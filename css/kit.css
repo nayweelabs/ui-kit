@@ -73,7 +73,7 @@ a.ui-num:hover{color:var(--ui-accent)}
 .ui-actions{display:flex;flex-wrap:wrap;gap:var(--ui-space-2);justify-content:flex-end}
 
 /* ---------- shell: footer status bar (never fixed) ---------- */
-.ui-footer{border-top:1px solid var(--ui-rule);background:var(--ui-surface)}
+.ui-footer{border-top:1px solid var(--ui-rule);background:var(--ui-surface);position:sticky;bottom:0;z-index:20;margin-top:auto;padding-bottom:env(safe-area-inset-bottom,0px)}
 .ui-footer>.ui-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;min-height:40px;padding-block:8px;font-size:var(--ui-text-xs);color:var(--ui-muted)}
 .ui-page .ui-footer a{color:var(--ui-muted)}
 .ui-footer-end{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
