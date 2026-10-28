@@ -73,3 +73,31 @@ func TestProductsPageFiltersOnTheServer(t *testing.T) {
 		t.Error("an empty filter result does not say Nothing matches")
 	}
 }
+
+// The lazy page draws each section's placeholder at once, serves each section on its own, and draws
+// the whole page on the server for a browser without JavaScript.
+func TestTheLazyPageLoadsEachSectionOnItsOwn(t *testing.T) {
+	srv := httptest.NewServer(preview.Handler())
+	defer srv.Close()
+	page := get(t, srv, "/lazy")
+	for _, want := range []string{`data-ui-src="/part/prs?"`, `data-ui-src="/part/slow?"`, `data-ui-src="/part/fails?"`, `content="0; url=/lazy?full=1"`} {
+		if !strings.Contains(page, want) {
+			t.Errorf("/lazy lacks %q", want)
+		}
+	}
+	if part := get(t, srv, "/part/prs?sort=newest"); !strings.Contains(part, `id="lazy-prs"`) || !strings.Contains(part, `<option value="newest" selected>`) {
+		t.Errorf("the PR section with its sort: %s", part)
+	}
+	res, err := http.Get(srv.URL + "/part/fails")
+	if err != nil {
+		t.Fatal(err)
+	}
+	res.Body.Close()
+	if res.StatusCode != http.StatusInternalServerError {
+		t.Errorf("the failing section answers %d", res.StatusCode)
+	}
+	full := get(t, srv, "/lazy?full=1")
+	if strings.Contains(full, "data-ui-src") || !strings.Contains(full, `id="lazy-prs"`) || !strings.Contains(full, "the sample source always fails") || strings.Contains(full, "http-equiv") {
+		t.Errorf("the whole page: %s", full)
+	}
+}

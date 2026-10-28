@@ -56,6 +56,7 @@ type Problem struct {
 	Title   string
 	Cause   string
 	Command string
+	Retry   string // with it, a Retry link to this address; a lazy section's error box reloads the section
 }
 
 // Notice is news about the whole page ("ui/notice"). Tone is "good", "info" or "warn".
@@ -191,6 +192,8 @@ type Milestones struct {
 }
 
 // Section is the block every page is made of ("ui/section"). It fails on its own: Loading draws a skeleton, Problem without Body is failed, Problem with Body is partial, Empty is empty.
+//
+// With Src it is lazy: it draws its skeleton at once and kit.js fetches Src, the section's own HTML, and puts it in its place; each lazy section on a page loads in parallel and on its own. If the fetch fails, the section shows its error box with a Retry link. A GET form inside a loaded lazy section (a toolbar) reloads only that section, and the address keeps the form's values. Full is the address of the page drawn whole on the server, linked for a browser without JavaScript.
 type Section struct {
 	ID      string
 	Title   string
@@ -201,6 +204,8 @@ type Section struct {
 	Empty   *Empty
 	Loading bool
 	More    *Link
+	Src     string
+	Full    string
 }
 
 // Column is one column of a data list. Num right-aligns it in mono; Hidden keeps the label for screen readers only.
@@ -298,6 +303,13 @@ type Toolbar struct {
 	Target  string
 	View    string
 	Primary *Button
+	Hidden  []Hidden
+}
+
+// Hidden is a value a toolbar's form sends unchanged, such as the tab it sits on.
+type Hidden struct {
+	Name  string
+	Value string
 }
 
 // Tab is one tab. With Href it is a link with its own address; without, it switches the panel of id Panel.
@@ -382,4 +394,5 @@ type Page struct {
 	Notice *Notice
 	Body   template.HTML
 	Footer Footer
+	Full   string // the address of this page drawn whole on the server: a browser without JavaScript goes there, for pages with lazy sections
 }

@@ -9,6 +9,7 @@
 {{- with .Search}}<label class="ui-search">{{template "ui/icon" "search"}}<input type="search" name="{{orDefault "q" .Name}}" value="{{.Value}}" placeholder="{{.Placeholder}}" aria-label="{{orDefault .Placeholder .Label}}"></label>{{end}}
 {{- range .Filters}}<select class="ui-select" name="{{.Name}}" aria-label="{{.Label}}"{{if .Active}} data-active{{end}} data-ui-submit>{{range .Options}}<option value="{{.Value}}"{{if .Selected}} selected{{end}}>{{.Label}}</option>{{end}}</select>{{end}}
 {{- with .Clear}}<a class="ui-btn" data-variant="quiet" data-size="sm" href="{{.Href}}"{{ext .Href}}>{{orDefault "Clear" .Label}}</a>{{end}}
+{{- range .Hidden}}<input type="hidden" name="{{.Name}}" value="{{.Value}}">{{end}}
 <noscript><button class="ui-btn" data-size="sm" type="submit">Apply</button></noscript>
 <span class="ui-grow"></span>
 {{- with .Count}}<span class="ui-toolbar-count">{{.}}</span>{{end}}

@@ -150,6 +150,7 @@ a.ui-num:hover{color:var(--ui-accent)}
 .ui-seg svg{width:14px;height:14px}
 
 /* ---------- section ---------- */
+.ui-lazy{display:contents}
 .ui-section{display:grid;gap:var(--ui-space-3);min-width:0;scroll-margin-top:calc(var(--ui-bar-h) + 12px)}
 .ui-section-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--ui-space-2) var(--ui-space-3)}
 .ui-section-title{font-size:var(--ui-text-lg);font-weight:650;display:flex;align-items:center;gap:8px}

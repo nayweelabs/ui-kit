@@ -1,4 +1,4 @@
-/* ui-kit/js/kit.js: theme switch, cards/list toggle, fold, tabs, and the small helpers of the field, id and dialog parts.
+/* ui-kit/js/kit.js: theme switch, cards/list toggle, fold, tabs, lazy sections, and the small helpers of the field, id and dialog parts.
    No app logic and no data. Every part works without it; this only saves a reload. Load it in <head> without defer. */
 (function () {
   "use strict";
@@ -51,8 +51,8 @@
   }
 
   // Fold: a <details class="ui-fold" id="…"> remembers whether it was open.
-  function initFolds() {
-    document.querySelectorAll("details.ui-fold[id]").forEach(function (d) {
+  function initFolds(within) {
+    (within || document).querySelectorAll("details.ui-fold[id]").forEach(function (d) {
       var s = store("fold." + d.id);
       if (s === "open") d.open = true;
       if (s === "closed") d.open = false;
@@ -91,6 +91,12 @@
     var t = e.target;
     if (t.closest("[data-ui-theme-toggle]")) return toggleTheme();
 
+    var retry = t.closest(".ui-lazy [data-ui-retry]");
+    if (retry && window.fetch) {
+      e.preventDefault();
+      return load(retry.closest(".ui-lazy"));
+    }
+
     var viewBtn = t.closest("[data-ui-views] [data-view]");
     if (viewBtn) {
       e.preventDefault();
@@ -127,6 +133,58 @@
     }
   }
 
+  // Lazy sections: each .ui-lazy fetches its own HTML from data-ui-src, all in parallel, and shows it in
+  // its place; a failed fetch shows the section's error box (from its <template data-ui-failed>) with Retry.
+  function failed(box, cause) {
+    var html = box.uiFailed || "";
+    box.innerHTML = html;
+    var p = box.querySelector("[data-ui-cause]");
+    if (p) p.textContent = cause + ". Everything else on this page is current.";
+  }
+
+  function load(box, src) {
+    if (!box.uiFailed) {
+      var tpl = box.querySelector("template[data-ui-failed]");
+      box.uiFailed = tpl ? tpl.innerHTML : "";
+    }
+    if (src) box.setAttribute("data-ui-src", src);
+    src = box.getAttribute("data-ui-src");
+    var sec = box.querySelector(".ui-section");
+    if (sec) sec.setAttribute("aria-busy", "true");
+    var seq = (box.uiSeq || 0) + 1;
+    box.uiSeq = seq;
+    return fetch(src, { credentials: "same-origin", headers: { "Accept": "text/html" } }).then(function (res) {
+      return res.text().then(function (text) {
+        if (box.uiSeq !== seq) return;
+        if (!res.ok) return failed(box, "The server answered " + res.status + (res.statusText ? " " + res.statusText : ""));
+        box.innerHTML = text;
+        initFolds(box);
+      });
+    }, function (err) {
+      if (box.uiSeq === seq) failed(box, "The page could not reach the server (" + err.message + ")");
+    });
+  }
+
+  function initLazy() {
+    if (!window.fetch) return;
+    document.querySelectorAll(".ui-lazy[data-ui-src]").forEach(function (box) { load(box); });
+  }
+
+  // A GET form inside a lazy section reloads only that section; the address keeps the form's values.
+  function onSubmit(e) {
+    var form = e.target;
+    var box = form.closest && form.closest(".ui-lazy[data-ui-src]");
+    if (!box || !window.fetch || !window.URLSearchParams || (form.method || "get").toLowerCase() !== "get") return;
+    e.preventDefault();
+    var fields = new URLSearchParams(new FormData(form));
+    var page = new URL(location.href);
+    fields.forEach(function (v, k) { page.searchParams.set(k, v); });
+    if (window.history && history.replaceState) history.replaceState(null, "", page);
+    var src = new URL(box.getAttribute("data-ui-src"), location.href);
+    src.search = page.search;
+    load(box, src.pathname + src.search);
+  }
+
   // A filter select in a toolbar applies on change, the same as pressing Apply.
   function onChange(e) {
     var sel = e.target.closest("select[data-ui-submit]");
@@ -136,9 +194,11 @@
   function init() {
     initViews();
     initFolds();
+    initLazy();
     document.addEventListener("click", onClick);
     document.addEventListener("keydown", tabKey);
     document.addEventListener("change", onChange);
+    document.addEventListener("submit", onSubmit);
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

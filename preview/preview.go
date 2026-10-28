@@ -28,7 +28,9 @@ func Handler() http.Handler {
 		"/focus":    func(r *http.Request) (kit.Page, error) { return focus(tpl) },
 		"/products": func(r *http.Request) (kit.Page, error) { return products(tpl, r) },
 		"/admin":    func(r *http.Request) (kit.Page, error) { return admin(tpl, r) },
+		"/lazy":     func(r *http.Request) (kit.Page, error) { return lazy(tpl, r) },
 	}
+	mux.HandleFunc("GET /part/{name}", func(w http.ResponseWriter, r *http.Request) { part(tpl, w, r) })
 	for path, build := range pages {
 		pattern := "GET " + path
 		if path == "/" {
@@ -60,7 +62,7 @@ func bar(current string) kit.Bar {
 	link := func(label, href string) kit.Link { return kit.Link{Label: label, Href: href, Current: href == current} }
 	return kit.Bar{
 		App: "UI kit", Sub: "preview", Href: "/",
-		Pages:  []kit.Link{link("Gallery", "/"), link("Control room", "/focus"), link("Products", "/products"), link("Left rail", "/admin")},
+		Pages:  []kit.Link{link("Gallery", "/"), link("Control room", "/focus"), link("Products", "/products"), link("Left rail", "/admin"), link("Lazy", "/lazy")},
 		Status: []kit.Status{{Tone: "good", Label: "local"}},
 	}
 }

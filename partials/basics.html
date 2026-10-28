@@ -43,7 +43,7 @@
 {{- end}}
 
 {{define "ui/error" -}}
-<div class="ui-box" data-tone="bad" role="alert">{{template "ui/icon" "alert"}}<b class="ui-box-title">{{.Title}}</b>{{with .Cause}}<p>{{.}}</p>{{end}}{{with .Command}}<code class="ui-cmd">{{.}}</code>{{end}}</div>
+<div class="ui-box" data-tone="bad" role="alert">{{template "ui/icon" "alert"}}<b class="ui-box-title">{{.Title}}</b>{{if .Retry}}<p data-ui-cause>{{.Cause}}</p>{{else}}{{with .Cause}}<p>{{.}}</p>{{end}}{{end}}{{with .Command}}<code class="ui-cmd">{{.}}</code>{{end}}{{with .Retry}}<p><a class="ui-btn" data-size="sm" href="{{.}}" data-ui-retry>Retry</a></p>{{end}}</div>
 {{- end}}
 
 {{define "ui/notice" -}}

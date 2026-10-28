@@ -88,6 +88,18 @@ func Funcs() template.FuncMap {
 			}
 			return strings.TrimSuffix(p.Assets, "/") + "/"
 		},
+		// lazySection is a lazy section's placeholder: its head and skeleton, without Src.
+		"lazySection": func(s Section) Section {
+			s.Src, s.Loading, s.Body, s.Problem, s.Empty, s.Count, s.More = "", true, "", nil, nil, nil, nil
+			return s
+		},
+		// failedSection is the section a lazy section becomes when its fetch fails: its head and an error box with Retry.
+		"failedSection": func(s Section) Section {
+			src := s.Src
+			s.Src, s.Full, s.Loading, s.Body, s.Empty, s.Count, s.More = "", "", false, "", nil, nil, nil
+			s.Problem = &Problem{Title: "Can’t load " + s.Title + ".", Retry: src}
+			return s
+		},
 		"orDefault": func(fallback, v string) string {
 			if v == "" {
 				return fallback

@@ -5,7 +5,9 @@ import (
 	"html/template"
 	"io/fs"
 	"net/http"
+	"slices"
 	"strings"
+	"time"
 
 	kit "github.com/ElderlyGate/ui-kit"
 )
@@ -103,4 +105,73 @@ func admin(tpl *template.Template, r *http.Request) (kit.Page, error) {
 		},
 		Body: body + must(liveDialogs(tpl)),
 	}, err
+}
+
+// lazySections are the sections of the lazy page: one quick with a toolbar, one slow, one that fails.
+var lazySections = []kit.Section{
+	{ID: "lazy-prs", Title: "Open pull requests", Why: "Quick; its toolbar reloads only this section."},
+	{ID: "lazy-slow", Title: "Slow source", Why: "Takes a second and a half."},
+	{ID: "lazy-fails", Title: "Failing source", Why: "Its server answers 500."},
+}
+
+// lazy is a page whose sections each load on their own; with ?full=1 the server draws it whole, as a
+// browser without JavaScript gets it.
+func lazy(tpl *template.Template, r *http.Request) (kit.Page, error) {
+	full := r.URL.Query().Get("full") == "1"
+	var body template.HTML
+	for _, sec := range lazySections {
+		name := strings.TrimPrefix(sec.ID, "lazy-")
+		if full {
+			h, _, err := lazyPart(tpl, name, r, false)
+			if err != nil {
+				h = mustHTML(tpl, "ui/section", kit.Section{ID: sec.ID, Title: sec.Title, Problem: &kit.Problem{Title: "Can’t read the " + strings.ToLower(sec.Title) + ".", Cause: err.Error()}})
+			}
+			body += h + "\n"
+			continue
+		}
+		q := r.URL.Query()
+		sec.Src, sec.Full = "/part/"+name+"?"+q.Encode(), "/lazy?full=1"
+		body += mustHTML(tpl, "ui/section", sec) + "\n"
+	}
+	page := kit.Page{Header: kit.Head{Title: "Lazy sections", Lede: "The shell comes at once; each section loads its own HTML, in parallel, and fails on its own."}, Body: body}
+	if !full {
+		page.Full = "/lazy?full=1"
+	}
+	return page, nil
+}
+
+// part serves one section of the lazy page as HTML.
+func part(tpl *template.Template, w http.ResponseWriter, r *http.Request) {
+	h, code, err := lazyPart(tpl, r.PathValue("name"), r, true)
+	if err != nil {
+		http.Error(w, err.Error(), code)
+		return
+	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte(h))
+}
+
+func lazyPart(tpl *template.Template, name string, r *http.Request, wait bool) (template.HTML, int, error) {
+	switch name {
+	case "prs":
+		prs := SamplePRs()
+		sort := r.URL.Query().Get("sort")
+		if sort == "newest" {
+			slices.Reverse(prs)
+		}
+		tb := kit.Toolbar{Action: "/lazy", Count: fmt.Sprintf("%d open", len(prs)), Filters: []kit.Select{{Name: "sort", Label: "Sort", Active: sort != "", Options: []kit.Option{
+			{Value: "", Label: "Oldest first", Selected: sort == ""}, {Value: "newest", Label: "Newest first", Selected: sort == "newest"}}}}}
+		body := mustHTML(tpl, "ui/toolbar", tb) + mustHTML(tpl, "ui/pr-list", kit.PRList{Items: prs})
+		h, err := kit.HTML(tpl, "ui/section", kit.Section{ID: "lazy-prs", Title: "Open pull requests", Count: &kit.Count{Tone: "accent", N: len(prs)}, Body: body})
+		return h, http.StatusInternalServerError, err
+	case "slow":
+		if wait {
+			time.Sleep(1500 * time.Millisecond)
+		}
+		h, err := kit.HTML(tpl, "ui/section", kit.Section{ID: "lazy-slow", Title: "Slow source", Body: mustHTML(tpl, "ui/milestones", SampleMilestones())})
+		return h, http.StatusInternalServerError, err
+	case "fails":
+		return "", http.StatusInternalServerError, fmt.Errorf("the sample source always fails")
+	}
+	return "", http.StatusNotFound, fmt.Errorf("no section %s", name)
 }

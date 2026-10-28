@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -166,6 +167,58 @@ func TestEveryFontHasItsLicence(t *testing.T) {
 		}
 		if !found {
 			t.Errorf("%s has no licence file beside it", n)
+		}
+	}
+}
+
+// A lazy section draws its skeleton with the address of its own HTML, the error box it shows when that
+// fails, and a link to the whole page for a browser without JavaScript; the page sends such a browser there.
+func TestALazySectionDrawsItsPlaceholderAndItsFailedState(t *testing.T) {
+	var b bytes.Buffer
+	if err := kit.Render(&b, "ui/section", kit.Section{ID: "prs", Title: "Open pull requests", Src: "/part/prs?pr_sort=newest", Full: "/?full=1", Body: "<p>never drawn</p>"}); err != nil {
+		t.Fatal(err)
+	}
+	got := b.String()
+	for _, want := range []string{`<div class="ui-lazy" data-ui-src="/part/prs?pr_sort=newest">`, `aria-busy="true"`, `class="ui-skel-group"`,
+		`<noscript><p class="ui-hint">This section loads with JavaScript. <a href="/?full=1">Show the whole page</a>.</p></noscript>`,
+		`<template data-ui-failed>`, `Can’t load Open pull requests.`, `<p data-ui-cause></p>`, `href="/part/prs?pr_sort=newest" data-ui-retry>Retry</a>`} {
+		if !strings.Contains(got, want) {
+			t.Errorf("lazy section lacks %q:\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, "never drawn") {
+		t.Error("a lazy section draws no body of its own")
+	}
+	b.Reset()
+	if err := kit.Render(&b, "ui/shell", kit.Page{Bar: kit.Bar{App: "x"}, Full: "/?full=1"}); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(b.String(), `<noscript><meta http-equiv="refresh" content="0; url=/?full=1"></noscript>`) {
+		t.Errorf("the page sends a browser without JavaScript to the whole page:\n%s", b.String())
+	}
+}
+
+var anchor = regexp.MustCompile(`<a\s[^>]*>`)
+
+// Every link to another site or app opens in a new tab; links inside the app stay in the same tab.
+func TestLinksToOtherSitesOpenInANewTab(t *testing.T) {
+	files, err := filepath.Glob(filepath.Join("testdata", "golden", "*.html"))
+	if err != nil || len(files) == 0 {
+		t.Fatalf("no goldens: %v", err)
+	}
+	for _, f := range files {
+		b, err := os.ReadFile(f)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, a := range anchor.FindAllString(string(b), -1) {
+			out := strings.Contains(a, `href="http://`) || strings.Contains(a, `href="https://`)
+			if out != strings.Contains(a, `target="_blank"`) {
+				t.Errorf("%s: %s", filepath.Base(f), a)
+			}
+			if out && !strings.Contains(a, `rel="noopener noreferrer"`) {
+				t.Errorf("%s: a new tab without noopener: %s", filepath.Base(f), a)
+			}
 		}
 	}
 }

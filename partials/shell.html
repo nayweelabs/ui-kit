@@ -13,6 +13,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{{if .Header.Title}}{{.Header.Title}} · {{end}}{{orDefault .Bar.App .Title}}</title>
 {{template "ui/assets" .}}
+{{- with .Full}}
+<noscript><meta http-equiv="refresh" content="0; url={{.}}"></noscript>{{end}}
 {{.Head}}
 </head>
 <body class="ui-page"{{if .Wide}} data-wide{{end}}>

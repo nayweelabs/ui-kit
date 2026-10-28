@@ -29,6 +29,8 @@ tpl := template.Must(kit.Templates().ParseFS(views, "views/*.html"))
 
 The data each partial takes is a Go type in `types.go` (`kit.Page`, `kit.Section`, `kit.Product`, `kit.PR`, …). The server works out every value, tone and label; the partial only draws it. `kit.HTML` draws a partial into `template.HTML`, ready to be a section's body.
 
+A section that reads something slow loads on its own: give `kit.Section` a `Src`, the address of the section's own HTML, and a `Full`, the page drawn whole on the server. The shell then comes at once with the section's skeleton; `kit.js` fetches every lazy section in parallel and puts each in its place, and a fetch that fails shows that section's error box with Retry. A GET form inside a loaded lazy section, such as its toolbar, reloads only that section and keeps its values in the address. Set `kit.Page.Full` too, and a browser without JavaScript goes straight to the whole page. `/lazy` in the preview shows all of it.
+
 A page that does not use `ui/shell` links `/ui-kit/css/kit.css` and `/ui-kit/js/kit.js` (in `<head>`, without `defer`) and puts `class="ui-page"` on its body.
 
 ## In a Vite app
@@ -53,7 +55,7 @@ Put `class="ui-page"` on `<body>`. The wrappers are plain ES modules with types;
 | `css/kit.css` | the shell and every part; imports `tokens.css` and the fonts |
 | `fonts/` | Hanken Grotesk and IBM Plex Mono (SIL OFL 1.1, licences beside them) |
 | `partials/` | the Go partials, `ui/…` |
-| `js/kit.js` | theme switch, cards/list toggle, fold, tabs; no app logic |
+| `js/kit.js` | theme switch, cards/list toggle, fold, tabs, lazy sections; no app logic |
 | `react/` | the React wrappers and their types |
 | `kit.go`, `types.go` | package `kit` |
 | `preview/`, `cmd/ui-kit-preview` | the gallery |
@@ -64,6 +66,12 @@ Put `class="ui-page"` on `<body>`. The wrappers are plain ES modules with types;
 Shell: `ui/shell`, `ui/assets`, `ui/bar`, `ui/rail`, `ui/page-header`, `ui/footer`.
 Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/drawer`, `ui/star`, `ui/skeleton`.
 Pieces they share: `ui/icon`, `ui/num`, `ui/fact`, `ui/cell`.
+
+## Rules
+
+- **A link to another site or app opens in a new tab**, with `rel="noopener noreferrer"`; a link inside the app stays in the same tab. The partials do it with the `ext` function (`<a href="{{.Href}}"{{ext .Href}}>`); an app's own templates use the same function, and a form that sends the browser to another app (such as one that starts a board and redirects to it) carries `target="_blank"`. A test checks every golden for it.
+- The server works out every value, tone, label, filter and order; a partial only draws it, and `kit.js` only saves a reload.
+- Every part works without JavaScript.
 
 ## Change it
 
