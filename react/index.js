@@ -1,6 +1,6 @@
 // Thin React wrappers over the kit's classes. Plain ES modules with createElement, so consumers need no build step;
 // types are in index.d.ts. Each wrapper draws the same markup as the Go partial of the same name; kit.css does the rest.
-import { Component, createElement as h, Fragment, useState } from "react";
+import { Component, createElement as h, Fragment, useEffect, useRef, useState } from "react";
 
 const cx = (...names) => names.filter(Boolean).join(" ");
 const tone = (t) => (t ? t : undefined);
@@ -15,6 +15,7 @@ const paths = {
   list: [["path", { d: "M2 3.5h12M2 8h12M2 12.5h12", strokeWidth: 1.5 }]],
   theme: [["circle", { cx: 8, cy: 8, r: 5.6, strokeWidth: 1.4 }], ["path", { d: "M8 2.4a5.6 5.6 0 0 1 0 11.2z", fill: "currentColor", stroke: "none" }]],
   close: [["path", { d: "M4 4l8 8M12 4l-8 8", strokeWidth: 1.6 }]],
+  github: [["path", { d: "M8 0c4.42 0 8 3.58 8 8a8.01 8.01 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A8 8 0 0 1 0 8c0-4.42 3.58-8 8-8z", fill: "currentColor", stroke: "none" }]],
 };
 
 export function Icon({ name }) {
@@ -277,6 +278,46 @@ export function Drawer({ id, title, open, onClose, children }) {
     children);
 }
 
+// Light is a status light for the top bar: a dot, an icon and a word that opens a popover with the facts and an
+// Actions menu. Escape, a click outside or focus leaving closes it. An action links (href), runs onSelect, opens
+// the dialog of id opens, or asks once more inside the popover (confirm: a form to action, or onConfirm).
+export function Light({ id, tone: t, icon, label, href = "#", title, text, details = [], actions = [], open: initial = false, children }) {
+  const [open, setOpen] = useState(initial);
+  const [step, setStep] = useState(-1);
+  const box = useRef(null);
+  const btn = useRef(null);
+  const close = (back) => { setOpen(false); setStep(-1); if (back && btn.current) btn.current.focus(); };
+  useEffect(() => {
+    if (!open) return undefined;
+    const away = (e) => { if (box.current && !box.current.contains(e.target) && !e.target.closest("dialog")) close(false); };
+    document.addEventListener("click", away);
+    document.addEventListener("focusin", away);
+    return () => { document.removeEventListener("click", away); document.removeEventListener("focusin", away); };
+  }, [open]);
+  const pick = (a, i) => {
+    if (a.confirm) return setStep(i);
+    if (a.opens) { const d = document.getElementById(a.opens); if (d && d.showModal && !d.open) d.showModal(); }
+    if (a.onSelect) a.onSelect();
+  };
+  const item = (a, i) => a.href
+    ? h("a", { key: i, className: "ui-menu-item", href: a.href, "data-variant": a.variant }, a.label)
+    : h("button", { key: i, className: "ui-menu-item", type: "button", "data-variant": a.variant, "aria-haspopup": a.opens ? "dialog" : undefined, "aria-expanded": a.confirm ? String(step === i) : undefined, onClick: () => pick(a, i) }, a.label);
+  const c = step >= 0 ? actions[step].confirm : null;
+  return h("div", { className: "ui-light", id, ref: box, onKeyDown: (e) => { if (e.key === "Escape" && open && !e.target.closest("dialog")) { e.preventDefault(); close(true); } } },
+    h("a", { className: "ui-light-btn", href, ref: btn, "aria-controls": id + "-pop", "aria-expanded": String(open), "aria-haspopup": "dialog", title, onClick: (e) => { e.preventDefault(); open ? close(true) : setOpen(true); } },
+      h("span", { className: "ui-dot", "data-tone": t || "none" }), icon ? h(Icon, { name: icon }) : null, h("span", { className: "ui-light-word" }, label), title ? h("span", { className: "ui-sr" }, ": " + title) : null),
+    h("div", { className: "ui-pop", id: id + "-pop", role: "dialog", "aria-labelledby": id + "-pop-title", tabIndex: -1, hidden: !open, ref: (el) => { if (el && open && !el.contains(document.activeElement)) el.focus(); } },
+      h("b", { className: "ui-pop-title", id: id + "-pop-title" }, title || label),
+      text ? h("p", { className: "ui-pop-text" }, text) : null,
+      details.length ? h("dl", { className: "ui-kv" }, details.map((d) => h(Fragment, { key: d.label }, h("dt", null, d.label), h("dd", null, d.value)))) : null,
+      actions.length ? h("details", { className: "ui-menu" }, h("summary", { className: "ui-btn", "data-size": "sm" }, "Actions"), h("div", { className: "ui-menu-list" }, actions.map(item))) : null,
+      c ? h("form", { className: "ui-pop-step", method: c.action ? "post" : undefined, action: c.action, onSubmit: c.onConfirm ? (e) => { e.preventDefault(); c.onConfirm(); close(true); } : undefined },
+        h("p", null, c.text), (c.hidden || []).map((f) => h("input", { key: f.name, type: "hidden", name: f.name, value: f.value })),
+        h("div", { className: "ui-dialog-acts" }, h("button", { className: "ui-btn", type: "button", "data-size": "sm", autoFocus: true, onClick: () => setStep(-1) }, "Cancel"),
+          h("button", { className: "ui-btn", type: "submit", "data-variant": actions[step].variant, "data-size": "sm" }, c.label))) : null),
+    children);
+}
+
 // The shell. Theme follows the system; ThemeToggle switches and remembers it, the same key kit.js uses.
 export function ThemeToggle() {
   const flip = () => {
@@ -290,7 +331,7 @@ export function ThemeToggle() {
   return h("button", { className: "ui-iconbtn", type: "button", "aria-label": "Switch light or dark theme", title: "Switch light or dark theme", onClick: flip }, h(Icon, { name: "theme" }));
 }
 
-export function Bar({ app, sub, href = "/", pages = [], apps, status = [], noTheme, children }) {
+export function Bar({ app, sub, href = "/", pages = [], apps, status = [], lights = [], noTheme, children }) {
   return h("header", { className: "ui-bar ui-gutter" }, h("div", { className: "ui-wrap" },
     apps && apps.length
       ? h("details", { className: "ui-apps" }, h("summary", { className: "ui-brand" }, app, sub ? h(Fragment, null, " ", h("small", null, sub)) : null),
@@ -299,7 +340,7 @@ export function Bar({ app, sub, href = "/", pages = [], apps, status = [], noThe
     pages.length ? h("nav", { className: "ui-nav", "aria-label": "Pages" }, pages.map((p) => h("a", { key: p.href, href: p.href, "aria-current": p.current ? "page" : undefined }, p.label, p.count ? h(Fragment, null, " ", h(Count, p.count)) : null))) : null,
     h("div", { className: "ui-bar-end" },
       status.map((s) => h("span", { key: s.label, className: "ui-status", title: s.label }, h("span", { className: "ui-dot", "data-tone": s.tone || "none" }), h("span", { className: "ui-status-word" }, s.label))),
-      children, noTheme ? null : h(ThemeToggle))));
+      lights.map((l) => h(Light, { key: l.id, ...l })), children, noTheme ? null : h(ThemeToggle))));
 }
 
 export function PageHeader({ crumb, title, lede, actions = [] }) {

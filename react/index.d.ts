@@ -61,7 +61,11 @@ export interface Tab { label: string; href?: string; panel?: string; count?: Cou
 export interface TabsProps { label: string; items?: Tab[]; onSelect?: (tab: Tab) => void }
 export interface DialogProps { id: string; title: string; text?: string; cancel?: string; confirm: ButtonProps; open?: boolean; onClose?: () => void; onConfirm?: () => void }
 export interface DrawerProps { id: string; title: string; open?: boolean; onClose?: () => void; children?: ReactNode }
-export interface BarProps { app: string; sub?: string; href?: string; pages?: Link[]; apps?: Link[]; status?: StatusProps[]; noTheme?: boolean; children?: ReactNode }
+export interface LightDetail { label: string; value: string }
+export interface LightConfirm { text: string; label: string; action?: string; hidden?: { name: string; value: string }[]; onConfirm?: () => void }
+export interface LightAction { label: string; variant?: "danger"; href?: string; opens?: string; onSelect?: () => void; confirm?: LightConfirm }
+export interface LightProps { id: string; tone?: Tone; icon?: string; label: string; href?: string; title?: string; text?: string; details?: LightDetail[]; actions?: LightAction[]; open?: boolean; children?: ReactNode }
+export interface BarProps { app: string; sub?: string; href?: string; pages?: Link[]; apps?: Link[]; status?: StatusProps[]; lights?: LightProps[]; noTheme?: boolean; children?: ReactNode }
 export interface HeadProps { crumb?: Link[]; title: string; lede?: string; actions?: ButtonProps[] }
 export interface FooterProps { version?: string; versionHref?: string; branch?: string; fresh?: StatusProps; links?: Link[] }
 export interface RailGroup { label?: string; links: Link[] }
@@ -95,6 +99,7 @@ export function Crumb(props: { items?: Link[] }): ReactElement;
 export function Dialog(props: DialogProps): ReactElement;
 export function Drawer(props: DrawerProps): ReactElement;
 export function ThemeToggle(): ReactElement;
+export function Light(props: LightProps): ReactElement;
 export function Bar(props: BarProps): ReactElement;
 export function PageHeader(props: HeadProps): ReactElement;
 export function Footer(props: FooterProps): ReactElement;

@@ -1,4 +1,4 @@
-/* ui-kit/js/kit.js: theme switch, cards/list toggle, fold, tabs, lazy sections, and the small helpers of the field, id and dialog parts.
+/* ui-kit/js/kit.js: theme switch, cards/list toggle, fold, tabs, lazy sections, status lights, and the small helpers of the field, id and dialog parts.
    No app logic and no data. Every part works without it; this only saves a reload. Load it in <head> without defer. */
 (function () {
   "use strict";
@@ -87,8 +87,81 @@
     if (!tabs[n].getAttribute("href")) selectTab(tabs[n]);
   }
 
+  // Status light: its link opens its popover instead of the page; Escape, a click outside or focus
+  // leaving closes it. An action with a step shows that step in the popover, Cancel first.
+  function setPop(btn, open, focusBack) {
+    var pop = document.getElementById(btn.getAttribute("aria-controls"));
+    if (!pop) return false;
+    pop.hidden = !open;
+    btn.setAttribute("aria-expanded", String(open));
+    if (open) {
+      pop.focus();
+    } else {
+      pop.querySelectorAll("details.ui-menu[open]").forEach(function (d) { d.open = false; });
+      pop.querySelectorAll(".ui-pop-step").forEach(function (f) { f.hidden = true; });
+      pop.querySelectorAll("[data-ui-step]").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
+      if (focusBack) btn.focus();
+    }
+    return true;
+  }
+
+  function closePops(except, focusBack) {
+    document.querySelectorAll("[data-ui-light][aria-expanded='true']").forEach(function (btn) {
+      if (!except || !btn.closest(".ui-light").contains(except)) setPop(btn, false, focusBack);
+    });
+  }
+
+  function lightClick(t, e) {
+    var btn = t.closest("[data-ui-light]");
+    if (btn) {
+      var open = btn.getAttribute("aria-expanded") !== "true";
+      closePops(btn);
+      if (setPop(btn, open, true)) e.preventDefault();
+      return true;
+    }
+    var step = t.closest("[data-ui-step]");
+    if (step) {
+      var form = document.getElementById(step.getAttribute("aria-controls"));
+      if (!form) return true;
+      var menu = step.closest("details");
+      if (menu) menu.open = false;
+      form.hidden = false;
+      step.setAttribute("aria-expanded", "true");
+      var cancel = form.querySelector("[data-ui-step-cancel]");
+      if (cancel) cancel.focus();
+      return true;
+    }
+    var back = t.closest("[data-ui-step-cancel]");
+    if (back) {
+      var f = back.closest(".ui-pop-step");
+      f.hidden = true;
+      var opener = document.querySelector('[data-ui-step][aria-controls="' + f.id + '"]');
+      if (opener) opener.setAttribute("aria-expanded", "false");
+      var sum = f.closest(".ui-pop").querySelector("details.ui-menu > summary");
+      if (sum) sum.focus();
+      return true;
+    }
+    return false;
+  }
+
+  function onKey(e) {
+    if (e.key !== "Escape" || e.target.closest("dialog")) return;
+    var open = document.querySelector("[data-ui-light][aria-expanded='true']");
+    if (open) {
+      e.preventDefault();
+      setPop(open, false, true);
+    }
+  }
+
+  function onFocus(e) {
+    if (!e.target.closest || e.target.closest("dialog")) return;
+    closePops(e.target, false);
+  }
+
   function onClick(e) {
     var t = e.target;
+    if (!t.closest("dialog")) closePops(t, false);
+    if (lightClick(t, e)) return;
     if (t.closest("[data-ui-theme-toggle]")) return toggleTheme();
 
     var retry = t.closest(".ui-lazy [data-ui-retry]");
@@ -120,6 +193,8 @@
     var opener = t.closest("[data-ui-open]");
     if (opener) {
       var dlg = document.getElementById(opener.getAttribute("data-ui-open"));
+      var menu = opener.closest("details.ui-menu");
+      if (menu) menu.open = false;
       if (dlg && dlg.showModal && !dlg.open) dlg.showModal();
       return;
     }
@@ -197,6 +272,8 @@
     initLazy();
     document.addEventListener("click", onClick);
     document.addEventListener("keydown", tabKey);
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("focusin", onFocus);
     document.addEventListener("change", onChange);
     document.addEventListener("submit", onSubmit);
   }

@@ -64,7 +64,16 @@ func bar(current string) kit.Bar {
 		App: "UI kit", Sub: "preview", Href: "/",
 		Pages:  []kit.Link{link("Gallery", "/"), link("Control room", "/focus"), link("Products", "/products"), link("Left rail", "/admin"), link("Lazy", "/lazy")},
 		Status: []kit.Status{{Tone: "good", Label: "local"}},
+		Lights: []kit.Light{barLight()},
 	}
+}
+
+// barLight is the sample GitHub light of every preview page, with its token dialog.
+func barLight() kit.Light {
+	l := lightGood("pv-light", false)
+	l.Actions[0].Opens = "pv-light-token"
+	l.Dialogs = []kit.Dialog{tokenDialog("pv-light-token", false)}
+	return l
 }
 
 func footer() kit.Footer {
@@ -158,6 +167,7 @@ func liveDialogs(tpl *template.Template) (template.HTML, error) {
 	for _, d := range []kit.Dialog{
 		{ID: "dlg-live", Title: "Disconnect GitHub?", Text: "Pull requests and CI stop showing. The token is deleted from the Keychain.", Confirm: kit.Button{Label: "Disconnect GitHub", Variant: "danger", Type: "submit", Value: "confirm"}},
 		{ID: "dlg-archive", Title: "Archive this card?", Text: "It moves to archive/ and leaves the board. kanban restore brings it back.", Confirm: kit.Button{Label: "Archive 1 card", Variant: "danger", Type: "submit", Value: "confirm"}},
+		tokenDialog("dlg-light-live", false),
 	} {
 		h, err := kit.HTML(tpl, "ui/dialog", d)
 		if err != nil {

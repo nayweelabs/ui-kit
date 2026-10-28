@@ -26,3 +26,4 @@
 @media (max-width:860px){.pv-two{grid-template-columns:minmax(0,1fr)}}
 .pv-waiting{margin:0;padding-left:1.1em;font-size:var(--ui-text-sm);color:var(--ui-muted);display:grid;gap:3px}
 .pv-tabs{display:grid;gap:var(--ui-space-4)}
+.pv-demo:has(.ui-pop:not([hidden])){min-height:330px;align-items:flex-start;justify-content:flex-end}

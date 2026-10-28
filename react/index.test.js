@@ -64,3 +64,13 @@ test("shell draws bar, header, body and footer", () => {
   const s = render(h(kit.Shell, { bar: { app: "Control room", pages: [{ label: "Focus", href: "/", current: true }] }, header: { title: "Focus" }, footer: { version: "v0.4.0" } }, "body"));
   for (const want of ["ui-bar", 'aria-current="page"', "<h1>Focus</h1>", "body", "ui-footer"]) assert.ok(s.includes(want), want);
 });
+
+test("light draws the same link, dot and hidden popover as the Go partial", () => {
+  const light = render(h(kit.Light, { id: "gh", tone: "warn", icon: "github", label: "GitHub", href: "/settings/github", title: "Connected, the last read failed.", details: [{ label: "Account", value: "bot" }], actions: [{ label: "Disconnect", variant: "danger", confirm: { text: "x", label: "Disconnect now" } }] }));
+  assert.match(light, /<a class="ui-light-btn" href="\/settings\/github" aria-controls="gh-pop" aria-expanded="false" aria-haspopup="dialog"/);
+  assert.match(light, /<span class="ui-dot" data-tone="warn"><\/span>/);
+  assert.match(light, /class="ui-pop" id="gh-pop" role="dialog" aria-labelledby="gh-pop-title" tabindex="-1" hidden=""/);
+  assert.match(light, /<dt>Account<\/dt><dd>bot<\/dd>/);
+  assert.match(light, /<summary class="ui-btn" data-size="sm">Actions<\/summary>/);
+  assert.match(light, /data-variant="danger" aria-expanded="false">Disconnect<\/button>/);
+});

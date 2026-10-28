@@ -156,6 +156,22 @@ func SamplePRs() []kit.PR {
 	}
 }
 
+// lightGood is the GitHub light of a connected, read-only token.
+func lightGood(id string, open bool) kit.Light {
+	return kit.Light{ID: id, Tone: "good", Icon: "github", Label: "GitHub", Href: "/settings/github", Open: open,
+		Title:   "Connected as the org’s bot, read-only.",
+		Details: []kit.Detail{{Label: "Account", Value: "elderlygate-ai"}, {Label: "Access", Value: "read-only"}, {Label: "Last checked", Value: "28 Oct 15:36"}, {Label: "Token from", Value: "the Keychain item control-room-github"}},
+		Actions: []kit.Action{{Label: "Enter a new token…", Opens: "dlg-light-live"},
+			{Label: "Disconnect", Variant: "danger", Confirm: &kit.Confirm{Text: "Removes the token from the Keychain. It stays valid on GitHub until you delete it there.", Label: "Disconnect now", Action: "#disconnect", Hidden: []kit.Hidden{{Name: "back", Value: "/"}}}}}}
+}
+
+// tokenDialog asks for a new token: the steps, the link, the secret field and Connect.
+func tokenDialog(id string, open bool) kit.Dialog {
+	body := template.HTML(`<p class="ui-dialog-text">Make a fine-grained, read-only token as elderlygate-ai: <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">new token</a>.</p>`) +
+		html("ui/field", kit.Field{ID: id + "-token", Name: "token", Label: "Token", Secret: true, Hint: "Checked with GitHub, then kept in the Keychain."})
+	return kit.Dialog{ID: id, Title: "Enter a new token", Action: "#connect", Body: body, Confirm: kit.Button{Label: "Connect", Variant: "primary", Type: "submit"}, Open: open}
+}
+
 // SampleMilestones is the org's road to public.
 func SampleMilestones() kit.Milestones {
 	return kit.Milestones{
@@ -173,6 +189,7 @@ func SampleMilestones() kit.Milestones {
 func Parts() []Part {
 	return []Part{
 		{"bar", "Top bar", ".ui-bar", "App name, up to 6 page links, global status, theme. On a phone the links scroll sideways in their own strip.", []string{"More than 6 pages of the same weight: add the left rail under the bar; the bar never goes away.", "A status here is a dot plus one word; the full story is a notice on the page that needs it.", "Apps set: the app name becomes a switcher menu (slot for later)."}},
+		{"light", "Status light", ".ui-light · .ui-pop", "A traffic light in the top bar for one connection: a dot, an icon and a word. Clicking it opens a popover under it with the facts and an Actions menu.", []string{"Tones: good green, warn amber, bad red, none grey. The word stays the same; the popover says why.", "Without JavaScript it is a link to the app's full page for it, with the same facts and forms.", "The Actions menu is a menu button of plain buttons: one opens a dialog, one asks once more inside the popover before it acts.", "Escape, a click outside or Tab out closes the popover; focus goes back to the light.", "With Src it loads on its own: the bar draws it grey first, so it never slows the page."}},
 		{"rail", "Left rail", ".ui-rail", "Only for apps with more than 6 pages, always under the top bar.", []string{"On a phone it becomes a strip that scrolls sideways."}},
 		{"page-header", "Page header", ".ui-head", "Breadcrumb when the page is below another, title, one plain sentence, the page's actions.", []string{"On a phone the actions drop below the title, full width."}},
 		{"footer", "Footer status bar", ".ui-footer", "Version, branch when not main, when the data was read and reads next, a live dot, links to the JSON, source and help.", []string{"Never fixed, so it never covers content.", "A page that stopped updating turns its dot red and says so in words."}},
@@ -210,7 +227,14 @@ func Cases() []Case {
 	return []Case{
 		{Part: "bar", State: "default", Items: one("ui/bar", kit.Bar{App: "Control room", Sub: "the org", Href: "#", Pages: []kit.Link{{Label: "Focus", Href: "#", Current: true}, {Label: "Products", Href: "#"}, {Label: "Designs", Href: "#"}}, Status: []kit.Status{{Tone: "good", Label: "GitHub"}}, Refresh: &kit.Link{Href: "#"}})},
 		{Part: "bar", State: "not-connected", Items: one("ui/bar", kit.Bar{App: "Control room", Href: "#", Pages: []kit.Link{{Label: "Focus", Href: "#"}, {Label: "Products", Href: "#", Current: true, Count: &kit.Count{Tone: "accent", N: 2}}, {Label: "Designs", Href: "#"}}, Status: []kit.Status{{Tone: "bad", Label: "GitHub not connected"}}})},
+		{Part: "bar", State: "light", Note: "A status light left of the theme switch; it opens its popover.", Items: one("ui/bar", kit.Bar{App: "Control room", Sub: "the org", Href: "#", Pages: []kit.Link{{Label: "Focus", Href: "#", Current: true}, {Label: "Products", Href: "#"}}, Lights: []kit.Light{lightGood("light-bar", false)}, Refresh: &kit.Link{Href: "#"}})},
 		{Part: "bar", State: "app-switcher", Note: "The slot for later: it needs an API that lists the running apps.", Items: one("ui/bar", kit.Bar{App: "kanban", Sub: "hubman board", Apps: []kit.Link{{Label: "Control room", Href: "#"}, {Label: "kanban", Href: "#", Current: true}, {Label: "e-designer", Href: "#"}}, Pages: []kit.Link{{Label: "Board", Href: "#", Current: true}, {Label: "Archive", Href: "#"}}})},
+		{Part: "light", State: "good", Items: one("ui/light", lightGood("light-good", false))},
+		{Part: "light", State: "warn", Items: one("ui/light", kit.Light{ID: "light-warn", Tone: "warn", Icon: "github", Label: "GitHub", Href: "/settings/github", Title: "Connected as the org’s bot, read-only.", Text: "The last read failed: cannot reach GitHub.", Details: lightGood("", false).Details, Actions: lightGood("", false).Actions})},
+		{Part: "light", State: "bad", Items: one("ui/light", kit.Light{ID: "light-bad", Tone: "bad", Icon: "github", Label: "GitHub", Href: "/settings/github", Title: "GitHub refuses the token.", Text: "401 Bad credentials: it has expired or been deleted.", Details: []kit.Detail{{Label: "Token from", Value: "the Keychain item control-room-github"}}, Actions: lightGood("", false).Actions})},
+		{Part: "light", State: "none", Items: one("ui/light", kit.Light{ID: "light-none", Tone: "none", Icon: "github", Label: "GitHub", Href: "/settings/github", Title: "GitHub is not connected.", Text: "Pull requests and CI are not shown.", Actions: []kit.Action{{Label: "Enter a token…", Opens: "dlg-light-live"}}})},
+		{Part: "light", State: "loading", Note: "Lazy: drawn grey at once, then kit.js fetches Src.", Items: one("ui/light", kit.Light{ID: "light-lazy", Icon: "github", Label: "GitHub", Href: "/settings/github", Src: "/part/light"})},
+		{Part: "light", State: "open", Note: "The popover open: the facts, then the Actions menu.", Items: one("ui/light", lightGood("light-open", true))},
 		{Part: "rail", State: "default", Items: one("ui/rail", []kit.RailGroup{{Label: "Favourites", Links: []kit.Link{{Label: "Deployments", Href: "#", Current: true}, {Label: "Machines", Href: "#", Count: &kit.Count{Tone: "warn", N: 2}}}}, {Label: "All services", Links: []kit.Link{{Label: "Providers", Href: "#"}, {Label: "Secrets", Href: "#"}, {Label: "Logs", Href: "#"}}}})},
 		{Part: "page-header", State: "top-level", Items: one("ui/page-header", kit.Head{Title: "Products", Lede: "Is it current, is anything open, is my copy behind.", Actions: []kit.Button{{Label: "Refresh"}}})},
 		{Part: "page-header", State: "below-another", Items: one("ui/page-header", kit.Head{Crumb: []kit.Link{{Label: "Products", Href: "#"}, {Label: "kanban", Href: "#"}, {Label: "20261027-a188"}}, Title: "Point every address at the org", Lede: "In Progress · turn: agent · 1.1d", Actions: []kit.Button{{Label: "Open board", Href: "#"}, {Label: "Archive", Variant: "danger", Opens: "dlg-archive"}}})},
@@ -290,6 +314,7 @@ func Cases() []Case {
 		{Part: "tabs", State: "links", Items: one("ui/tabs", kit.Tabs{Label: "Product views", Items: []kit.Tab{{Label: "Overview", Href: "#", Selected: true}, {Label: "Board", Href: "#", Count: &kit.Count{N: 7}}, {Label: "Pull requests", Href: "#", Count: &kit.Count{Tone: "accent", N: 1}}, {Label: "Releases", Href: "#"}, {Label: "Designs", Href: "#"}}})},
 		{Part: "crumb", State: "default", Items: one("ui/crumb", []kit.Link{{Label: "Products", Href: "#"}, {Label: "kanban", Href: "#"}, {Label: "20261027-a188"}})},
 		{Part: "dialog", State: "confirm-danger", Stage: true, Items: one("ui/dialog", kit.Dialog{ID: "dlg-archive-demo", Title: "Archive 4 done cards?", Text: "They move to archive/ and leave the board. You can bring them back with kanban restore.", Confirm: kit.Button{Label: "Archive 4 cards", Variant: "danger", Type: "submit", Value: "confirm"}, Open: true})},
+		{Part: "dialog", State: "with-body", Stage: true, Note: "Body holds fields and steps; the form posts to Action.", Items: one("ui/dialog", tokenDialog("dlg-token-demo", true))},
 		{Part: "drawer", State: "open", Stage: true, Items: one("ui/drawer", kit.Drawer{ID: "drw-demo", Title: "checkman #5", Open: true, Body: html("ui/pr-item", compact)})},
 		{Part: "star", State: "marks", Items: []Item{{"ui/star", kit.Star{Text: "focus"}}, {"ui/star", kit.Star{Text: "focus now", Chip: true}}, {"ui/star", kit.Star{}}}},
 		{Part: "skeleton", State: "card", Items: one("ui/skeleton", kit.Skeleton{Shape: "card", Lines: 3})},

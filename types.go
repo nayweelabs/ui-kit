@@ -336,6 +336,7 @@ type Dialog struct {
 	Confirm Button
 	Action  string
 	Open    bool
+	Body    template.HTML // between the text and the buttons, inside the form: fields, steps, hidden values
 }
 
 // Drawer shows detail next to the list you came from ("ui/drawer").
@@ -346,7 +347,7 @@ type Drawer struct {
 	Open  bool
 }
 
-// Bar is the top bar. Pages are up to 6 links; Apps, when set, turns the app name into a switcher menu.
+// Bar is the top bar. Pages are up to 6 links; Apps, when set, turns the app name into a switcher menu. Lights sit left of Refresh and the theme switch.
 type Bar struct {
 	App     string
 	Sub     string
@@ -354,8 +355,51 @@ type Bar struct {
 	Pages   []Link
 	Apps    []Link
 	Status  []Status
+	Lights  []Light
 	Refresh *Link
 	NoTheme bool
+}
+
+// Light is a status light in the top bar ("ui/light"): a traffic-light dot (Tone "good", "warn", "bad" or "none"), an icon and a short Label. It is a link to Href, the app's full page for it; kit.js makes it open a popover under it instead, holding Title, Text, the Details and the Actions menu. Open draws the popover open.
+//
+// With Src it is lazy: it is drawn neutral at once, and kit.js fetches Src, the light's own HTML, and puts it in its place.
+type Light struct {
+	ID      string
+	Tone    string
+	Icon    string
+	Label   string
+	Href    string
+	Title   string
+	Text    string
+	Details []Detail
+	Actions []Action
+	Dialogs []Dialog // the dialogs its actions open
+	Open    bool
+	Src     string
+	Retry   string // with it, the popover says why the light could not load (data-ui-cause) and a Retry link reloads it from this address
+}
+
+// Detail is one title and value line of a light's popover.
+type Detail struct {
+	Label string
+	Value string
+}
+
+// Action is one choice of a light's Actions menu: a link (Href), a dialog it opens (Opens, a dialog's ID), or a form it posts after asking once more inside the popover (Confirm).
+type Action struct {
+	Label   string
+	Variant string // "danger" for one that removes something
+	Href    string
+	Opens   string
+	Confirm *Confirm
+}
+
+// Confirm is the step an action asks inside the popover: Text says what will happen, and the button Label posts the form to Action with Hidden.
+type Confirm struct {
+	Text   string
+	Label  string
+	Action string
+	Hidden []Hidden
 }
 
 // Head is the page header: breadcrumb (pages two or more levels down), title, one line, actions.

@@ -222,3 +222,58 @@ func TestLinksToOtherSitesOpenInANewTab(t *testing.T) {
 		}
 	}
 }
+
+// A light is a link to its page; its popover, drawn hidden, holds the facts, a menu of the actions, the
+// step an action asks before it posts, and the dialogs its actions open.
+func TestALightIsALinkWithAHiddenPopoverOfFactsAndActions(t *testing.T) {
+	light := kit.Light{ID: "gh", Tone: "good", Icon: "github", Label: "GitHub", Href: "/settings/github", Title: "Connected as bot, read-only.", Text: "<b>x</b>",
+		Details: []kit.Detail{{Label: "Account", Value: "bot"}, {Label: "Token from", Value: "the Keychain"}},
+		Actions: []kit.Action{{Label: "Enter a new token…", Opens: "gh-token"}, {Label: "Settings", Href: "/settings/github"},
+			{Label: "Disconnect", Variant: "danger", Confirm: &kit.Confirm{Text: "Removes the token.", Label: "Disconnect now", Action: "/github/disconnect", Hidden: []kit.Hidden{{Name: "back", Value: "/roads"}}}}},
+		Dialogs: []kit.Dialog{{ID: "gh-token", Title: "Enter a new token", Action: "/github/connect", Body: "<p>steps</p>", Confirm: kit.Button{Label: "Connect", Type: "submit"}}}}
+	var b bytes.Buffer
+	if err := kit.Render(&b, "ui/light", light); err != nil {
+		t.Fatal(err)
+	}
+	got := b.String()
+	for _, want := range []string{`<div class="ui-light" id="gh">`, `<a class="ui-light-btn" href="/settings/github" data-ui-light aria-controls="gh-pop" aria-expanded="false" aria-haspopup="dialog" title="Connected as bot, read-only.">`,
+		`<span class="ui-dot" data-tone="good"></span>`, `<span class="ui-light-word">GitHub</span><span class="ui-sr">: Connected as bot, read-only.</span>`,
+		`<div class="ui-pop" id="gh-pop" role="dialog" aria-labelledby="gh-pop-title" tabindex="-1" hidden>`, `&lt;b&gt;x&lt;/b&gt;`,
+		`<dt>Account</dt><dd>bot</dd><dt>Token from</dt><dd>the Keychain</dd>`, `<details class="ui-menu"><summary class="ui-btn" data-size="sm">Actions</summary>`,
+		`<button class="ui-menu-item" type="button" data-ui-open="gh-token" aria-haspopup="dialog">Enter a new token…</button>`, `<a class="ui-menu-item" href="/settings/github">Settings</a>`,
+		`<button class="ui-menu-item" type="button" data-variant="danger" data-ui-step aria-controls="gh-step-2" aria-expanded="false">Disconnect</button>`,
+		`<form class="ui-pop-step" id="gh-step-2" method="post" action="/github/disconnect" hidden><p>Removes the token.</p><input type="hidden" name="back" value="/roads">`,
+		`<button class="ui-btn" type="button" data-size="sm" data-ui-step-cancel>Cancel</button><button class="ui-btn" type="submit" data-variant="danger" data-size="sm">Disconnect now</button>`,
+		`<dialog class="ui-dialog" id="gh-token"`, `<form method="post" action="/github/connect">`, `<p>steps</p><div class="ui-dialog-acts">`} {
+		if !strings.Contains(got, want) {
+			t.Errorf("light lacks %q:\n%s", want, got)
+		}
+	}
+	light.Open = true
+	b.Reset()
+	if err := kit.Render(&b, "ui/light", light); err != nil {
+		t.Fatal(err)
+	}
+	if got := b.String(); !strings.Contains(got, `aria-expanded="true"`) || !strings.Contains(got, `tabindex="-1">`) || strings.Contains(got, `tabindex="-1" hidden>`) {
+		t.Errorf("open, the popover is still hidden:\n%s", got)
+	}
+}
+
+// A lazy light is drawn grey at once, a plain link to its page, with the light it shows when its fetch fails.
+func TestALazyLightIsDrawnNeutralFirst(t *testing.T) {
+	var b bytes.Buffer
+	if err := kit.Render(&b, "ui/light", kit.Light{ID: "gh", Tone: "good", Icon: "github", Label: "GitHub", Href: "/settings/github", Title: "never drawn", Src: "/part/light/github?back=%2F"}); err != nil {
+		t.Fatal(err)
+	}
+	got := b.String()
+	for _, want := range []string{`<div class="ui-lazy" data-ui-src="/part/light/github?back=%2F">`, `<a class="ui-light-btn" href="/settings/github" aria-busy="true">`, `<span class="ui-dot" data-tone="none"></span>`,
+		`<template data-ui-failed>`, `Can’t load GitHub.`, `<p class="ui-pop-text" data-ui-cause></p>`, `href="/part/light/github?back=%2F" data-ui-retry>Retry</a>`} {
+		if !strings.Contains(got, want) {
+			t.Errorf("lazy light lacks %q:\n%s", want, got)
+		}
+	}
+	before, _, _ := strings.Cut(got, "<template")
+	if strings.Contains(before, "never drawn") || strings.Contains(before, "ui-pop") || strings.Contains(before, `data-tone="good"`) {
+		t.Errorf("the placeholder shows what is not loaded yet:\n%s", got)
+	}
+}

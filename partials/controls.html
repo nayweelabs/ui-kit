@@ -48,7 +48,7 @@
 
 {{define "ui/dialog" -}}
 <dialog class="ui-dialog" id="{{.ID}}" aria-labelledby="{{.ID}}-title"{{if .Open}} open{{end}}>
-<form method="{{if .Action}}post{{else}}dialog{{end}}"{{with .Action}} action="{{.}}"{{end}}><h2 class="ui-dialog-title" id="{{.ID}}-title">{{.Title}}</h2>{{with .Text}}<p class="ui-dialog-text">{{.}}</p>{{end}}<div class="ui-dialog-acts"><button class="ui-btn" type="submit" value="cancel" formmethod="dialog" formnovalidate>{{orDefault "Cancel" .Cancel}}</button>{{template "ui/button" .Confirm}}</div></form>
+<form method="{{if .Action}}post{{else}}dialog{{end}}"{{with .Action}} action="{{.}}"{{end}}><h2 class="ui-dialog-title" id="{{.ID}}-title">{{.Title}}</h2>{{with .Text}}<p class="ui-dialog-text">{{.}}</p>{{end}}{{.Body}}<div class="ui-dialog-acts"><button class="ui-btn" type="submit" value="cancel" formmethod="dialog" formnovalidate>{{orDefault "Cancel" .Cancel}}</button>{{template "ui/button" .Confirm}}</div></form>
 </dialog>
 {{- end}}
 

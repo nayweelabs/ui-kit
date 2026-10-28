@@ -100,6 +100,14 @@ func Funcs() template.FuncMap {
 			s.Problem = &Problem{Title: "Can’t load " + s.Title + ".", Retry: src}
 			return s
 		},
+		// lazyLight is a lazy light's placeholder: grey, its icon and word only.
+		"lazyLight": func(l Light) Light {
+			return Light{Icon: l.Icon, Label: l.Label, Href: l.Href}
+		},
+		// failedLight is the light a lazy light becomes when its fetch fails: grey, with the cause and Retry.
+		"failedLight": func(l Light) Light {
+			return Light{ID: l.ID, Tone: "none", Icon: l.Icon, Label: l.Label, Href: l.Href, Title: "Can’t load " + l.Label + ".", Retry: l.Src}
+		},
 		"orDefault": func(fallback, v string) string {
 			if v == "" {
 				return fallback

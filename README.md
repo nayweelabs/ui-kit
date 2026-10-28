@@ -31,6 +31,8 @@ The data each partial takes is a Go type in `types.go` (`kit.Page`, `kit.Section
 
 A section that reads something slow loads on its own: give `kit.Section` a `Src`, the address of the section's own HTML, and a `Full`, the page drawn whole on the server. The shell then comes at once with the section's skeleton; `kit.js` fetches every lazy section in parallel and puts each in its place, and a fetch that fails shows that section's error box with Retry. A GET form inside a loaded lazy section, such as its toolbar, reloads only that section and keeps its values in the address. Set `kit.Page.Full` too, and a browser without JavaScript goes straight to the whole page. `/lazy` in the preview shows all of it.
 
+A status light (`kit.Light`, in `kit.Bar.Lights`) is a dot, an icon and a word in the top bar for one connection, such as GitHub. It is a link to the app's full page for it; `kit.js` makes it open a popover under it with the facts (`Details`) and an Actions menu. An action links, opens a dialog of `Dialogs` (a `kit.Dialog` whose `Body` holds its fields), or asks once more inside the popover (`Confirm`) before it posts. Give it a `Src` and the bar draws it grey at once and fetches it, like a lazy section.
+
 A page that does not use `ui/shell` links `/ui-kit/css/kit.css` and `/ui-kit/js/kit.js` (in `<head>`, without `defer`) and puts `class="ui-page"` on its body.
 
 ## In a Vite app
@@ -63,7 +65,7 @@ Put `class="ui-page"` on `<body>`. The wrappers are plain ES modules with types;
 
 ### Partials
 
-Shell: `ui/shell`, `ui/assets`, `ui/bar`, `ui/rail`, `ui/page-header`, `ui/footer`.
+Shell: `ui/shell`, `ui/assets`, `ui/bar`, `ui/light`, `ui/rail`, `ui/page-header`, `ui/footer`.
 Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/drawer`, `ui/star`, `ui/skeleton`.
 Pieces they share: `ui/icon`, `ui/num`, `ui/fact`, `ui/cell`.
 
@@ -72,6 +74,7 @@ Pieces they share: `ui/icon`, `ui/num`, `ui/fact`, `ui/cell`.
 - **A link to another site or app opens in a new tab**, with `rel="noopener noreferrer"`; a link inside the app stays in the same tab. The partials do it with the `ext` function (`<a href="{{.Href}}"{{ext .Href}}>`); an app's own templates use the same function, and a form that sends the browser to another app (such as one that starts a board and redirects to it) carries `target="_blank"`. A test checks every golden for it.
 - The server works out every value, tone, label, filter and order; a partial only draws it, and `kit.js` only saves a reload.
 - Every part works without JavaScript.
+- **A status light says one connection's state in its tone**: good green, warn amber, bad red, none grey; its word stays the same and the popover says why. Without JavaScript it is a link to the app's full page with the same facts and forms. Its actions are a menu button of plain buttons, not a `<select>`: choosing an option of a select must not act (it fires while a keyboard user moves through the options), and a menu of buttons needs no script to reach. An action that removes something asks once more inside the popover, never with `confirm()`. Escape, a click outside or Tab out closes the popover, and focus goes back to the light. A light that reads something slow has a `Src`, so it never slows the page.
 
 ## Change it
 
