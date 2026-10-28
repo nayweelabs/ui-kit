@@ -1,0 +1,45 @@
+{{define "preview/gallery" -}}
+<nav class="pv-index" aria-label="Parts">{{range .Parts}}<a class="ui-pill" data-variant="tag" href="#{{.ID}}">{{.Title}}</a>{{end}}</nav>
+{{- range .Parts}}
+<section class="pv-part" id="{{.ID}}" aria-labelledby="{{.ID}}-h">
+<div class="pv-part-head"><h2 id="{{.ID}}-h">{{.Title}}</h2><code>{{.Class}}</code><p>{{.Purpose}}</p>{{if .Rules}}<ul>{{range .Rules}}<li>{{.}}</li>{{end}}</ul>{{end}}</div>
+{{- range .Cases}}
+<div class="pv-case">
+<div class="pv-case-head"><span class="ui-label">{{.State}}</span>{{with .Note}}<span class="pv-note">{{.}}</span>{{end}}</div>
+<div class="pv-themes"{{if $.Both}} data-both{{end}}>
+{{- if $.Both}}
+<div class="pv-frame" data-theme="light"><span class="pv-tag">light</span>{{if .Stage}}<div class="ui-stage">{{.Light}}</div>{{else}}<div class="pv-demo">{{.Light}}</div>{{end}}</div>
+<div class="pv-frame" data-theme="dark"><span class="pv-tag">dark</span>{{if .Stage}}<div class="ui-stage">{{.Dark}}</div>{{else}}<div class="pv-demo">{{.Dark}}</div>{{end}}</div>
+{{- else}}
+<div class="pv-frame">{{if .Stage}}<div class="ui-stage">{{.Light}}</div>{{else}}<div class="pv-demo">{{.Light}}</div>{{end}}</div>
+{{- end}}
+</div>
+</div>
+{{- end}}
+</section>
+{{- end}}
+{{.Live}}
+{{- end}}
+
+{{define "preview/focus" -}}
+{{.Miles}}
+<div class="pv-two">
+{{.Open}}
+{{.Now}}
+</div>
+{{- end}}
+
+{{define "preview/waiting" -}}
+<details class="ui-fold" id="fold-waiting"><summary>Waiting <span class="ui-count">9</span></summary>
+<ul class="pv-waiting"><li>Approve hubman #10</li><li>Merge mankit #4</li><li>Decide the licence per product</li><li>Tidy 22 cards on the hubman board</li></ul>
+</details>
+{{- end}}
+
+{{define "preview/admin" -}}
+<div class="pv-tabs">
+{{.Tabs}}
+<div id="pane-machines" role="tabpanel" aria-labelledby="pane-machines-tab">{{.Machines}}</div>
+<div id="pane-logs" role="tabpanel" aria-labelledby="pane-logs-tab" hidden>{{.Logs}}</div>
+<div id="pane-settings" role="tabpanel" aria-labelledby="pane-settings-tab" hidden>{{.Settings}}</div>
+</div>
+{{- end}}

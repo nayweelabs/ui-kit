@@ -1,0 +1,61 @@
+{{/* Small parts: icon, status dot, pill, count badge, focus marker, linked number, button, error box, notice, empty state, loading placeholder. */}}
+
+{{define "ui/icon" -}}
+{{- if eq . "star"}}<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.6l2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.3l-5.8 3.1 1.2-6.5L2.6 9.4l6.5-.8z"/></svg>
+{{- else if eq . "cards"}}<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1"/><rect x="9" y="9" width="5.5" height="5.5" rx="1"/></svg>
+{{- else if eq . "list"}}<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 3.5h12M2 8h12M2 12.5h12"/></svg>
+{{- else if eq . "search"}}<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+{{- else if eq . "alert"}}<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.8l6.6 11.6H1.4z" stroke-width="1.4"/><path d="M8 6.2v3.4M8 11.4v.2" stroke-width="1.6"/></svg>
+{{- else if eq . "check"}}<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.3" stroke-width="1.4"/><path d="M5.2 8.2l1.9 1.9 3.8-4" stroke-width="1.5"/></svg>
+{{- else if eq . "info"}}<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="8" cy="8" r="6.3" stroke-width="1.4"/><path d="M8 7.2v4M8 4.8v.2" stroke-width="1.6"/></svg>
+{{- else if eq . "theme"}}<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 2.4a5.6 5.6 0 0 1 0 11.2z" fill="currentColor"/></svg>
+{{- else if eq . "refresh"}}<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8A5.5 5.5 0 1 1 11.9 4.1"/><path d="M13.5 2.5v3h-3"/></svg>
+{{- else if eq . "close"}}<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+{{- end -}}
+{{- end}}
+
+{{define "ui/status" -}}
+<span class="ui-status"><span class="ui-dot" data-tone="{{orDefault "none" .Tone}}"></span>{{.Label}}</span>
+{{- end}}
+
+{{define "ui/pill" -}}
+{{if .Href}}<a class="ui-pill" href="{{.Href}}"{{else}}<span class="ui-pill"{{end}}{{with .Tone}} data-tone="{{.}}"{{end}}{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Title}} title="{{.}}"{{end}}>{{.Label}}{{if .Href}}</a>{{else}}</span>{{end}}
+{{- end}}
+
+{{define "ui/count" -}}
+{{if or .N .ShowZero}}<span class="ui-count"{{with .Tone}} data-tone="{{.}}"{{end}}>{{if or .Label (gt .N 99)}}<span aria-hidden="true">{{countText .N}}</span><span class="ui-sr">{{if .Label}}{{.Label}}{{else}}{{.N}}{{end}}</span>{{else}}{{.N}}{{end}}</span>{{end}}
+{{- end}}
+
+{{define "ui/star" -}}
+<span class="ui-star"{{if .Chip}} data-chip{{end}}{{if .Corner}} data-corner{{end}} role="img" aria-label="{{orDefault "Focus now" .Label}}" title="{{orDefault "Focus now" .Label}}">{{template "ui/icon" "star"}}{{with .Text}}<span aria-hidden="true">{{.}}</span>{{end}}</span>
+{{- end}}
+
+{{define "ui/num" -}}
+{{if .Href}}<a class="ui-num" href="{{.Href}}"{{with .Command}} title="{{.}}"{{end}}>{{.Text}}</a>{{else}}<span class="ui-num"{{with .Command}} title="{{.}}"{{end}}>{{.Text}}</span>{{end}}
+{{- end}}
+
+{{define "ui/button" -}}
+{{if .Href -}}
+<a class="ui-btn" href="{{.Href}}"{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Size}} data-size="{{.}}"{{end}}{{if or .Disabled .Busy}} aria-disabled="true"{{end}}{{if .Busy}} aria-busy="true"{{end}}>{{.Label}}{{with .Kbd}} <kbd>{{.}}</kbd>{{end}}</a>
+{{- else -}}
+<button class="ui-btn" type="{{orDefault "button" .Type}}"{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Size}} data-size="{{.}}"{{end}}{{with .Name}} name="{{.}}"{{end}}{{with .Value}} value="{{.}}"{{end}}{{with .Opens}} data-ui-open="{{.}}" aria-haspopup="dialog"{{end}}{{if .Disabled}} disabled{{end}}{{if .Busy}} disabled aria-busy="true"{{end}}{{with .Kbd}} aria-keyshortcuts="{{.}}"{{end}}>{{.Label}}{{with .Kbd}} <kbd>{{.}}</kbd>{{end}}</button>
+{{- end}}
+{{- end}}
+
+{{define "ui/error" -}}
+<div class="ui-box" data-tone="bad" role="alert">{{template "ui/icon" "alert"}}<b class="ui-box-title">{{.Title}}</b>{{with .Cause}}<p>{{.}}</p>{{end}}{{with .Command}}<code class="ui-cmd">{{.}}</code>{{end}}</div>
+{{- end}}
+
+{{define "ui/notice" -}}
+<div class="ui-box" data-tone="{{orDefault "info" .Tone}}" role="status">{{if eq .Tone "good"}}{{template "ui/icon" "check"}}{{else if eq .Tone "warn"}}{{template "ui/icon" "alert"}}{{else}}{{template "ui/icon" "info"}}{{end}}<b class="ui-box-title">{{.Title}}</b>{{if or .Text .Link}}<p>{{.Text}}{{with .Link}} <a href="{{.Href}}">{{.Label}}</a>{{end}}</p>{{end}}</div>
+{{- end}}
+
+{{define "ui/empty" -}}
+{{if .Small}}<div class="ui-empty" data-size="sm">{{orDefault "empty" .Title}}</div>{{else -}}
+<div class="ui-empty"><b class="ui-empty-title">{{.Title}}</b>{{with .Text}}<span>{{.}}</span>{{end}}{{with .Command}}<code>{{.}}</code>{{end}}{{with .Action}}{{template "ui/button" .}}{{end}}</div>
+{{- end}}
+{{- end}}
+
+{{define "ui/skeleton" -}}
+<div class="ui-skel-group" data-shape="{{orDefault "card" .Shape}}" role="status" aria-label="Loading"><span class="ui-skel" data-size="title"></span>{{range .Lines}}<span class="ui-skel"></span>{{else}}<span class="ui-skel"></span><span class="ui-skel"></span><span class="ui-skel"></span>{{end}}</div>
+{{- end}}

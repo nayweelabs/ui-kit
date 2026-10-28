@@ -1,0 +1,59 @@
+{{/* Toolbar with view toggle, tabs, breadcrumb, form field, modal and drawer. All work without JavaScript; kit.js only makes them quicker. */}}
+
+{{define "ui/view-toggle" -}}
+<div class="ui-seg" role="group" aria-label="View"{{with .Target}} data-ui-views="{{.}}"{{end}}><button type="submit" name="view" value="cards" data-view="cards" aria-pressed="{{if ne .View "list"}}true{{else}}false{{end}}">{{template "ui/icon" "cards"}}Cards</button><button type="submit" name="view" value="list" data-view="list" aria-pressed="{{if eq .View "list"}}true{{else}}false{{end}}">{{template "ui/icon" "list"}}List</button></div>
+{{- end}}
+
+{{define "ui/toolbar" -}}
+<form class="ui-toolbar" method="get"{{with .Action}} action="{{.}}"{{end}} role="search">
+{{- with .Search}}<label class="ui-search">{{template "ui/icon" "search"}}<input type="search" name="{{orDefault "q" .Name}}" value="{{.Value}}" placeholder="{{.Placeholder}}" aria-label="{{orDefault .Placeholder .Label}}"></label>{{end}}
+{{- range .Filters}}<select class="ui-select" name="{{.Name}}" aria-label="{{.Label}}"{{if .Active}} data-active{{end}} data-ui-submit>{{range .Options}}<option value="{{.Value}}"{{if .Selected}} selected{{end}}>{{.Label}}</option>{{end}}</select>{{end}}
+{{- with .Clear}}<a class="ui-btn" data-variant="quiet" data-size="sm" href="{{.Href}}">{{orDefault "Clear" .Label}}</a>{{end}}
+<noscript><button class="ui-btn" data-size="sm" type="submit">Apply</button></noscript>
+<span class="ui-grow"></span>
+{{- with .Count}}<span class="ui-toolbar-count">{{.}}</span>{{end}}
+{{- if .Target}}{{template "ui/view-toggle" .}}{{end}}
+{{- with .Primary}}{{template "ui/button" .}}{{end}}
+</form>
+{{- end}}
+
+{{define "ui/tabs" -}}
+<div class="ui-tabs" role="tablist" aria-label="{{.Label}}">
+{{- range .Items}}{{if .Href}}<a class="ui-tab" role="tab" href="{{.Href}}" aria-selected="{{.Selected}}"{{if .Selected}} aria-current="page"{{else}} tabindex="-1"{{end}}>{{.Label}}{{with .Count}} {{template "ui/count" .}}{{end}}</a>{{else}}<button class="ui-tab" role="tab" type="button" id="{{.Panel}}-tab" aria-controls="{{.Panel}}" aria-selected="{{.Selected}}"{{if not .Selected}} tabindex="-1"{{end}}>{{.Label}}{{with .Count}} {{template "ui/count" .}}{{end}}</button>{{end}}{{end -}}
+</div>
+{{- end}}
+
+{{define "ui/crumb" -}}
+<nav aria-label="Breadcrumb"><ol class="ui-crumb">{{$n := len .}}{{range $i, $l := .}}<li>{{if or $l.Current (last $i $n)}}<span aria-current="page">{{$l.Label}}</span>{{else}}<a href="{{$l.Href}}">{{$l.Label}}</a>{{end}}</li>{{end}}</ol></nav>
+{{- end}}
+
+{{define "ui/field" -}}
+<div class="ui-field">
+<label for="{{.ID}}">{{.Label}}</label>
+{{- if .Saved}}
+<div class="ui-saved"><span class="ui-status"><span class="ui-dot" data-tone="good"></span>{{.Saved}}</span>{{with .SavedAction}}{{template "ui/button" .}}{{end}}</div>
+{{- else if .Secret}}
+<div class="ui-input"{{if .Error}} data-invalid{{end}}><input id="{{.ID}}" name="{{orDefault .ID .Name}}" type="password" data-secret autocomplete="off" spellcheck="false" autocapitalize="off"{{with .Placeholder}} placeholder="{{.}}"{{end}}{{if .Error}} aria-invalid="true" aria-describedby="{{.ID}}-err"{{else if .Hint}} aria-describedby="{{.ID}}-hint"{{end}}><button class="ui-btn" data-variant="quiet" data-size="sm" type="button" data-ui-reveal="{{.ID}}" aria-controls="{{.ID}}" aria-pressed="false">Show</button></div>
+{{- else}}
+<div class="ui-input"{{if .Error}} data-invalid{{end}}><input id="{{.ID}}" name="{{orDefault .ID .Name}}" type="{{orDefault "text" .Type}}" value="{{.Value}}"{{with .Placeholder}} placeholder="{{.}}"{{end}}{{if .Error}} aria-invalid="true" aria-describedby="{{.ID}}-err"{{else if .Hint}} aria-describedby="{{.ID}}-hint"{{end}}></div>
+{{- end}}
+{{- if .Error}}
+<span class="ui-err" id="{{.ID}}-err">{{.Error}}</span>
+{{- else if .Hint}}
+<span class="ui-hint" id="{{.ID}}-hint">{{.Hint}}</span>
+{{- end}}
+</div>
+{{- end}}
+
+{{define "ui/dialog" -}}
+<dialog class="ui-dialog" id="{{.ID}}" aria-labelledby="{{.ID}}-title"{{if .Open}} open{{end}}>
+<form method="{{if .Action}}post{{else}}dialog{{end}}"{{with .Action}} action="{{.}}"{{end}}><h2 class="ui-dialog-title" id="{{.ID}}-title">{{.Title}}</h2>{{with .Text}}<p class="ui-dialog-text">{{.}}</p>{{end}}<div class="ui-dialog-acts"><button class="ui-btn" type="submit" value="cancel" formmethod="dialog" formnovalidate>{{orDefault "Cancel" .Cancel}}</button>{{template "ui/button" .Confirm}}</div></form>
+</dialog>
+{{- end}}
+
+{{define "ui/drawer" -}}
+<dialog class="ui-drawer" id="{{.ID}}" aria-labelledby="{{.ID}}-title"{{if .Open}} open{{end}}>
+<div class="ui-drawer-head"><h2 class="ui-dialog-title" id="{{.ID}}-title">{{.Title}}</h2><form method="dialog"><button class="ui-iconbtn" type="submit" aria-label="Close">{{template "ui/icon" "close"}}</button></form></div>
+{{.Body}}
+</dialog>
+{{- end}}

@@ -1,0 +1,62 @@
+<div class="ui-products" id="products">
+<form class="ui-toolbar" method="get" role="search"><label class="ui-search"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg><input type="search" name="q" value="" placeholder="Filter products" aria-label="Filter products"></label><select class="ui-select" name="show" aria-label="Show" data-ui-submit><option value="" selected>All products</option><option value="needs-me">Needs me</option><option value="planned">Planned</option></select>
+<noscript><button class="ui-btn" data-size="sm" type="submit">Apply</button></noscript>
+<span class="ui-grow"></span><span class="ui-toolbar-count">6 products</span><div class="ui-seg" role="group" aria-label="View" data-ui-views="products"><button type="submit" name="view" value="cards" data-view="cards" aria-pressed="true"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1"/><rect x="9" y="9" width="5.5" height="5.5" rx="1"/></svg>Cards</button><button type="submit" name="view" value="list" data-view="list" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 3.5h12M2 8h12M2 12.5h12"/></svg>List</button></div>
+</form>
+<div class="ui-cards" data-ui-view-panel="products" data-view="cards">
+<article class="ui-card" data-focus>
+<div class="ui-card-head"><div class="ui-card-title"><a href="#hubman">hubman</a><span class="ui-card-kind">tool · github-release</span></div><span class="ui-star" data-chip role="img" aria-label="Focus now" title="Focus now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.6l2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.3l-5.8 3.1 1.2-6.5L2.6 9.4l6.5-.8z"/></svg><span aria-hidden="true">focus</span></span></div>
+<dl class="ui-kv">
+<dt>Installed</dt><dd><span class="ui-dot" data-tone="good"></span><a class="ui-num" href="#release" title="hubman list --installed">v0.7.0</a> current</dd>
+<dt>Board</dt><dd><a class="ui-num" href="#board" title="kanban cards --board hubman --open">7</a> open <span class="ui-pill" data-tone="warn">9 waiting</span></dd>
+<dt>Pull requests</dt><dd><a class="ui-num" href="#prs">1</a> open · CI <span class="ui-pill" data-tone="good">passing</span></dd>
+<dt>My copy</dt><dd><span class="ui-dot" data-tone="warn"></span><a class="ui-num" href="#copy" title="git -C hubman status -sb">3</a> behind</dd>
+</dl>
+<div class="ui-card-foot"><span>Next: v0.8.0 · Rename window</span><a href="#hubman">Open<span class="ui-sr"> hubman</span></a></div>
+</article>
+<article class="ui-card">
+<div class="ui-card-head"><div class="ui-card-title"><a href="#kanban">kanban</a><span class="ui-card-kind">tool · github-release</span></div><span class="ui-pill" data-tone="warn">update ready</span></div>
+<dl class="ui-kv">
+<dt>Installed</dt><dd><span class="ui-dot" data-tone="warn"></span><span class="ui-num">0.1.0</span> → v0.2.0</dd>
+<dt>Board</dt><dd><a class="ui-num" href="#board">1</a> open</dd>
+<dt>Pull requests</dt><dd><span class="ui-num">0</span> open · CI <span class="ui-pill" data-tone="good">passing</span></dd>
+<dt>My copy</dt><dd><span class="ui-dot" data-tone="bad"></span> on <span class="ui-branch"><b>fix/agent-test-git-identity</b></span></dd>
+</dl>
+<div class="ui-card-foot"><span>Not managed by hubman</span><a href="#kanban">Open<span class="ui-sr"> kanban</span></a></div>
+</article>
+<article class="ui-card">
+<div class="ui-card-head"><div class="ui-card-title"><a href="#checkman">checkman</a><span class="ui-card-kind">tool · github-release</span></div><span class="ui-count" data-tone="accent"><span aria-hidden="true">1</span><span class="ui-sr">1 pull request waits for you</span></span></div>
+<dl class="ui-kv">
+<dt>Installed</dt><dd><span class="ui-dot" data-tone="good"></span><a class="ui-num" href="#release">v1.9.2</a> current</dd>
+<dt>Board</dt><dd><a class="ui-num" href="#board">2</a> open <span class="ui-pill" data-tone="warn">2 waiting</span></dd>
+<dt>Pull requests</dt><dd><a class="ui-num" href="#prs">1</a> open · CI <span class="ui-pill" data-tone="good">passing</span></dd>
+<dt>My copy</dt><dd><span class="ui-dot" data-tone="warn"></span><span class="ui-num">2</span> behind</dd>
+</dl>
+<div class="ui-card-foot"><span>Next: v2.0.0 · Private group</span><a href="#checkman">Open<span class="ui-sr"> checkman</span></a></div>
+</article>
+<article class="ui-card" data-state="failed">
+<div class="ui-card-head"><div class="ui-card-title"><a href="#designer">designer</a><span class="ui-card-kind">tool · docker-checkout</span></div></div>
+<div class="ui-box" data-tone="bad" role="alert"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.8l6.6 11.6H1.4z" stroke-width="1.4"/><path d="M8 6.2v3.4M8 11.4v.2" stroke-width="1.6"/></svg><b class="ui-box-title">Can’t read the board</b><p>The board folder moved. Other facts below are current.</p></div>
+<dl class="ui-kv">
+<dt>Installed</dt><dd><span class="ui-dot" data-tone="good"></span><span class="ui-num">v4.11.0</span> current</dd>
+<dt>Board</dt><dd><span class="ui-fact-err"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.8l6.6 11.6H1.4z" stroke-width="1.4"/><path d="M8 6.2v3.4M8 11.4v.2" stroke-width="1.6"/></svg>can’t read the board</span></dd>
+<dt>Pull requests</dt><dd><a class="ui-num" href="#prs">2</a> open</dd>
+<dt>My copy</dt><dd><span class="ui-dot" data-tone="warn"></span><span class="ui-num">3</span> behind · 2 changes</dd>
+</dl>
+<div class="ui-card-foot"><span>Partial: 1 of 4 facts failed</span><a href="#designer">Open<span class="ui-sr"> designer</span></a></div>
+</article>
+</div>
+<div class="ui-list" data-ui-view-panel="products" data-view="list" hidden>
+<table><thead><tr><th scope="col">Product</th><th scope="col">Installed</th><th scope="col">Board</th><th scope="col">Pull requests</th><th scope="col">My copy</th><th scope="col"><span class="ui-sr">Focus</span></th></tr></thead>
+<tbody>
+<tr><td><a class="ui-item" href="#hubman">hubman</a><span class="ui-item-sub">tool · github-release</span></td><td><span class="ui-cell"><span class="ui-dot" data-tone="good"></span><a class="ui-num" href="#release" title="hubman list --installed">v0.7.0</a> current</span></td><td><span class="ui-cell"><a class="ui-num" href="#board" title="kanban cards --board hubman --open">7</a> open <span class="ui-pill" data-tone="warn">9 waiting</span></span></td><td><span class="ui-cell"><a class="ui-num" href="#prs">1</a> open · CI <span class="ui-pill" data-tone="good">passing</span></span></td><td><span class="ui-cell"><span class="ui-dot" data-tone="warn"></span><a class="ui-num" href="#copy" title="git -C hubman status -sb">3</a> behind</span></td>
+<td><span class="ui-star" role="img" aria-label="Focus now" title="Focus now"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.6l2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.3l-5.8 3.1 1.2-6.5L2.6 9.4l6.5-.8z"/></svg></span></td></tr>
+<tr><td><a class="ui-item" href="#kanban">kanban</a><span class="ui-item-sub">tool · github-release</span></td><td><span class="ui-cell"><span class="ui-dot" data-tone="warn"></span><span class="ui-num">0.1.0</span> → v0.2.0</span></td><td><span class="ui-cell"><a class="ui-num" href="#board">1</a> open</span></td><td><span class="ui-cell"><span class="ui-num">0</span> open · CI <span class="ui-pill" data-tone="good">passing</span></span></td><td><span class="ui-cell"><span class="ui-dot" data-tone="bad"></span> on <span class="ui-branch"><b>fix/agent-test-git-identity</b></span></span></td>
+<td></td></tr>
+<tr><td><a class="ui-item" href="#checkman">checkman</a><span class="ui-item-sub">tool · github-release</span></td><td><span class="ui-cell"><span class="ui-dot" data-tone="good"></span><a class="ui-num" href="#release">v1.9.2</a> current</span></td><td><span class="ui-cell"><a class="ui-num" href="#board">2</a> open <span class="ui-pill" data-tone="warn">2 waiting</span></span></td><td><span class="ui-cell"><a class="ui-num" href="#prs">1</a> open · CI <span class="ui-pill" data-tone="good">passing</span></span></td><td><span class="ui-cell"><span class="ui-dot" data-tone="warn"></span><span class="ui-num">2</span> behind</span></td>
+<td></td></tr>
+<tr><td><a class="ui-item" href="#designer">designer</a><span class="ui-item-sub">tool · docker-checkout</span></td><td><span class="ui-cell"><span class="ui-dot" data-tone="good"></span><span class="ui-num">v4.11.0</span> current</span></td><td><span class="ui-cell"><span class="ui-fact-err"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.8l6.6 11.6H1.4z" stroke-width="1.4"/><path d="M8 6.2v3.4M8 11.4v.2" stroke-width="1.6"/></svg>can’t read the board</span></span></td><td><span class="ui-cell"><a class="ui-num" href="#prs">2</a> open</span></td><td><span class="ui-cell"><span class="ui-dot" data-tone="warn"></span><span class="ui-num">3</span> behind · 2 changes</span></td>
+<td></td></tr>
+</tbody></table>
+</div>
+</div>
