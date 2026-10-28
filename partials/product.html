@@ -8,7 +8,7 @@
 
 {{define "ui/product-card" -}}
 <article class="ui-card"{{if .Focus}} data-focus{{end}}{{if .Problem}} data-state="failed"{{end}}{{with .Variant}} data-variant="{{.}}"{{end}}>
-<div class="ui-card-head"><div class="ui-card-title"><a href="{{.Href}}">{{.Name}}</a>{{with .Kind}}<span class="ui-card-kind">{{.}}</span>{{end}}</div>
+<div class="ui-card-head"><div class="ui-card-title"><a href="{{.Href}}"{{ext .Href}}>{{.Name}}</a>{{with .Kind}}<span class="ui-card-kind">{{.}}</span>{{end}}</div>
 {{- if .Focus}}{{template "ui/star" (star "focus" true)}}{{else if .Marker}}{{template "ui/pill" .Marker}}{{else if .Waiting}}{{template "ui/count" .Waiting}}{{end}}</div>
 {{- with .Problem}}
 {{template "ui/error" .}}{{end}}
@@ -18,12 +18,12 @@
 <dt>{{.Label}}</dt><dd>{{template "ui/fact" .}}</dd>
 {{- end}}
 </dl>{{end}}
-<div class="ui-card-foot"><span>{{.Foot}}</span><a href="{{orDefault .Href .OpenHref}}">Open<span class="ui-sr"> {{.Name}}</span></a></div>
+<div class="ui-card-foot"><span>{{.Foot}}</span><a href="{{orDefault .Href .OpenHref}}"{{ext (orDefault .Href .OpenHref)}}>Open<span class="ui-sr"> {{.Name}}</span></a></div>
 </article>
 {{- end}}
 
 {{define "ui/product-row" -}}
-<tr><td><a class="ui-item" href="{{.Href}}">{{.Name}}</a>{{with .Kind}}<span class="ui-item-sub">{{.}}</span>{{end}}</td>
+<tr><td><a class="ui-item" href="{{.Href}}"{{ext .Href}}>{{.Name}}</a>{{with .Kind}}<span class="ui-item-sub">{{.}}</span>{{end}}</td>
 {{- range .Facts}}<td><span class="ui-cell">{{template "ui/fact" .}}</span></td>{{end}}
 <td>{{if .Focus}}{{template "ui/star" (star "" false)}}{{end}}</td></tr>
 {{- end}}

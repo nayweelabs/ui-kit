@@ -5,12 +5,12 @@
 <div class="ui-pr">{{template "ui/error" .Problem}}</div>
 {{- else -}}
 <div class="ui-pr"{{if .Compact}} data-compact{{end}}>
-<div class="ui-pr-top">{{if .Compact}}<span class="ui-pr-verb">{{.Verb}}</span> {{end}}<a class="ui-repo" href="{{orDefault .Href .RepoHref}}">{{.Repo}} <b>#{{.Number}}</b></a>{{if .Draft}}<span class="ui-pill" data-variant="tag">draft</span>{{end}}{{if not .Compact}}{{with .Initials}}<span class="ui-avatar" aria-hidden="true">{{.}}</span>{{end}}{{with .Author}}<span>{{.}}</span>{{end}}{{end}}{{with .Age}}<span>· {{.}}</span>{{end}}</div>
-<a class="ui-pr-title" href="{{.Href}}">{{.Title}}</a>
+<div class="ui-pr-top">{{if .Compact}}<span class="ui-pr-verb">{{.Verb}}</span> {{end}}<a class="ui-repo" href="{{orDefault .Href .RepoHref}}"{{ext (orDefault .Href .RepoHref)}}>{{.Repo}} <b>#{{.Number}}</b></a>{{if .Draft}}<span class="ui-pill" data-variant="tag">draft</span>{{end}}{{if not .Compact}}{{with .Initials}}<span class="ui-avatar" aria-hidden="true">{{.}}</span>{{end}}{{with .Author}}<span>{{.}}</span>{{end}}{{end}}{{with .Age}}<span>· {{.}}</span>{{end}}</div>
+<a class="ui-pr-title" href="{{.Href}}"{{ext .Href}}>{{.Title}}</a>
 {{- if not .Compact}}
 <div class="ui-pr-meta">{{with .Branch}}<span class="ui-branch"><b>{{.}}</b> → {{orDefault "main" $.Base}}</span>{{end}}{{with .Files}}<span>{{template "ui/num" .}} files</span>{{end}}{{if or .Added .Removed}}<span><span class="ui-add">+{{.Added}}</span> <span class="ui-del">−{{.Removed}}</span></span>{{end}}{{with .Conflict}}<span class="ui-status" data-tone="warn"><span class="ui-dot" data-tone="warn"></span>{{.}}</span>{{end}}</div>
 {{- end}}
-<div class="ui-pr-side"><span class="ui-pr-pills">{{with .Review}}{{template "ui/pill" .}}{{end}}{{with .CI}}{{template "ui/pill" .}}{{end}}</span>{{if not .Compact}}<a class="ui-btn" data-size="sm" href="{{.Href}}">{{orDefault "Open on GitHub" .Open}}</a>{{end}}</div>
+<div class="ui-pr-side"><span class="ui-pr-pills">{{with .Review}}{{template "ui/pill" .}}{{end}}{{with .CI}}{{template "ui/pill" .}}{{end}}</span>{{if not .Compact}}<a class="ui-btn" data-size="sm" href="{{.Href}}"{{ext .Href}}>{{orDefault "Open on GitHub" .Open}}</a>{{end}}</div>
 </div>
 {{- end}}
 {{- end}}
@@ -59,13 +59,13 @@
 {{template "ui/empty" .Empty}}
 {{- end}}
 {{- with .More}}
-<a class="ui-section-more" href="{{.Href}}">{{.Label}}</a>{{end}}
+<a class="ui-section-more" href="{{.Href}}"{{ext .Href}}>{{.Label}}</a>{{end}}
 {{- end}}
 </section>
 {{- end}}
 
 {{define "ui/cell" -}}
-{{if .Href}}<a class="ui-item" href="{{.Href}}">{{.Text}}</a>{{else if .ID}}<button class="ui-id" type="button" data-ui-copy="{{.ID}}" title="Copy {{.ID}}">{{.ID}}</button>{{else}}{{.Text}}{{end}}
+{{if .Href}}<a class="ui-item" href="{{.Href}}"{{ext .Href}}>{{.Text}}</a>{{else if .ID}}<button class="ui-id" type="button" data-ui-copy="{{.ID}}" title="Copy {{.ID}}">{{.ID}}</button>{{else}}{{.Text}}{{end}}
 {{- with .Sub}}<span class="ui-item-sub">{{.}}</span>{{end}}
 {{- with .Status}}{{template "ui/status" .}}{{end}}
 {{- with .Pill}}{{template "ui/pill" .}}{{end}}
@@ -93,7 +93,7 @@
 
 {{define "ui/ticket" -}}
 <article class="ui-ticket"{{if .Focus}} data-focus{{end}}>
-<div class="ui-ticket-head">{{if .Href}}<a class="ui-ticket-title" href="{{.Href}}">{{.Title}}</a>{{else}}<b class="ui-ticket-title">{{.Title}}</b>{{end}}{{if .Focus}}{{template "ui/star" (star "" false)}}{{end}}</div>
+<div class="ui-ticket-head">{{if .Href}}<a class="ui-ticket-title" href="{{.Href}}"{{ext .Href}}>{{.Title}}</a>{{else}}<b class="ui-ticket-title">{{.Title}}</b>{{end}}{{if .Focus}}{{template "ui/star" (star "" false)}}{{end}}</div>
 {{- with .Summary}}
 <span class="ui-ticket-summary">{{.}}</span>{{end}}
 {{- if .Tags}}

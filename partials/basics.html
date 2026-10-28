@@ -19,7 +19,7 @@
 {{- end}}
 
 {{define "ui/pill" -}}
-{{if .Href}}<a class="ui-pill" href="{{.Href}}"{{else}}<span class="ui-pill"{{end}}{{with .Tone}} data-tone="{{.}}"{{end}}{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Title}} title="{{.}}"{{end}}>{{.Label}}{{if .Href}}</a>{{else}}</span>{{end}}
+{{if .Href}}<a class="ui-pill" href="{{.Href}}"{{ext .Href}}{{else}}<span class="ui-pill"{{end}}{{with .Tone}} data-tone="{{.}}"{{end}}{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Title}} title="{{.}}"{{end}}>{{.Label}}{{if .Href}}</a>{{else}}</span>{{end}}
 {{- end}}
 
 {{define "ui/count" -}}
@@ -31,12 +31,12 @@
 {{- end}}
 
 {{define "ui/num" -}}
-{{if .Href}}<a class="ui-num" href="{{.Href}}"{{with .Command}} title="{{.}}"{{end}}>{{.Text}}</a>{{else}}<span class="ui-num"{{with .Command}} title="{{.}}"{{end}}>{{.Text}}</span>{{end}}
+{{if .Href}}<a class="ui-num" href="{{.Href}}"{{ext .Href}}{{with .Command}} title="{{.}}"{{end}}>{{.Text}}</a>{{else}}<span class="ui-num"{{with .Command}} title="{{.}}"{{end}}>{{.Text}}</span>{{end}}
 {{- end}}
 
 {{define "ui/button" -}}
 {{if .Href -}}
-<a class="ui-btn" href="{{.Href}}"{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Size}} data-size="{{.}}"{{end}}{{if or .Disabled .Busy}} aria-disabled="true"{{end}}{{if .Busy}} aria-busy="true"{{end}}>{{.Label}}{{with .Kbd}} <kbd>{{.}}</kbd>{{end}}</a>
+<a class="ui-btn" href="{{.Href}}"{{ext .Href}}{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Size}} data-size="{{.}}"{{end}}{{if or .Disabled .Busy}} aria-disabled="true"{{end}}{{if .Busy}} aria-busy="true"{{end}}>{{.Label}}{{with .Kbd}} <kbd>{{.}}</kbd>{{end}}</a>
 {{- else -}}
 <button class="ui-btn" type="{{orDefault "button" .Type}}"{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Size}} data-size="{{.}}"{{end}}{{with .Name}} name="{{.}}"{{end}}{{with .Value}} value="{{.}}"{{end}}{{with .Opens}} data-ui-open="{{.}}" aria-haspopup="dialog"{{end}}{{if .Disabled}} disabled{{end}}{{if .Busy}} disabled aria-busy="true"{{end}}{{with .Kbd}} aria-keyshortcuts="{{.}}"{{end}}>{{.Label}}{{with .Kbd}} <kbd>{{.}}</kbd>{{end}}</button>
 {{- end}}
@@ -47,7 +47,7 @@
 {{- end}}
 
 {{define "ui/notice" -}}
-<div class="ui-box" data-tone="{{orDefault "info" .Tone}}" role="status">{{if eq .Tone "good"}}{{template "ui/icon" "check"}}{{else if eq .Tone "warn"}}{{template "ui/icon" "alert"}}{{else}}{{template "ui/icon" "info"}}{{end}}<b class="ui-box-title">{{.Title}}</b>{{if or .Text .Link}}<p>{{.Text}}{{with .Link}} <a href="{{.Href}}">{{.Label}}</a>{{end}}</p>{{end}}</div>
+<div class="ui-box" data-tone="{{orDefault "info" .Tone}}" role="status">{{if eq .Tone "good"}}{{template "ui/icon" "check"}}{{else if eq .Tone "warn"}}{{template "ui/icon" "alert"}}{{else}}{{template "ui/icon" "info"}}{{end}}<b class="ui-box-title">{{.Title}}</b>{{if or .Text .Link}}<p>{{.Text}}{{with .Link}} <a href="{{.Href}}"{{ext .Href}}>{{.Label}}</a>{{end}}</p>{{end}}</div>
 {{- end}}
 
 {{define "ui/empty" -}}

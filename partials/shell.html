@@ -36,16 +36,16 @@
 {{define "ui/bar" -}}
 <header class="ui-bar ui-gutter"><div class="ui-wrap">
 {{- if .Apps}}
-<details class="ui-apps"><summary class="ui-brand">{{.App}}{{with .Sub}} <small>{{.}}</small>{{end}}</summary><nav class="ui-apps-menu" aria-label="Apps">{{range .Apps}}<a href="{{.Href}}"{{if .Current}} aria-current="page"{{end}}>{{.Label}}</a>{{end}}</nav></details>
+<details class="ui-apps"><summary class="ui-brand">{{.App}}{{with .Sub}} <small>{{.}}</small>{{end}}</summary><nav class="ui-apps-menu" aria-label="Apps">{{range .Apps}}<a href="{{.Href}}"{{ext .Href}}{{if .Current}} aria-current="page"{{end}}>{{.Label}}</a>{{end}}</nav></details>
 {{- else}}
-<a class="ui-brand" href="{{orDefault "/" .Href}}">{{.App}}{{with .Sub}} <small>{{.}}</small>{{end}}</a>
+<a class="ui-brand" href="{{orDefault "/" .Href}}"{{ext (orDefault "/" .Href)}}>{{.App}}{{with .Sub}} <small>{{.}}</small>{{end}}</a>
 {{- end}}
 {{- if .Pages}}
-<nav class="ui-nav" aria-label="Pages">{{range .Pages}}<a href="{{.Href}}"{{if .Current}} aria-current="page"{{end}}>{{.Label}}{{with .Count}} {{template "ui/count" .}}{{end}}</a>{{end}}</nav>
+<nav class="ui-nav" aria-label="Pages">{{range .Pages}}<a href="{{.Href}}"{{ext .Href}}{{if .Current}} aria-current="page"{{end}}>{{.Label}}{{with .Count}} {{template "ui/count" .}}{{end}}</a>{{end}}</nav>
 {{- end}}
 <div class="ui-bar-end">
 {{- range .Status}}<span class="ui-status" title="{{.Label}}"><span class="ui-dot" data-tone="{{orDefault "none" .Tone}}"></span><span class="ui-status-word">{{.Label}}</span></span>{{end}}
-{{- with .Refresh}}<a class="ui-iconbtn" href="{{.Href}}" aria-label="{{orDefault "Refresh" .Label}}" title="{{orDefault "Refresh" .Label}}">{{template "ui/icon" "refresh"}}</a>{{end}}
+{{- with .Refresh}}<a class="ui-iconbtn" href="{{.Href}}"{{ext .Href}} aria-label="{{orDefault "Refresh" .Label}}" title="{{orDefault "Refresh" .Label}}">{{template "ui/icon" "refresh"}}</a>{{end}}
 {{- if not .NoTheme}}<button class="ui-iconbtn" type="button" data-ui-theme-toggle aria-label="Switch light or dark theme" title="Switch light or dark theme">{{template "ui/icon" "theme"}}</button>{{end -}}
 </div>
 </div></header>
@@ -53,7 +53,7 @@
 
 {{define "ui/rail" -}}
 <nav class="ui-rail" aria-label="All pages">
-{{- range .}}{{with .Label}}<span class="ui-label">{{.}}</span>{{end}}{{range .Links}}<a href="{{.Href}}"{{if .Current}} aria-current="page"{{end}}>{{.Label}}{{with .Count}}{{template "ui/count" .}}{{end}}</a>{{end}}{{end -}}
+{{- range .}}{{with .Label}}<span class="ui-label">{{.}}</span>{{end}}{{range .Links}}<a href="{{.Href}}"{{ext .Href}}{{if .Current}} aria-current="page"{{end}}>{{.Label}}{{with .Count}}{{template "ui/count" .}}{{end}}</a>{{end}}{{end -}}
 </nav>
 {{- end}}
 
@@ -69,9 +69,9 @@
 
 {{define "ui/footer" -}}
 <footer class="ui-footer ui-gutter"><div class="ui-wrap">
-{{- with .Version}}{{if $.VersionHref}}<a class="ui-num" href="{{$.VersionHref}}">{{.}}</a>{{else}}<span class="ui-num">{{.}}</span>{{end}}{{end}}
+{{- with .Version}}{{if $.VersionHref}}<a class="ui-num" href="{{$.VersionHref}}"{{ext $.VersionHref}}>{{.}}</a>{{else}}<span class="ui-num">{{.}}</span>{{end}}{{end}}
 {{- with .Branch}}<span class="ui-branch">on <b>{{.}}</b></span>{{end}}
 {{- with .Fresh.Label}}<span class="ui-status" data-ui-live><span class="ui-dot" data-tone="{{orDefault "none" $.Fresh.Tone}}"></span>{{.}}</span>{{end}}
-{{- if .Links}}<span class="ui-footer-end">{{range .Links}}<a href="{{.Href}}">{{.Label}}</a>{{end}}</span>{{end -}}
+{{- if .Links}}<span class="ui-footer-end">{{range .Links}}<a href="{{.Href}}"{{ext .Href}}>{{.Label}}</a>{{end}}</span>{{end -}}
 </div></footer>
 {{- end}}

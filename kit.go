@@ -59,6 +59,13 @@ var base = sync.OnceValue(func() *template.Template {
 // Funcs are the functions the partials use; an app may use them in its own templates too.
 func Funcs() template.FuncMap {
 	return template.FuncMap{
+		// ext opens a link to another site in a new tab; links inside the app stay in the same tab.
+		"ext": func(href string) template.HTMLAttr {
+			if strings.HasPrefix(href, "http://") || strings.HasPrefix(href, "https://") {
+				return ` target="_blank" rel="noopener noreferrer"`
+			}
+			return ""
+		},
 		"pill":   func(tone, label string) Pill { return Pill{Tone: tone, Label: label} },
 		"tag":    func(label string) Pill { return Pill{Variant: "tag", Label: label} },
 		"status": func(tone, label string) Status { return Status{Tone: tone, Label: label} },
