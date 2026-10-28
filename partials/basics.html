@@ -24,7 +24,7 @@
 {{- end}}
 
 {{define "ui/count" -}}
-{{if or .N .ShowZero}}<span class="ui-count"{{with .Tone}} data-tone="{{.}}"{{end}}>{{if or .Label (gt .N 99)}}<span aria-hidden="true">{{countText .N}}</span><span class="ui-sr">{{if .Label}}{{.Label}}{{else}}{{.N}}{{end}}</span>{{else}}{{.N}}{{end}}</span>{{end}}
+{{if or .N .ShowZero}}<span class="ui-count"{{with .Tone}} data-tone="{{.}}"{{end}}{{with .Label}} title="{{.}}"{{end}}>{{if or .Label (gt .N 99)}}<span aria-hidden="true">{{countText .N}}</span><span class="ui-sr">{{if .Label}}{{.Label}}{{else}}{{.N}}{{end}}</span>{{else}}{{.N}}{{end}}</span>{{end}}
 {{- end}}
 
 {{define "ui/star" -}}

@@ -29,6 +29,7 @@ type Pill struct {
 }
 
 // Count is how many of something ("ui/count"). Zero hides it unless ShowZero; over 99 shows "99+".
+// Label says what it counts, to screen readers and on hover.
 type Count struct {
 	Tone     string
 	N        int

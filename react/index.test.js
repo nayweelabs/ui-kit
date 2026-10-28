@@ -15,6 +15,12 @@ test("count hides zero, shows 99+ with the true number for screen readers", () =
   assert.match(many, /class="ui-sr">128</);
 });
 
+test("count says its label on hover and to screen readers", () => {
+  const labelled = render(h(kit.Count, { n: 2, tone: "warn", label: "2 cards wait for you" }));
+  assert.match(labelled, /class="ui-count" data-tone="warn" title="2 cards wait for you"/);
+  assert.match(labelled, /class="ui-sr">2 cards wait for you</);
+});
+
 test("status dot always carries its word", () => {
   assert.equal(render(h(kit.Status, { tone: "good", label: "current" })), '<span class="ui-status"><span class="ui-dot" data-tone="good"></span>current</span>');
 });

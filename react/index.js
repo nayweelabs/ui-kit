@@ -37,7 +37,7 @@ export function Pill({ tone: t, variant, label, title, href, children }) {
 export function Count({ tone: t, n, label, showZero }) {
   if (!n && !showZero) return null;
   const many = n > 99;
-  return h("span", { className: "ui-count", "data-tone": tone(t) },
+  return h("span", { className: "ui-count", "data-tone": tone(t), title: label || undefined },
     label || many ? h(Fragment, null, h("span", { "aria-hidden": true }, many ? "99+" : String(n)), h("span", { className: "ui-sr" }, label || String(n))) : String(n));
 }
 
