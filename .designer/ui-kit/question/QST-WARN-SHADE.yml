@@ -1,0 +1,11 @@
+apiVersion: "core/design/v2"
+kind: "Question"
+metadata:
+  id: "QST-WARN-SHADE"
+  title: "Approve three light colours changed for contrast"
+spec:
+  state:
+    status: "open"
+    severity: "medium"
+  description: "The article's light warn #A8670F, good-soft #E1F1E9 and bad-soft #F8E4DD left pill text under 4.5:1. The kit uses warn #975D0E, good-soft #EDF7F2 and bad-soft #F9E9E4, which pass; the dark theme is unchanged."
+

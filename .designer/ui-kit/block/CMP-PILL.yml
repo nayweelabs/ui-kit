@@ -1,0 +1,15 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-PILL"
+  title: "Pill"
+spec:
+  place:
+    group: "GRP-PARTS"
+    release: "v0.1.0"
+  caption:
+    - "`ui/pill`"
+  description: "A short state or a tag; tags neutral unless a board maps them to a tone."
+  code:
+    implements: "partials/basics.html"
+

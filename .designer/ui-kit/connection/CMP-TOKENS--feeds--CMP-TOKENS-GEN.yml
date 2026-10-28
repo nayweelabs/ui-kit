@@ -1,0 +1,9 @@
+apiVersion: "core/design/v2"
+kind: "Connection"
+metadata:
+  id: "CMP-TOKENS--feeds--CMP-TOKENS-GEN"
+spec:
+  from: "CMP-TOKENS"
+  to: "CMP-TOKENS-GEN"
+  label: "feeds"
+

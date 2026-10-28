@@ -1,0 +1,15 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-FIELD"
+  title: "Form field"
+spec:
+  place:
+    group: "GRP-PARTS"
+    release: "v0.1.0"
+  caption:
+    - "`ui/field`"
+  description: "Label, input, hint or error; secrets with Show, never shown back after saving."
+  code:
+    implements: "partials/controls.html"
+

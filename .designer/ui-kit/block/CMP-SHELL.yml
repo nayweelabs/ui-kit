@@ -1,0 +1,16 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-SHELL"
+  title: "Page"
+spec:
+  place:
+    group: "GRP-SHELL"
+    release: "v0.1.0"
+  caption:
+    - "`ui/shell`"
+    - "the whole document"
+  description: "A whole page: head with the kit's CSS and kit.js, bar, optional rail, header, one notice, body, footer."
+  code:
+    implements: "partials/shell.html"
+

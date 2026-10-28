@@ -1,0 +1,16 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-GOPKG"
+  title: "Go package kit"
+spec:
+  place:
+    group: "GRP-DELIVERY"
+    release: "v0.1.0"
+  caption:
+    - "`kit.Templates()`, `kit.Assets()`"
+    - "embedded css, fonts, js, partials"
+  description: "Go apps import `github.com/ElderlyGate/ui-kit`, mount `kit.Assets()` at `/ui-kit/` and parse their templates into `kit.Templates()`. Golden HTML tests per part and state."
+  code:
+    implements: "kit.go"
+

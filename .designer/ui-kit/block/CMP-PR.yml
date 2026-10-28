@@ -1,0 +1,15 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-PR"
+  title: "PR item and list"
+spec:
+  place:
+    group: "GRP-PARTS"
+    release: "v0.1.0"
+  caption:
+    - "`ui/pr-item, ui/pr-list`"
+  description: "Repo and number, author, age, branch, files, lines, conflicts, review and CI; compact form for Do now."
+  code:
+    implements: "partials/work.html"
+

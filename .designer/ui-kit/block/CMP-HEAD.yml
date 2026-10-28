@@ -1,0 +1,16 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-HEAD"
+  title: "Page header"
+spec:
+  place:
+    group: "GRP-SHELL"
+    release: "v0.1.0"
+  caption:
+    - "`ui/page-header` · `.ui-head`"
+    - "crumb, title, line, actions"
+  description: "Breadcrumb for pages two levels down, title, one plain sentence, the page's actions (below the title on a phone)."
+  code:
+    implements: "partials/shell.html"
+

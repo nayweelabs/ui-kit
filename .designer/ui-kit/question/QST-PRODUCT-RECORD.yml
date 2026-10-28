@@ -1,0 +1,11 @@
+apiVersion: "core/design/v2"
+kind: "Question"
+metadata:
+  id: "QST-PRODUCT-RECORD"
+  title: "Where the kit's Product record goes"
+spec:
+  state:
+    status: "open"
+    severity: "medium"
+  description: "The design should hold a `Product` record for ID `ui-kit` (G-PLAN-12, G-PLAN-13), but the e-designer build used here has no Product kind. Add it when the kind ships; until then the ID lives in the product-family design and hubman's catalog (a separate hubman change)."
+

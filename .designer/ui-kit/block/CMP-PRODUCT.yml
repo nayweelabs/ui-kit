@@ -1,0 +1,15 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-PRODUCT"
+  title: "Product card and list"
+spec:
+  place:
+    group: "GRP-PARTS"
+    release: "v0.1.0"
+  caption:
+    - "`ui/product-card, ui/product-row, ui/products`"
+  description: "Four facts in order (Installed, Board, Pull requests, My copy), as a card or a list row; one part, two views."
+  code:
+    implements: "partials/product.html"
+

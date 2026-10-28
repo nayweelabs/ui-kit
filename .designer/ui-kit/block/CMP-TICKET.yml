@@ -1,0 +1,15 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-TICKET"
+  title: "Card / ticket"
+spec:
+  place:
+    group: "GRP-PARTS"
+    release: "v0.1.0"
+  caption:
+    - "`ui/ticket`"
+  description: "Kanban card, decision, design finding: title, summary, tags, turn, age, id."
+  code:
+    implements: "partials/work.html"
+

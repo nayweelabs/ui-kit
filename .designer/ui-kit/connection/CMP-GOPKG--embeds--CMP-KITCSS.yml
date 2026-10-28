@@ -1,0 +1,9 @@
+apiVersion: "core/design/v2"
+kind: "Connection"
+metadata:
+  id: "CMP-GOPKG--embeds--CMP-KITCSS"
+spec:
+  from: "CMP-GOPKG"
+  to: "CMP-KITCSS"
+  label: "embeds"
+
