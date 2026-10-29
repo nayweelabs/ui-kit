@@ -150,3 +150,16 @@ test("Read again on a lazy section reloads only it with fresh=1, keeps its addre
   assert.ok(box.querySelector("[id=new]"), "the section shows what the server read");
   assert.equal(box.querySelector(".ui-section-head [data-ui-again]"), again);
 });
+
+test("a section link reloads only its section at the link's address, and carries it to Read again", () => {
+  const refresh = new El("a", { href: "/roads?road=r6&fresh=1", "data-ui-carry": "fresh" });
+  const label = new El("text");
+  const link = new El("a", { href: "/roads?road=r6&open=kit%2Fcards", "data-ui-section-link": "" }, [label]);
+  const box = new El("div", { class: "ui-lazy", "data-ui-src": "/part/roads/road-graph?road=r6" }, [new El("section", { class: "ui-section" }, [link])]);
+  const p = page("http://localhost/roads?road=r6", [refresh, box]);
+  const e = p.fire("click", label);
+  assert.ok(e.prevented);
+  assert.equal(p.location.search, "?road=r6&open=kit%2Fcards");
+  assert.equal(p.fetches.at(-1), "/part/roads/road-graph?road=r6&open=kit%2Fcards");
+  assert.equal(refresh.getAttribute("href"), "/roads?road=r6&open=kit%2Fcards&fresh=1");
+});

@@ -41,6 +41,8 @@ When a toolbar or the cards/list toggle changes the address without a reload, li
 
 The server draws every one of them right for the first load: a carried link's `Href` already holds the page's query (a Read again link `/?pr_sort=newest&fresh=1` with `Carry: "fresh"`; a tab `/product/x?pr_sort=newest&tab=board` with `Carry: "tab"`). A reload (F5) asks the server again and needs none of it.
 
+A link inside a lazy section can change only that section's view, like a toolbar does: give it `data-ui-section-link` and an `href` to the page with the new query (an `<a>` in an inline SVG works too). `kit.js` makes that the address and reloads only the section from its `Src` with the new query; without JavaScript, or with a modifier key, it is a plain link to the page.
+
 A status light (`kit.Light`, in `kit.Bar.Lights`) is a dot, an icon and a word in the top bar for one connection, such as GitHub. It is a link to the app's full page for it; `kit.js` makes it open a popover under it with the facts (`Details`) and an Actions menu. An action links, opens a dialog of `Dialogs` (a `kit.Dialog` whose `Body` holds its fields), or asks once more inside the popover (`Confirm`) before it posts. Give it a `Src` and the bar draws it grey at once and fetches it, like a lazy section.
 
 A page that does not use `ui/shell` links `/ui-kit/css/kit.css` and `/ui-kit/js/kit.js` (in `<head>`, without `defer`) and puts `class="ui-page"` on its body.

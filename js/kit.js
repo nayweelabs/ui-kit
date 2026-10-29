@@ -202,6 +202,13 @@
       return load(again.closest(".ui-lazy"), null, true);
     }
 
+    // A section link changes only its lazy section's view: the address becomes its href, and the section reloads.
+    var here = t.closest(".ui-lazy[data-ui-src] a[data-ui-section-link]");
+    if (here && window.fetch && !e.metaKey && !e.ctrlKey && !e.shiftKey) {
+      e.preventDefault();
+      return reloadAt(here.closest(".ui-lazy"), new URL(here.getAttribute("href"), location.href));
+    }
+
     var retry = t.closest(".ui-lazy [data-ui-retry]");
     if (retry && window.fetch) {
       e.preventDefault();
@@ -311,6 +318,11 @@
     var fields = new URLSearchParams(new FormData(form));
     var page = new URL(location.href);
     fields.forEach(function (v, k) { page.searchParams.set(k, v); });
+    reloadAt(box, page);
+  }
+
+  // reloadAt makes page the address and reloads only box, from its src with the page's query.
+  function reloadAt(box, page) {
     if (window.history && history.replaceState) {
       history.replaceState(null, "", page);
       carry();
