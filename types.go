@@ -34,12 +34,16 @@ type Pill struct {
 }
 
 // Count is how many of something ("ui/count"). Zero hides it unless ShowZero; over 99 shows "99+".
-// Label says what it counts, to screen readers and on hover.
+// Label says what it counts, to screen readers and on hover. With Icon (a "ui/icon" name) it is a badge
+// whose Label shows as a tooltip on hover and on keyboard focus; with Href it is a link, such as to a
+// group further down the page.
 type Count struct {
 	Tone     string
 	N        int
 	Label    string
 	ShowZero bool
+	Icon     string
+	Href     string
 }
 
 // Star is the focus marker ("ui/star"). Label is read by screen readers; Text is shown beside the star.

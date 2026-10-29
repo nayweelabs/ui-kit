@@ -135,6 +135,11 @@ a.ui-num:hover{color:var(--ui-accent)}
 .ui-count[data-tone="warn"]{background:var(--ui-warn);color:var(--ui-surface)}
 .ui-count[data-tone="bad"]{background:var(--ui-bad);color:var(--ui-surface)}
 .ui-count[data-tone="accent"]{background:var(--ui-accent);color:var(--ui-on-accent)}
+.ui-count[data-tone="good"]{background:var(--ui-good);color:var(--ui-surface)}
+.ui-count[data-icon]{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px 0 6px;position:relative;text-decoration:none}
+.ui-count[data-icon] svg{width:13px;height:13px;flex:none}
+a.ui-count:hover{filter:brightness(1.08)}
+.ui-count[data-tip]:hover::after,.ui-count[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;top:calc(100% + 6px);left:0;white-space:nowrap;padding:5px 8px;border-radius:var(--ui-radius-sm);background:var(--ui-ink);color:var(--ui-bg);font:500 var(--ui-text-xs)/1.3 var(--ui-font);box-shadow:var(--ui-shadow-pop);z-index:30;pointer-events:none}
 
 /* ---------- focus marker: only --ui-focus draws it, and it draws nothing else ---------- */
 .ui-star{display:inline-flex;align-items:center;gap:4px;color:var(--ui-focus);font-weight:600;font-size:var(--ui-text-xs);white-space:nowrap}

@@ -80,3 +80,11 @@ test("light draws the same link, dot and hidden popover as the Go partial", () =
   assert.match(light, /<summary class="ui-btn" data-size="sm">Actions<\/summary>/);
   assert.match(light, /data-variant="danger" aria-expanded="false">Disconnect<\/button>/);
 });
+
+test("count with an icon is a badge whose label is its tooltip, and with href a link", () => {
+  const badge = render(h(kit.Count, { n: 6, tone: "good", icon: "check", label: "6 approved, not merged yet" }));
+  assert.match(badge, /^<span class="ui-count" data-tone="good" data-icon="" data-tip="6 approved, not merged yet" tabindex="0"><svg/);
+  assert.match(badge, /class="ui-sr">6 approved, not merged yet</);
+  const link = render(h(kit.Count, { n: 2, icon: "eye", label: "2 to review", href: "#review" }));
+  assert.match(link, /^<a class="ui-count" data-icon="" data-tip="2 to review" href="#review">/);
+});

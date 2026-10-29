@@ -270,6 +270,11 @@ func Cases() []Case {
 		{Part: "status", State: "tones", Items: []Item{{"ui/status", kit.Status{Tone: "good", Label: "current"}}, {"ui/status", kit.Status{Tone: "warn", Label: "3 behind"}}, {"ui/status", kit.Status{Tone: "bad", Label: "off main"}}, {"ui/status", kit.Status{Tone: "info", Label: "unmanaged"}}, {"ui/status", kit.Status{Tone: "none", Label: "planned"}}}},
 		{Part: "pill", State: "tones", Items: []Item{{"ui/pill", kit.Pill{Tone: "good", Label: "CI passing"}}, {"ui/pill", kit.Pill{Tone: "warn", Label: "9 waiting"}}, {"ui/pill", kit.Pill{Tone: "bad", Label: "CI failing"}}, {"ui/pill", kit.Pill{Tone: "info", Label: "running"}}, {"ui/pill", kit.Pill{Tone: "accent", Label: "your review"}}, {"ui/pill", kit.Pill{Label: "no checks"}}}},
 		{Part: "pill", State: "tags", Items: []Item{{"ui/pill", kit.Pill{Variant: "tag", Label: "#feature"}}, {"ui/pill", kit.Pill{Variant: "tag", Label: "#cli"}}, {"ui/pill", kit.Pill{Variant: "tag", Tone: "bad", Label: "#bug"}}, {"ui/pill", kit.Pill{Variant: "outline", Tone: "warn", Label: "v0.2.0 ready"}}}},
+		{Part: "count", State: "badges", Note: "An icon badge per group: hover or focus it for its words; one with Href jumps to its group.", Items: []Item{
+			{"ui/count", kit.Count{Icon: "eye", Tone: "accent", N: 2, Label: "2 waiting for your review: review them on GitHub", Href: "#review"}},
+			{"ui/count", kit.Count{Icon: "check", Tone: "good", N: 6, Label: "6 approved, not merged yet: merge them on GitHub"}},
+			{"ui/count", kit.Count{Icon: "alert", Tone: "warn", N: 1, Label: "1 needs work: CI failing or changes requested"}},
+			{"ui/count", kit.Count{Icon: "edit", N: 1, Label: "1 draft: not ready for review"}}}},
 		{Part: "count", State: "tones", Items: []Item{{"ui/count", kit.Count{N: 9}}, {"ui/count", kit.Count{Tone: "accent", N: 5}}, {"ui/count", kit.Count{Tone: "warn", N: 2}}, {"ui/count", kit.Count{Tone: "bad", N: 1}}}},
 		{Part: "count", State: "zero-and-many", Note: "Zero hides unless it is news; 100 and more shows 99+.", Items: []Item{{"ui/count", kit.Count{N: 0}}, {"ui/count", kit.Count{N: 0, ShowZero: true, Label: "0 failing"}}, {"ui/count", kit.Count{Tone: "accent", N: 128}}}},
 

@@ -15,6 +15,8 @@ const paths = {
   list: [["path", { d: "M2 3.5h12M2 8h12M2 12.5h12", strokeWidth: 1.5 }]],
   theme: [["circle", { cx: 8, cy: 8, r: 5.6, strokeWidth: 1.4 }], ["path", { d: "M8 2.4a5.6 5.6 0 0 1 0 11.2z", fill: "currentColor", stroke: "none" }]],
   close: [["path", { d: "M4 4l8 8M12 4l-8 8", strokeWidth: 1.6 }]],
+  eye: [["path", { d: "M1.5 8s2.4-4.5 6.5-4.5S14.5 8 14.5 8 12.1 12.5 8 12.5 1.5 8 1.5 8z" }], ["circle", { cx: 8, cy: 8, r: 2 }]],
+  edit: [["path", { d: "M10.8 2.7l2.5 2.5-7.6 7.6-3.2.7.7-3.2z" }], ["path", { d: "M9.3 4.2l2.5 2.5" }]],
   github: [["path", { d: "M8 0c4.42 0 8 3.58 8 8a8.01 8.01 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A8 8 0 0 1 0 8c0-4.42 3.58-8 8-8z", fill: "currentColor", stroke: "none" }]],
 };
 
@@ -34,10 +36,12 @@ export function Pill({ tone: t, variant, label, title, href, children }) {
   return href ? h("a", { ...props, href }, label ?? children) : h("span", props, label ?? children);
 }
 
-export function Count({ tone: t, n, label, showZero }) {
+export function Count({ tone: t, n, label, showZero, icon, href }) {
   if (!n && !showZero) return null;
   const many = n > 99;
-  return h("span", { className: "ui-count", "data-tone": tone(t), title: label || undefined },
+  const props = { className: "ui-count", "data-tone": tone(t), title: !icon && label ? label : undefined,
+    "data-icon": icon ? "" : undefined, "data-tip": icon && label ? label : undefined, tabIndex: icon && label && !href ? 0 : undefined, href };
+  return h(href ? "a" : "span", props, icon ? h(Icon, { name: icon }) : null,
     label || many ? h(Fragment, null, h("span", { "aria-hidden": true }, many ? "99+" : String(n)), h("span", { className: "ui-sr" }, label || String(n))) : String(n));
 }
 

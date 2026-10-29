@@ -6,7 +6,7 @@ export type Tone = "good" | "warn" | "bad" | "info" | "accent" | "none" | "";
 export interface Link { label: string; href: string; title?: string; current?: boolean; count?: CountProps }
 export interface StatusProps { tone?: Tone; label: string }
 export interface PillProps { tone?: Tone; variant?: "" | "outline" | "tag"; label?: string; title?: string; href?: string; children?: ReactNode }
-export interface CountProps { tone?: Tone; n: number; label?: string; showZero?: boolean }
+export interface CountProps { tone?: Tone; n: number; label?: string; showZero?: boolean; icon?: string; href?: string }
 export interface StarProps { label?: string; text?: string; chip?: boolean; corner?: boolean }
 export interface NumProps { text: string; href?: string; command?: string }
 export interface ButtonProps {

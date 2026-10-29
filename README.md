@@ -82,6 +82,8 @@ Shell: `ui/shell`, `ui/assets`, `ui/bar`, `ui/light`, `ui/rail`, `ui/page-header
 Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/drawer`, `ui/star`, `ui/skeleton`.
 Pieces they share: `ui/icon`, `ui/num`, `ui/fact`, `ui/cell`, `ui/read-at`.
 
+A count with an `Icon` (`eye`, `check`, `alert`, `edit`, or any `ui/icon`) is a badge: icon and number in its tone, and its `Label` as a tooltip on hover and on keyboard focus, read out through the same hidden label. With `Href` it is a link, such as to a group further down the page (an anchor inside the page; it opens no new tab).
+
 ## Rules
 
 - **A link to another site or app opens in a new tab**, with `rel="noopener noreferrer"`; a link inside the app stays in the same tab. The partials do it with the `ext` function (`<a href="{{.Href}}"{{ext .Href}}>`); an app's own templates use the same function, and a form that sends the browser to another app (such as one that starts a board and redirects to it) carries `target="_blank"`. A test checks every golden for it.
