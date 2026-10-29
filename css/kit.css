@@ -196,7 +196,7 @@ a.ui-count:hover{filter:brightness(1.08)}
 [data-ui-again][aria-busy="true"] svg{animation:ui-spin .9s linear infinite}
 .ui-section[data-ui-reloading]{position:relative}
 .ui-section[data-ui-reloading]>:not(.ui-section-head){opacity:.45;transition:opacity .15s}
-.ui-section[data-ui-reloading]::before{content:"";position:absolute;left:0;right:0;top:-8px;height:3px;border-radius:var(--ui-radius-pill);background:var(--ui-accent);transform-origin:left;animation:ui-progress 1.1s ease-in-out infinite alternate}
+.ui-section[data-ui-reloading]::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;z-index:1;border-radius:var(--ui-radius-pill);background:var(--ui-accent);transform-origin:left;animation:ui-progress 1.1s ease-in-out infinite alternate}
 .ui-products{display:grid;gap:var(--ui-space-3);min-width:0}
 .ui-section-more{font-size:var(--ui-text-sm);justify-self:start}
 .ui-label{font-size:var(--ui-text-xs);font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ui-muted)}
