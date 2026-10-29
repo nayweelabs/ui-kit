@@ -58,7 +58,7 @@
 
 {{define "ui/section-frame" -}}
 <section class="ui-section"{{with .ID}} id="{{.}}" aria-labelledby="{{.}}-title"{{end}}{{if .Loading}} aria-busy="true"{{end}}>
-<div class="ui-section-head"><h2 class="ui-section-title"{{with .ID}} id="{{.}}-title"{{end}}>{{.Title}}{{with .Count}} {{template "ui/count" .}}{{end}}</h2>{{with .Why}}<span class="ui-why">{{.}}</span>{{end}}{{with .Again}}<a class="ui-iconbtn" href="{{.}}" data-ui-again data-ui-carry="fresh" aria-label="Read {{$.Title}} again" title="Read {{$.Title}} again">{{template "ui/icon" "refresh"}}</a>{{end}}</div>
+<div class="ui-section-head"><h2 class="ui-section-title"{{with .ID}} id="{{.}}-title"{{end}}>{{.Title}}{{with .Count}} {{template "ui/count" .}}{{end}}</h2>{{with .Why}}<span class="ui-why">{{.}}</span>{{end}}{{if or .Again .Read}}<span class="ui-section-tools" data-ui-tools>{{template "ui/read-at" .Read}}<span class="ui-again-done" role="status" aria-live="polite"></span>{{with .Again}}<a class="ui-iconbtn" href="{{.}}" data-ui-again data-ui-carry="fresh" aria-label="Read {{$.Title}} again" title="Read {{$.Title}} again">{{template "ui/icon" "refresh"}}</a>{{end}}</span>{{end}}</div>
 {{- if .Loading}}
 {{template "ui/skeleton" (skeleton "rows" 3)}}
 {{- with .Full}}
@@ -75,6 +75,10 @@
 <a class="ui-section-more" href="{{.Href}}"{{ext .Href}}>{{.Label}}</a>{{end}}
 {{- end}}
 </section>
+{{- end}}
+
+{{define "ui/read-at" -}}
+{{if .}}<time class="ui-read" data-ui-read datetime="{{.At}}" title="{{.Title}}">{{.Text}}</time>{{else}}<time class="ui-read" data-ui-read hidden></time>{{end}}
 {{- end}}
 
 {{define "ui/cell" -}}

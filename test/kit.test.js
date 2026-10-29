@@ -39,12 +39,15 @@ class El {
   hasAttribute(k) { return k in this.attrs; }
   removeAttribute(k) { delete this.attrs[k]; }
   addEventListener() {}
+  remove() { if (this.parent) { this.parent.children.splice(this.parent.children.indexOf(this), 1); this.parent = null; } }
   appendChild(c) {
     if (c.parent) c.parent.children.splice(c.parent.children.indexOf(c), 1);
     c.parent = this;
     this.children.push(c);
     return c;
   }
+  set textContent(t) { this.text = t; }
+  get textContent() { return this.text || ""; }
   set innerHTML(html) {
     this.children.forEach((c) => { c.parent = null; });
     this.children = [];
@@ -82,14 +85,15 @@ function page(href, children, fetched = {}) {
     location, document, fetch: (url) => {
       fetches.push(url);
       const text = fetched[url];
-      return text === undefined ? new Promise(() => {}) : Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve(text) });
+      const headers = { get: (k) => (k === "UI-Read-At" ? fetched.readAt || null : null) };
+      return text === undefined ? new Promise(() => {}) : Promise.resolve({ ok: true, status: 200, headers, text: () => Promise.resolve(text) });
     },
     history: { replaceState: (_s, _t, url) => go(String(url)) },
     URLSearchParams, URL,
   };
   window.window = window;
   vm.runInNewContext(source, { ...window, localStorage: { getItem: () => null, setItem() {} },
-    FormData: function (form) { return form.fields; }, matchMedia: () => ({ matches: false }), setTimeout });
+    FormData: function (form) { return form.fields; }, matchMedia: () => ({ matches: false }), setTimeout, clearTimeout });
   const fire = (type, target) => { const e = { target, preventDefault() { e.prevented = true; } }; handlers[type](e); return e; };
   return { location, fetches, fire };
 }
@@ -132,23 +136,36 @@ test("the cards or list toggle carries the view the same way", () => {
   assert.equal(refresh.getAttribute("href"), "/products?view=list&fresh=1");
 });
 
-test("Read again on a lazy section reloads only it with fresh=1, keeps its address, and stays in the loaded head", async () => {
+test("Read again on a lazy section reloads only it with fresh=1, shows it is busy, then says Updated and when it was read", async () => {
   const again = new El("a", { class: "ui-iconbtn", href: "/?pr_sort=newest&fresh=1", "data-ui-again": "", "data-ui-carry": "fresh" });
   const icon = new El("svg");
   again.appendChild(icon);
-  const head = new El("div", { class: "ui-section-head" }, [again]);
+  const read = new El("time", { class: "ui-read", "data-ui-read": "", hidden: "" });
+  read.hidden = true;
+  const done = new El("span", { class: "ui-again-done", role: "status", "aria-live": "polite" });
+  const tools = new El("span", { class: "ui-section-tools", "data-ui-tools": "" }, [read, done, again]);
+  const head = new El("div", { class: "ui-section-head" }, [tools]);
   const box = new El("div", { class: "ui-lazy", "data-ui-src": "/part/focus/decisions?pr_sort=newest" }, [new El("section", { class: "ui-section" }, [head])]);
   El.parse["<loaded>"] = () => [new El("section", { class: "ui-section" }, [new El("div", { class: "ui-section-head" }), new El("p", { id: "new" })])];
-  const p = page("http://localhost/?pr_sort=newest", [box], { "/part/focus/decisions?pr_sort=newest": "<loaded>", "/part/focus/decisions?pr_sort=newest&fresh=1": "<loaded>" });
+  const p = page("http://localhost/?pr_sort=newest", [box], { "/part/focus/decisions?pr_sort=newest": "<loaded>", "/part/focus/decisions?pr_sort=newest&fresh=1": "<loaded>", readAt: "2026-10-29T09:41:00Z" });
   await new Promise((r) => setTimeout(r, 0));
+  assert.equal(read.hidden, false, "the first load says when the sources were read");
+  assert.equal(read.getAttribute("datetime"), "2026-10-29T09:41:00Z");
+  assert.match(read.textContent, /^read \d/);
   const e = p.fire("click", icon);
   assert.ok(e.prevented);
   assert.equal(p.fetches.at(-1), "/part/focus/decisions?pr_sort=newest&fresh=1");
   assert.equal(box.getAttribute("data-ui-src"), "/part/focus/decisions?pr_sort=newest", "the next plain load reads from the cache again");
   assert.equal(box.querySelector("section").getAttribute("aria-busy"), "true");
+  assert.ok(box.querySelector("section").hasAttribute("data-ui-reloading"), "the old section dims under a bar");
+  assert.equal(again.getAttribute("aria-busy"), "true", "the button spins");
+  assert.equal(p.fire("click", icon).prevented, true);
+  assert.equal(p.fetches.length, 2, "a busy button asks nothing more");
   await new Promise((r) => setTimeout(r, 0));
   assert.ok(box.querySelector("[id=new]"), "the section shows what the server read");
   assert.equal(box.querySelector(".ui-section-head [data-ui-again]"), again);
+  assert.equal(again.getAttribute("aria-busy"), null);
+  assert.equal(done.textContent, "Updated");
 });
 
 test("a section link reloads only its section at the link's address, and carries it to Read again", () => {

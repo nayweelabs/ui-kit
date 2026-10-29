@@ -48,6 +48,7 @@
 <div class="ui-bar-end">
 {{- range .Status}}<span class="ui-status" title="{{.Label}}"><span class="ui-dot" data-tone="{{orDefault "none" .Tone}}"></span><span class="ui-status-word">{{.Label}}</span></span>{{end}}
 {{- range .Lights}}{{template "ui/light" .}}{{end}}
+{{- with .Read}}{{template "ui/read-at" .}}{{end}}
 {{- with .Refresh}}<a class="ui-iconbtn" href="{{.Href}}"{{ext .Href}}{{with .Carry}} data-ui-carry="{{.}}"{{end}} aria-label="{{orDefault "Refresh" .Label}}" title="{{orDefault "Refresh" .Label}}">{{template "ui/icon" "refresh"}}</a>{{end}}
 {{- if not .NoTheme}}<button class="ui-iconbtn" type="button" data-ui-theme-toggle aria-label="Switch light or dark theme" title="Switch light or dark theme">{{template "ui/icon" "theme"}}</button>{{end -}}
 </div>

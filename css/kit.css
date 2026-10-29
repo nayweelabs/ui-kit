@@ -180,9 +180,18 @@ a.ui-num:hover{color:var(--ui-accent)}
 .ui-section-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--ui-space-2) var(--ui-space-3)}
 .ui-section-title{font-size:var(--ui-text-lg);font-weight:650;display:flex;align-items:center;gap:8px}
 .ui-why{font-size:var(--ui-text-sm);color:var(--ui-muted);margin-left:auto}
-.ui-section-head>[data-ui-again]{width:28px;height:28px;align-self:center}
-.ui-section-title+[data-ui-again]{margin-left:auto}
-.ui-section[aria-busy="true"] [data-ui-again]{opacity:.55;cursor:progress}
+.ui-section-tools{display:inline-flex;align-items:center;gap:var(--ui-space-2);margin-left:auto;align-self:center}
+.ui-why+.ui-section-tools{margin-left:0}
+.ui-section-tools [data-ui-again]{width:28px;height:28px}
+.ui-read{font:var(--ui-text-xs)/1 var(--ui-font-data);color:var(--ui-muted);white-space:nowrap}
+.ui-bar-end .ui-read{margin-right:2px}
+.ui-again-done{font-size:var(--ui-text-xs);font-weight:600;color:var(--ui-good)}
+.ui-again-done:empty{display:none}
+[data-ui-again][aria-busy="true"]{opacity:.6;cursor:progress;pointer-events:none}
+[data-ui-again][aria-busy="true"] svg{animation:ui-spin .9s linear infinite}
+.ui-section[data-ui-reloading]{position:relative}
+.ui-section[data-ui-reloading]>:not(.ui-section-head){opacity:.45;transition:opacity .15s}
+.ui-section[data-ui-reloading]::before{content:"";position:absolute;left:0;right:0;top:-8px;height:3px;border-radius:var(--ui-radius-pill);background:var(--ui-accent);transform-origin:left;animation:ui-progress 1.1s ease-in-out infinite alternate}
 .ui-products{display:grid;gap:var(--ui-space-3);min-width:0}
 .ui-section-more{font-size:var(--ui-text-sm);justify-self:start}
 .ui-label{font-size:var(--ui-text-xs);font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ui-muted)}
@@ -216,6 +225,8 @@ a.ui-num:hover{color:var(--ui-accent)}
 .ui-skel-group>.ui-skel[data-size="title"]{width:40%}
 @keyframes ui-skel{from{background-position:100% 0}to{background-position:-100% 0}}
 @keyframes ui-appear{from{visibility:hidden}to{visibility:visible}}
+@keyframes ui-spin{to{transform:rotate(360deg)}}
+@keyframes ui-progress{from{transform:scaleX(.08)}to{transform:scaleX(1)}}
 
 /* ---------- product card and card grid ---------- */
 .ui-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:var(--ui-space-3);align-items:start}

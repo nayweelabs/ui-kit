@@ -199,6 +199,7 @@
     var again = t.closest(".ui-lazy [data-ui-again]");
     if (again && window.fetch) {
       e.preventDefault();
+      if (again.getAttribute("aria-busy") === "true") return;
       return load(again.closest(".ui-lazy"), null, true);
     }
 
@@ -255,7 +256,9 @@
 
   // Lazy sections: each .ui-lazy fetches its own HTML from data-ui-src, all in parallel, and shows it in
   // its place; a failed fetch shows the section's error box (from its <template data-ui-failed>) with Retry.
-  // The placeholder's Read again button stays in the loaded section's head; it reloads with fresh=1.
+  // The placeholder's tools (when it was read, Read again) stay in the loaded section's head. Read again
+  // reloads with fresh=1: the button spins, the section dims under a bar until the new HTML lands, then
+  // "Updated" shows and is announced. The UI-Read-At header says when the section's sources were read.
   function failed(box, cause) {
     var html = box.uiFailed || "";
     box.innerHTML = html;
@@ -263,16 +266,50 @@
     if (p) p.textContent = cause + ". Everything else on this page is current.";
   }
 
-  function keepAgain(box) {
+  function keepTools(box) {
     var head = box.querySelector(".ui-section-head");
-    if (box.uiAgain && head && !head.querySelector("[data-ui-again]")) head.appendChild(box.uiAgain);
+    if (!box.uiTools || !head) return;
+    var drawn = head.querySelector("[data-ui-tools]");
+    if (drawn === box.uiTools) return;
+    if (drawn) drawn.remove();
+    head.appendChild(box.uiTools);
+  }
+
+  function readAt(box, at) {
+    var t = box.uiTools && box.uiTools.querySelector("[data-ui-read]");
+    var when = at && new Date(at);
+    if (!t || !when || isNaN(when)) return;
+    t.setAttribute("datetime", at);
+    t.setAttribute("title", "Its sources were read at " + when.toLocaleString());
+    t.textContent = "read " + when.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    t.hidden = false;
+  }
+
+  function busy(box, on) {
+    var btn = box.uiTools && box.uiTools.querySelector("[data-ui-again]");
+    if (btn) {
+      if (on) btn.setAttribute("aria-busy", "true");
+      else btn.removeAttribute("aria-busy");
+      if (on) btn.setAttribute("aria-disabled", "true");
+      else btn.removeAttribute("aria-disabled");
+    }
+    var sec = box.querySelector(".ui-section");
+    if (sec && on) sec.setAttribute("data-ui-reloading", "");
+  }
+
+  function said(box, text) {
+    var s = box.uiTools && box.uiTools.querySelector(".ui-again-done");
+    if (!s) return;
+    s.textContent = text;
+    clearTimeout(box.uiSaid);
+    if (text) box.uiSaid = setTimeout(function () { s.textContent = ""; }, 4000);
   }
 
   function load(box, src, fresh) {
     if (!box.uiFailed) {
       var tpl = box.querySelector("template[data-ui-failed]");
       box.uiFailed = tpl ? tpl.innerHTML : "";
-      box.uiAgain = box.querySelector("[data-ui-again]");
+      box.uiTools = box.querySelector("[data-ui-tools]");
     }
     if (src) box.setAttribute("data-ui-src", src);
     src = box.getAttribute("data-ui-src");
@@ -280,6 +317,8 @@
       var url = new URL(src, location.href);
       url.searchParams.set("fresh", "1");
       src = url.pathname + url.search;
+      said(box, "");
+      busy(box, true);
     }
     var sec = box.querySelector(".ui-section");
     if (sec) sec.setAttribute("aria-busy", "true");
@@ -288,19 +327,23 @@
     return fetch(src, { credentials: "same-origin", headers: { "Accept": "text/html" } }).then(function (res) {
       return res.text().then(function (text) {
         if (box.uiSeq !== seq) return;
+        busy(box, false);
         if (!res.ok) {
           failed(box, "The server answered " + res.status + (res.statusText ? " " + res.statusText : ""));
-          return keepAgain(box);
+          return keepTools(box);
         }
         box.innerHTML = text;
-        keepAgain(box);
+        keepTools(box);
+        readAt(box, res.headers && res.headers.get("UI-Read-At"));
+        if (fresh) said(box, "Updated");
         initFolds(box);
         carry(box);
       });
     }, function (err) {
       if (box.uiSeq !== seq) return;
+      busy(box, false);
       failed(box, "The page could not reach the server (" + err.message + ")");
-      keepAgain(box);
+      keepTools(box);
     });
   }
 

@@ -216,6 +216,16 @@ type Section struct {
 	Src     string
 	Full    string
 	Again   string // the page with this section's sources read again (fresh=1): a Read again button in the head
+	Read    *ReadAt
+}
+
+// ReadAt is when a section's or a page's sources were last read ("ui/read-at"): Text is shown ("read 10:42"),
+// Title on hover (the exact time), At is the time as RFC 3339. A lazy section draws it empty; kit.js fills it from
+// the UI-Read-At header of the section's HTML.
+type ReadAt struct {
+	Text  string
+	Title string
+	At    string
 }
 
 // Column is one column of a data list. Num right-aligns it in mono; Hidden keeps the label for screen readers only.
@@ -370,6 +380,7 @@ type Bar struct {
 	Status  []Status
 	Lights  []Light
 	Refresh *Link
+	Read    *ReadAt // when the page was read, left of Refresh
 	NoTheme bool
 }
 
