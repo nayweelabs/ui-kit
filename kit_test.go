@@ -277,3 +277,16 @@ func TestALazyLightIsDrawnNeutralFirst(t *testing.T) {
 		t.Errorf("the placeholder shows what is not loaded yet:\n%s", got)
 	}
 }
+
+func TestAHiddenBackValueIsMarkedForKitJS(t *testing.T) {
+	var b bytes.Buffer
+	l := kit.Light{ID: "gh", Label: "GitHub", Href: "/s", Actions: []kit.Action{{Label: "Disconnect", Confirm: &kit.Confirm{Text: "x", Label: "Disconnect now", Action: "/d",
+		Hidden: []kit.Hidden{{Name: "back", Value: "/?pr_sort=newest", Back: true}, {Name: "tab", Value: "prs"}}}}}}
+	if err := kit.Render(&b, "ui/light", l); err != nil {
+		t.Fatal(err)
+	}
+	got := b.String()
+	if !strings.Contains(got, `<input type="hidden" name="back" value="/?pr_sort=newest" data-ui-back>`) || !strings.Contains(got, `<input type="hidden" name="tab" value="prs">`) {
+		t.Errorf("only a Back value carries data-ui-back:\n%s", got)
+	}
+}

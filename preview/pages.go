@@ -131,6 +131,9 @@ func lazy(tpl *template.Template, r *http.Request) (kit.Page, error) {
 		}
 		q := r.URL.Query()
 		sec.Src, sec.Full = "/part/"+name+"?"+q.Encode(), "/lazy?full=1"
+		again := r.URL.Query()
+		again.Set("fresh", "1")
+		sec.Again = "/lazy?" + again.Encode()
 		body += mustHTML(tpl, "ui/section", sec) + "\n"
 	}
 	page := kit.Page{Header: kit.Head{Title: "Lazy sections", Lede: "The shell comes at once; each section loads its own HTML, in parallel, and fails on its own."}, Body: body}

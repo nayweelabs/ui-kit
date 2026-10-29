@@ -58,7 +58,7 @@
 
 {{define "ui/section-frame" -}}
 <section class="ui-section"{{with .ID}} id="{{.}}" aria-labelledby="{{.}}-title"{{end}}{{if .Loading}} aria-busy="true"{{end}}>
-<div class="ui-section-head"><h2 class="ui-section-title"{{with .ID}} id="{{.}}-title"{{end}}>{{.Title}}{{with .Count}} {{template "ui/count" .}}{{end}}</h2>{{with .Why}}<span class="ui-why">{{.}}</span>{{end}}</div>
+<div class="ui-section-head"><h2 class="ui-section-title"{{with .ID}} id="{{.}}-title"{{end}}>{{.Title}}{{with .Count}} {{template "ui/count" .}}{{end}}</h2>{{with .Why}}<span class="ui-why">{{.}}</span>{{end}}{{with .Again}}<a class="ui-iconbtn" href="{{.}}" data-ui-again data-ui-carry="fresh" aria-label="Read {{$.Title}} again" title="Read {{$.Title}} again">{{template "ui/icon" "refresh"}}</a>{{end}}</div>
 {{- if .Loading}}
 {{template "ui/skeleton" (skeleton "rows" 3)}}
 {{- with .Full}}

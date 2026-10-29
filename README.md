@@ -29,7 +29,17 @@ tpl := template.Must(kit.Templates().ParseFS(views, "views/*.html"))
 
 The data each partial takes is a Go type in `types.go` (`kit.Page`, `kit.Section`, `kit.Product`, `kit.PR`, …). The server works out every value, tone and label; the partial only draws it. `kit.HTML` draws a partial into `template.HTML`, ready to be a section's body.
 
-A section that reads something slow loads on its own: give `kit.Section` a `Src`, the address of the section's own HTML, and a `Full`, the page drawn whole on the server. The shell then comes at once with the section's skeleton; `kit.js` fetches every lazy section in parallel and puts each in its place, and a fetch that fails shows that section's error box with Retry. A GET form inside a loaded lazy section, such as its toolbar, reloads only that section and keeps its values in the address. Set `kit.Page.Full` too, and a browser without JavaScript goes straight to the whole page. `/lazy` in the preview shows all of it.
+A section that reads something slow loads on its own: give `kit.Section` a `Src`, the address of the section's own HTML, and a `Full`, the page drawn whole on the server. The shell then comes at once with the section's skeleton; `kit.js` fetches every lazy section in parallel and puts each in its place, and a fetch that fails shows that section's error box with Retry. A GET form inside a loaded lazy section, such as its toolbar, reloads only that section and keeps its values in the address. Set `kit.Page.Full` too, and a browser without JavaScript goes straight to the whole page. Give a section an `Again`, the page with its sources read again (`?fresh=1`), and its head holds a Read again button: `kit.js` reloads only that section, from its `Src` with `fresh=1` added and its current sort or filter kept, so the server reads that section's sources again; without JavaScript it is a link to `Again`. `/lazy` in the preview shows all of it.
+
+When a toolbar or the cards/list toggle changes the address without a reload, links drawn with the old address would lose the change. Mark them, and `kit.js` keeps them current:
+
+| Mark | Go field | Drawn as | Kept current |
+|---|---|---|---|
+| A link that carries the page's query | `Carry` on `kit.Link`, `kit.Tab`, `kit.Button`: its own query values, space-separated | `data-ui-carry="fresh"` | the link takes the page's new query; its own values (here `fresh`) stay as its `Href` had them |
+| A lazy light's address of the page | `Back` on `kit.Light`: the name of `Src`'s value | `data-ui-back="back"` on the lazy box | that value of `data-ui-src` becomes the page's address |
+| A form's address of the page | `Back` on `kit.Hidden` | `<input type="hidden" … data-ui-back>` | its value becomes the page's address |
+
+The server draws every one of them right for the first load: a carried link's `Href` already holds the page's query (a Read again link `/?pr_sort=newest&fresh=1` with `Carry: "fresh"`; a tab `/product/x?pr_sort=newest&tab=board` with `Carry: "tab"`). A reload (F5) asks the server again and needs none of it.
 
 A status light (`kit.Light`, in `kit.Bar.Lights`) is a dot, an icon and a word in the top bar for one connection, such as GitHub. It is a link to the app's full page for it; `kit.js` makes it open a popover under it with the facts (`Details`) and an Actions menu. An action links, opens a dialog of `Dialogs` (a `kit.Dialog` whose `Body` holds its fields), or asks once more inside the popover (`Confirm`) before it posts. Give it a `Src` and the bar draws it grey at once and fetches it, like a lazy section.
 
@@ -57,8 +67,9 @@ Put `class="ui-page"` on `<body>`. The wrappers are plain ES modules with types;
 | `css/kit.css` | the shell and every part; imports `tokens.css` and the fonts |
 | `fonts/` | Hanken Grotesk and IBM Plex Mono (SIL OFL 1.1, licences beside them) |
 | `partials/` | the Go partials, `ui/…` |
-| `js/kit.js` | theme switch, cards/list toggle, fold, tabs, lazy sections; no app logic |
+| `js/kit.js` | theme switch, cards/list toggle, fold, tabs, lazy sections, carried links; no app logic |
 | `react/` | the React wrappers and their types |
+| `test/` | the tests of `kit.js`, in a small stand-in DOM |
 | `kit.go`, `types.go` | package `kit` |
 | `preview/`, `cmd/ui-kit-preview` | the gallery |
 | `cmd/ui-kit-tokens` | writes `css/tokens.css` |

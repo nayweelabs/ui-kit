@@ -2,7 +2,7 @@
 
 {{define "ui/light" -}}
 {{- if .Src -}}
-<div class="ui-lazy" data-ui-src="{{.Src}}"><div class="ui-light"><a class="ui-light-btn" href="{{.Href}}"{{ext .Href}} aria-busy="true">{{template "ui/light-face" (lazyLight .)}}</a></div><template data-ui-failed>{{template "ui/light" (failedLight .)}}</template></div>
+<div class="ui-lazy" data-ui-src="{{.Src}}"{{with .Back}} data-ui-back="{{.}}"{{end}}><div class="ui-light"><a class="ui-light-btn" href="{{.Href}}"{{ext .Href}} aria-busy="true">{{template "ui/light-face" (lazyLight .)}}</a></div><template data-ui-failed>{{template "ui/light" (failedLight .)}}</template></div>
 {{- else -}}
 <div class="ui-light"{{with .ID}} id="{{.}}"{{end}}><a class="ui-light-btn" href="{{.Href}}"{{ext .Href}} data-ui-light aria-controls="{{.ID}}-pop" aria-expanded="{{.Open}}" aria-haspopup="dialog"{{with .Title}} title="{{.}}"{{end}}>{{template "ui/light-face" .}}</a>
 <div class="ui-pop" id="{{.ID}}-pop" role="dialog" aria-labelledby="{{.ID}}-pop-title" tabindex="-1"{{if not .Open}} hidden{{end}}>
@@ -24,7 +24,7 @@
 {{- end}}
 </div></details>
 {{- range $i, $a := .Actions}}{{with .Confirm}}
-<form class="ui-pop-step" id="{{$.ID}}-step-{{$i}}" method="post" action="{{.Action}}" hidden><p>{{.Text}}</p>{{range .Hidden}}<input type="hidden" name="{{.Name}}" value="{{.Value}}">{{end}}<div class="ui-dialog-acts"><button class="ui-btn" type="button" data-size="sm" data-ui-step-cancel>Cancel</button><button class="ui-btn" type="submit"{{with $a.Variant}} data-variant="{{.}}"{{end}} data-size="sm">{{.Label}}</button></div></form>
+<form class="ui-pop-step" id="{{$.ID}}-step-{{$i}}" method="post" action="{{.Action}}" hidden><p>{{.Text}}</p>{{range .Hidden}}<input type="hidden" name="{{.Name}}" value="{{.Value}}"{{if .Back}} data-ui-back{{end}}>{{end}}<div class="ui-dialog-acts"><button class="ui-btn" type="button" data-size="sm" data-ui-step-cancel>Cancel</button><button class="ui-btn" type="submit"{{with $a.Variant}} data-variant="{{.}}"{{end}} data-size="sm">{{.Label}}</button></div></form>
 {{- end}}{{end}}
 {{- end}}
 </div>

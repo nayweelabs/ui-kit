@@ -9,7 +9,7 @@
 {{- with .Search}}<label class="ui-search">{{template "ui/icon" "search"}}<input type="search" name="{{orDefault "q" .Name}}" value="{{.Value}}" placeholder="{{.Placeholder}}" aria-label="{{orDefault .Placeholder .Label}}"></label>{{end}}
 {{- range .Filters}}<select class="ui-select" name="{{.Name}}" aria-label="{{.Label}}"{{if .Active}} data-active{{end}} data-ui-submit>{{range .Options}}<option value="{{.Value}}"{{if .Selected}} selected{{end}}>{{.Label}}</option>{{end}}</select>{{end}}
 {{- with .Clear}}<a class="ui-btn" data-variant="quiet" data-size="sm" href="{{.Href}}"{{ext .Href}}>{{orDefault "Clear" .Label}}</a>{{end}}
-{{- range .Hidden}}<input type="hidden" name="{{.Name}}" value="{{.Value}}">{{end}}
+{{- range .Hidden}}<input type="hidden" name="{{.Name}}" value="{{.Value}}"{{if .Back}} data-ui-back{{end}}>{{end}}
 <noscript><button class="ui-btn" data-size="sm" type="submit">Apply</button></noscript>
 <span class="ui-grow"></span>
 {{- with .Count}}<span class="ui-toolbar-count">{{.}}</span>{{end}}
@@ -20,7 +20,7 @@
 
 {{define "ui/tabs" -}}
 <div class="ui-tabs" role="tablist" aria-label="{{.Label}}">
-{{- range .Items}}{{if .Href}}<a class="ui-tab" role="tab" href="{{.Href}}"{{ext .Href}} aria-selected="{{.Selected}}"{{if .Selected}} aria-current="page"{{else}} tabindex="-1"{{end}}>{{.Label}}{{with .Count}} {{template "ui/count" .}}{{end}}</a>{{else}}<button class="ui-tab" role="tab" type="button" id="{{.Panel}}-tab" aria-controls="{{.Panel}}" aria-selected="{{.Selected}}"{{if not .Selected}} tabindex="-1"{{end}}>{{.Label}}{{with .Count}} {{template "ui/count" .}}{{end}}</button>{{end}}{{end -}}
+{{- range .Items}}{{if .Href}}<a class="ui-tab" role="tab" href="{{.Href}}"{{ext .Href}}{{with .Carry}} data-ui-carry="{{.}}"{{end}} aria-selected="{{.Selected}}"{{if .Selected}} aria-current="page"{{else}} tabindex="-1"{{end}}>{{.Label}}{{with .Count}} {{template "ui/count" .}}{{end}}</a>{{else}}<button class="ui-tab" role="tab" type="button" id="{{.Panel}}-tab" aria-controls="{{.Panel}}" aria-selected="{{.Selected}}"{{if not .Selected}} tabindex="-1"{{end}}>{{.Label}}{{with .Count}} {{template "ui/count" .}}{{end}}</button>{{end}}{{end -}}
 </div>
 {{- end}}
 

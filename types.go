@@ -5,12 +5,17 @@ import "html/template"
 // The data each partial draws. The server works out every value (G-STACK-7): tone, label, order, age text. A Tone is one of "good", "warn", "bad", "info", "accent", "none", or "" for neutral.
 
 // Link is a place to go. Current marks the page you are on.
+//
+// Carry makes it a link that carries the page's address: Href holds the page's query, and Carry names
+// the link's own query values, space-separated (like "fresh" or "tab"). When the address changes without
+// a reload (a toolbar or the view toggle), kit.js gives the link the new query and keeps its own values.
 type Link struct {
 	Label   string
 	Href    string
 	Title   string
 	Current bool
 	Count   *Count
+	Carry   string
 }
 
 // Status is a dot and a word ("ui/status").
@@ -96,6 +101,7 @@ type Button struct {
 	Opens    string
 	Disabled bool
 	Busy     bool
+	Carry    string // with Href, the link's own query values; it carries the page's others (see Link)
 }
 
 // Fact is one label and value row of a product card, and one cell of its list row ("ui/fact").
@@ -195,6 +201,8 @@ type Milestones struct {
 // Section is the block every page is made of ("ui/section"). It fails on its own: Loading draws a skeleton, Problem without Body is failed, Problem with Body is partial, Empty is empty.
 //
 // With Src it is lazy: it draws its skeleton at once and kit.js fetches Src, the section's own HTML, and puts it in its place; each lazy section on a page loads in parallel and on its own. If the fetch fails, the section shows its error box with a Retry link. A GET form inside a loaded lazy section (a toolbar) reloads only that section, and the address keeps the form's values. Full is the address of the page drawn whole on the server, linked for a browser without JavaScript.
+//
+// With Again, the head holds a Read again button, a link to Again. On a lazy section kit.js reloads only that section instead, from Src with fresh=1 added, so the server reads the section's sources again; the button stays in the loaded section's head.
 type Section struct {
 	ID      string
 	Title   string
@@ -207,6 +215,7 @@ type Section struct {
 	More    *Link
 	Src     string
 	Full    string
+	Again   string // the page with this section's sources read again (fresh=1): a Read again button in the head
 }
 
 // Column is one column of a data list. Num right-aligns it in mono; Hidden keeps the label for screen readers only.
@@ -307,10 +316,12 @@ type Toolbar struct {
 	Hidden  []Hidden
 }
 
-// Hidden is a value a toolbar's form sends unchanged, such as the tab it sits on.
+// Hidden is a value a form sends unchanged, such as the tab it sits on. Back makes Value the page's
+// address, which kit.js keeps current when the address changes without a reload.
 type Hidden struct {
 	Name  string
 	Value string
+	Back  bool
 }
 
 // Tab is one tab. With Href it is a link with its own address; without, it switches the panel of id Panel.
@@ -320,6 +331,7 @@ type Tab struct {
 	Panel    string
 	Count    *Count
 	Selected bool
+	Carry    string // with Href, the tab's own query values ("tab"); it carries the page's others (see Link)
 }
 
 // Tabs switch views of the same thing on one page ("ui/tabs").
@@ -377,6 +389,7 @@ type Light struct {
 	Dialogs []Dialog // the dialogs its actions open
 	Open    bool
 	Src     string
+	Back    string // the name of Src's query value that holds the page's address ("back"); kit.js keeps it current
 	Retry   string // with it, the popover says why the light could not load (data-ui-cause) and a Retry link reloads it from this address
 }
 

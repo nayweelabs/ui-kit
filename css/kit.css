@@ -180,6 +180,9 @@ a.ui-num:hover{color:var(--ui-accent)}
 .ui-section-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--ui-space-2) var(--ui-space-3)}
 .ui-section-title{font-size:var(--ui-text-lg);font-weight:650;display:flex;align-items:center;gap:8px}
 .ui-why{font-size:var(--ui-text-sm);color:var(--ui-muted);margin-left:auto}
+.ui-section-head>[data-ui-again]{width:28px;height:28px;align-self:center}
+.ui-section-title+[data-ui-again]{margin-left:auto}
+.ui-section[aria-busy="true"] [data-ui-again]{opacity:.55;cursor:progress}
 .ui-products{display:grid;gap:var(--ui-space-3);min-width:0}
 .ui-section-more{font-size:var(--ui-text-sm);justify-self:start}
 .ui-label{font-size:var(--ui-text-xs);font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ui-muted)}

@@ -28,6 +28,6 @@
     "typescript": "^5.6.0"
   },
   "scripts": {
-    "test": "node --test react/ && tsc -p react"
+    "test": "node --test react/ test/ && tsc -p react"
   }
 }

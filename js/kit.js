@@ -1,4 +1,4 @@
-/* ui-kit/js/kit.js: theme switch, cards/list toggle, fold, tabs, lazy sections, status lights, and the small helpers of the field, id and dialog parts.
+/* ui-kit/js/kit.js: theme switch, cards/list toggle, fold, tabs, lazy sections, carried links, status lights, and the small helpers of the field, id and dialog parts.
    No app logic and no data. Every part works without it; this only saves a reload. Load it in <head> without defer. */
 (function () {
   "use strict";
@@ -38,7 +38,39 @@
       var url = new URL(location.href);
       url.searchParams.set("view", view);
       history.replaceState(null, "", url);
+      carry();
     }
+  }
+
+  // Carried links: a link with data-ui-carry takes the page's query when the address changes without a
+  // reload, and keeps its own values, the names the attribute lists. data-ui-back holds the page's address:
+  // in a hidden input's value, or in the value it names of a lazy box's data-ui-src.
+  function carry(within) {
+    var scope = within || document;
+    var here = location.pathname + location.search;
+    scope.querySelectorAll("[data-ui-carry]").forEach(function (a) {
+      var url = new URL(a.getAttribute("href"), location.href);
+      if (url.origin !== location.origin) return;
+      var q = new URLSearchParams(location.search);
+      (a.getAttribute("data-ui-carry") || "").split(/\s+/).forEach(function (k) {
+        if (!k) return;
+        q.delete(k);
+        url.searchParams.getAll(k).forEach(function (v) { q.append(k, v); });
+      });
+      var query = q.toString();
+      a.setAttribute("href", url.pathname + (query ? "?" + query : "") + url.hash);
+    });
+    scope.querySelectorAll("[data-ui-back]").forEach(function (el) {
+      var name = el.getAttribute("data-ui-back");
+      if (!name) {
+        el.value = here;
+        el.setAttribute("value", here);
+        return;
+      }
+      var url = new URL(el.getAttribute("data-ui-src"), location.href);
+      url.searchParams.set(name, here);
+      el.setAttribute("data-ui-src", url.pathname + url.search);
+    });
   }
 
   function initViews() {
@@ -164,6 +196,12 @@
     if (lightClick(t, e)) return;
     if (t.closest("[data-ui-theme-toggle]")) return toggleTheme();
 
+    var again = t.closest(".ui-lazy [data-ui-again]");
+    if (again && window.fetch) {
+      e.preventDefault();
+      return load(again.closest(".ui-lazy"), null, true);
+    }
+
     var retry = t.closest(".ui-lazy [data-ui-retry]");
     if (retry && window.fetch) {
       e.preventDefault();
@@ -210,6 +248,7 @@
 
   // Lazy sections: each .ui-lazy fetches its own HTML from data-ui-src, all in parallel, and shows it in
   // its place; a failed fetch shows the section's error box (from its <template data-ui-failed>) with Retry.
+  // The placeholder's Read again button stays in the loaded section's head; it reloads with fresh=1.
   function failed(box, cause) {
     var html = box.uiFailed || "";
     box.innerHTML = html;
@@ -217,13 +256,24 @@
     if (p) p.textContent = cause + ". Everything else on this page is current.";
   }
 
-  function load(box, src) {
+  function keepAgain(box) {
+    var head = box.querySelector(".ui-section-head");
+    if (box.uiAgain && head && !head.querySelector("[data-ui-again]")) head.appendChild(box.uiAgain);
+  }
+
+  function load(box, src, fresh) {
     if (!box.uiFailed) {
       var tpl = box.querySelector("template[data-ui-failed]");
       box.uiFailed = tpl ? tpl.innerHTML : "";
+      box.uiAgain = box.querySelector("[data-ui-again]");
     }
     if (src) box.setAttribute("data-ui-src", src);
     src = box.getAttribute("data-ui-src");
+    if (fresh) {
+      var url = new URL(src, location.href);
+      url.searchParams.set("fresh", "1");
+      src = url.pathname + url.search;
+    }
     var sec = box.querySelector(".ui-section");
     if (sec) sec.setAttribute("aria-busy", "true");
     var seq = (box.uiSeq || 0) + 1;
@@ -231,12 +281,19 @@
     return fetch(src, { credentials: "same-origin", headers: { "Accept": "text/html" } }).then(function (res) {
       return res.text().then(function (text) {
         if (box.uiSeq !== seq) return;
-        if (!res.ok) return failed(box, "The server answered " + res.status + (res.statusText ? " " + res.statusText : ""));
+        if (!res.ok) {
+          failed(box, "The server answered " + res.status + (res.statusText ? " " + res.statusText : ""));
+          return keepAgain(box);
+        }
         box.innerHTML = text;
+        keepAgain(box);
         initFolds(box);
+        carry(box);
       });
     }, function (err) {
-      if (box.uiSeq === seq) failed(box, "The page could not reach the server (" + err.message + ")");
+      if (box.uiSeq !== seq) return;
+      failed(box, "The page could not reach the server (" + err.message + ")");
+      keepAgain(box);
     });
   }
 
@@ -254,7 +311,10 @@
     var fields = new URLSearchParams(new FormData(form));
     var page = new URL(location.href);
     fields.forEach(function (v, k) { page.searchParams.set(k, v); });
-    if (window.history && history.replaceState) history.replaceState(null, "", page);
+    if (window.history && history.replaceState) {
+      history.replaceState(null, "", page);
+      carry();
+    }
     var src = new URL(box.getAttribute("data-ui-src"), location.href);
     src.search = page.search;
     load(box, src.pathname + src.search);
