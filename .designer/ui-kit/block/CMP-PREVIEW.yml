@@ -1,0 +1,16 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-PREVIEW"
+  title: "Preview gallery"
+spec:
+  place:
+    group: "GRP-DELIVERY"
+    release: "v0.1.0"
+  caption:
+    - "`go run ./cmd/ui-kit-preview`"
+    - "every part, every state, both themes"
+  description: "What the owner looks at before a release. The same cases feed the golden tests. Example pages: Focus, Products, Left rail."
+  code:
+    implements: "preview/preview.go"
+

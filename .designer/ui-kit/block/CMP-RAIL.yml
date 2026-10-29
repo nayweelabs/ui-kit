@@ -1,0 +1,16 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-RAIL"
+  title: "Left rail"
+spec:
+  place:
+    group: "GRP-SHELL"
+    release: "v0.1.0"
+  caption:
+    - "`ui/rail` · `.ui-rail`"
+    - "only for apps over 6 pages"
+  description: "Under the top bar, never instead of it. A strip that scrolls sideways on a phone."
+  code:
+    implements: "partials/shell.html"
+

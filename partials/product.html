@@ -1,0 +1,57 @@
+{{/* Product card and its list view: one part, two views. Facts always in the order the server sends. */}}
+
+{{define "ui/fact" -}}
+{{if .Error}}<span class="ui-fact-err">{{template "ui/icon" "alert"}}{{.Error}}</span>{{else -}}
+{{with .Tone}}<span class="ui-dot" data-tone="{{.}}"></span>{{end}}{{with .Num}}{{template "ui/num" .}}{{end}}{{with .Text}} {{.}}{{end}}{{with .Branch}} <span class="ui-branch"><b>{{.}}</b></span>{{end}}{{with .Pill}} {{template "ui/pill" .}}{{end}}
+{{- end}}
+{{- end}}
+
+{{define "ui/product-card" -}}
+<article class="ui-card"{{if .Focus}} data-focus{{end}}{{if .Problem}} data-state="failed"{{end}}{{with .Variant}} data-variant="{{.}}"{{end}}>
+<div class="ui-card-head"><div class="ui-card-title"><a href="{{.Href}}"{{ext .Href}}>{{.Name}}</a>{{with .Kind}}<span class="ui-card-kind">{{.}}</span>{{end}}</div>
+{{- if .Focus}}{{template "ui/star" (star "focus" true)}}{{else if .Marker}}{{template "ui/pill" .Marker}}{{else if .Waiting}}{{template "ui/count" .Waiting}}{{end}}</div>
+{{- with .Problem}}
+{{template "ui/error" .}}{{end}}
+{{- if .Facts}}
+<dl class="ui-kv">
+{{- range .Facts}}
+<dt>{{.Label}}</dt><dd>{{template "ui/fact" .}}</dd>
+{{- end}}
+</dl>{{end}}
+<div class="ui-card-foot"><span>{{.Foot}}</span><a href="{{orDefault .Href .OpenHref}}"{{ext (orDefault .Href .OpenHref)}}>Open<span class="ui-sr"> {{.Name}}</span></a></div>
+</article>
+{{- end}}
+
+{{define "ui/product-row" -}}
+<tr><td><a class="ui-item" href="{{.Href}}"{{ext .Href}}>{{.Name}}</a>{{with .Kind}}<span class="ui-item-sub">{{.}}</span>{{end}}</td>
+{{- range .Facts}}<td><span class="ui-cell">{{template "ui/fact" .}}</span></td>{{end}}
+<td>{{if .Focus}}{{template "ui/star" (star "" false)}}{{end}}</td></tr>
+{{- end}}
+
+{{define "ui/products" -}}
+<div class="ui-products" id="{{.ID}}">
+{{- with .Toolbar}}
+{{template "ui/toolbar" .}}{{end}}
+{{- if .Loading}}
+<div class="ui-cards">{{template "ui/skeleton" (skeleton "card" 3)}}{{template "ui/skeleton" (skeleton "card" 3)}}{{template "ui/skeleton" (skeleton "card" 3)}}</div>
+{{- else if .Problem}}
+{{template "ui/error" .Problem}}
+{{- else if not .Items}}
+{{with .Empty}}{{template "ui/empty" .}}{{end}}
+{{- else}}
+<div class="ui-cards" data-ui-view-panel="{{.ID}}" data-view="cards"{{if eq .View "list"}} hidden{{end}}>
+{{- range .Items}}
+{{template "ui/product-card" .}}
+{{- end}}
+</div>
+<div class="ui-list" data-ui-view-panel="{{.ID}}" data-view="list"{{if ne .View "list"}} hidden{{end}}>
+<table><thead><tr><th scope="col">Product</th>{{range .Columns}}<th scope="col">{{.}}</th>{{end}}<th scope="col"><span class="ui-sr">Focus</span></th></tr></thead>
+<tbody>
+{{- range .Items}}
+{{template "ui/product-row" .}}
+{{- end}}
+</tbody></table>
+</div>
+{{- end}}
+</div>
+{{- end}}

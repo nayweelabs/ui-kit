@@ -1,0 +1,120 @@
+{{/* PR item and list, milestone strip, section, data list, ticket. */}}
+
+{{define "ui/pr-item" -}}
+{{if .Problem -}}
+<div class="ui-pr">{{template "ui/error" .Problem}}</div>
+{{- else -}}
+<div class="ui-pr"{{if .Compact}} data-compact{{end}}>
+<div class="ui-pr-top">{{if .Compact}}<span class="ui-pr-verb">{{.Verb}}</span> {{end}}<a class="ui-repo" href="{{orDefault .Href .RepoHref}}"{{ext (orDefault .Href .RepoHref)}}>{{.Repo}} <b>#{{.Number}}</b></a>{{if .Draft}}<span class="ui-pill" data-variant="tag">draft</span>{{end}}{{if not .Compact}}{{with .Initials}}<span class="ui-avatar" aria-hidden="true">{{.}}</span>{{end}}{{with .Author}}<span>{{.}}</span>{{end}}{{end}}{{with .Age}}<span>· {{.}}</span>{{end}}</div>
+<a class="ui-pr-title" href="{{.Href}}"{{ext .Href}}>{{.Title}}</a>
+{{- if not .Compact}}
+<div class="ui-pr-meta">{{with .Branch}}<span class="ui-branch"><b>{{.}}</b> → {{orDefault "main" $.Base}}</span>{{end}}{{with .Files}}<span>{{template "ui/num" .}} files</span>{{end}}{{if or .Added .Removed}}<span><span class="ui-add">+{{.Added}}</span> <span class="ui-del">−{{.Removed}}</span></span>{{end}}{{with .Conflict}}<span class="ui-status" data-tone="warn"><span class="ui-dot" data-tone="warn"></span>{{.}}</span>{{end}}</div>
+{{- end}}
+<div class="ui-pr-side"><span class="ui-pr-pills">{{with .Review}}{{template "ui/pill" .}}{{end}}{{with .CI}}{{template "ui/pill" .}}{{end}}</span>{{if not .Compact}}<a class="ui-btn" data-size="sm" href="{{.Href}}"{{ext .Href}}>{{orDefault "Open on GitHub" .Open}}</a>{{end}}</div>
+</div>
+{{- end}}
+{{- end}}
+
+{{define "ui/pr-list" -}}
+{{if .Loading}}{{template "ui/skeleton" (skeleton "rows" 6)}}
+{{- else if not .Items}}{{with .Empty}}{{template "ui/empty" .}}{{end}}
+{{- else -}}
+<div class="ui-prs">
+{{- range .Items}}
+{{template "ui/pr-item" .}}
+{{- end}}
+</div>
+{{- end}}
+{{- end}}
+
+{{define "ui/milestones" -}}
+<div class="ui-miles">
+<span class="ui-label">{{.Label}}{{with .Total}} · <span class="ui-num">{{.}}</span>{{end}}</span>
+{{- if not .Items}}
+{{with .Empty}}{{template "ui/empty" .}}{{end}}
+{{- else}}
+<div class="ui-track" aria-hidden="true">
+{{- range .Track}}{{if eq .Kind "span"}}<span class="ui-track-span" style="left:{{pct .At}};width:{{pct .Width}}"></span>{{else}}<span class="ui-track-mark" data-kind="{{orDefault "point" .Kind}}" style="left:{{pct .At}}"></span>{{end}}{{end -}}
+</div>
+<ol class="ui-milelist">
+{{- range .Items}}
+<li class="ui-mile"><b>{{.Name}}{{if .Focus}}{{template "ui/star" (star "" false)}}{{end}}</b><span>{{.When}}{{with .Days}} · {{.}}{{end}}</span></li>
+{{- end}}
+</ol>
+{{- end}}
+</div>
+{{- end}}
+
+{{define "ui/section" -}}
+{{if .Src -}}
+<div class="ui-lazy" data-ui-src="{{.Src}}">
+{{template "ui/section-frame" (lazySection .)}}
+<template data-ui-failed>{{template "ui/section-frame" (failedSection .)}}</template>
+</div>
+{{- else -}}
+{{template "ui/section-frame" .}}
+{{- end}}
+{{- end}}
+
+{{define "ui/section-frame" -}}
+<section class="ui-section"{{with .ID}} id="{{.}}" aria-labelledby="{{.}}-title"{{end}}{{if .Loading}} aria-busy="true"{{end}}>
+<div class="ui-section-head"><h2 class="ui-section-title"{{with .ID}} id="{{.}}-title"{{end}}>{{.Title}}{{with .Count}} {{template "ui/count" .}}{{end}}</h2>{{with .Why}}<span class="ui-why">{{.}}</span>{{end}}{{if or .Again .Read}}<span class="ui-section-tools" data-ui-tools>{{template "ui/read-at" .Read}}<span class="ui-again-done" role="status" aria-live="polite"></span>{{with .Again}}<a class="ui-iconbtn" href="{{.}}" data-ui-again data-ui-carry="fresh" aria-label="Read {{$.Title}} again" title="Read {{$.Title}} again">{{template "ui/icon" "refresh"}}</a>{{end}}</span>{{end}}</div>
+{{- if .Loading}}
+{{template "ui/skeleton" (skeleton "rows" 3)}}
+{{- with .Full}}
+<noscript><p class="ui-hint">This section loads with JavaScript. <a href="{{.}}">Show the whole page</a>.</p></noscript>{{end}}
+{{- else}}
+{{- with .Problem}}
+{{template "ui/error" .}}{{end}}
+{{- if .Body}}
+{{.Body}}
+{{- else if and .Empty (not .Problem)}}
+{{template "ui/empty" .Empty}}
+{{- end}}
+{{- with .More}}
+<a class="ui-section-more" href="{{.Href}}"{{ext .Href}}>{{.Label}}</a>{{end}}
+{{- end}}
+</section>
+{{- end}}
+
+{{define "ui/read-at" -}}
+{{if .}}<time class="ui-read" data-ui-read datetime="{{.At}}" title="{{.Title}}">{{.Text}}</time>{{else}}<time class="ui-read" data-ui-read hidden></time>{{end}}
+{{- end}}
+
+{{define "ui/cell" -}}
+{{if .Href}}<a class="ui-item" href="{{.Href}}"{{ext .Href}}>{{.Text}}</a>{{else if .ID}}<button class="ui-id" type="button" data-ui-copy="{{.ID}}" title="Copy {{.ID}}">{{.ID}}</button>{{else}}{{.Text}}{{end}}
+{{- with .Sub}}<span class="ui-item-sub">{{.}}</span>{{end}}
+{{- with .Status}}{{template "ui/status" .}}{{end}}
+{{- with .Pill}}{{template "ui/pill" .}}{{end}}
+{{- with .Star}}{{template "ui/star" .}}{{end}}
+{{- end}}
+
+{{define "ui/table" -}}
+<div class="ui-list"{{if .Small}} data-size="sm"{{end}}{{with .Label}} role="region" aria-label="{{.}}" tabindex="0"{{end}}>
+{{- if .Loading}}
+{{template "ui/skeleton" (skeleton "rows" 4)}}
+{{- else}}
+<table>
+<thead><tr>{{range .Columns}}<th scope="col"{{if .Num}} data-num{{end}}>{{if .Hidden}}<span class="ui-sr">{{.Label}}</span>{{else}}{{.Label}}{{end}}</th>{{end}}</tr></thead>
+<tbody>
+{{- range .Rows}}
+<tr>{{if .Error}}<td colspan="{{len $.Columns}}" data-error><span class="ui-fact-err">{{template "ui/icon" "alert"}}{{.Error}}</span></td>{{else}}{{range .Cells}}<td{{if .Num}} data-num{{end}}>{{template "ui/cell" .}}</td>{{end}}{{end}}</tr>
+{{- end}}
+</tbody>
+</table>
+{{- if and (not .Rows) .Empty}}
+{{template "ui/empty" .Empty}}{{end}}
+{{- end}}
+</div>
+{{- end}}
+
+{{define "ui/ticket" -}}
+<article class="ui-ticket"{{if .Focus}} data-focus{{end}}>
+<div class="ui-ticket-head">{{if .Href}}<a class="ui-ticket-title" href="{{.Href}}"{{ext .Href}}>{{.Title}}</a>{{else}}<b class="ui-ticket-title">{{.Title}}</b>{{end}}{{if .Focus}}{{template "ui/star" (star "" false)}}{{end}}</div>
+{{- with .Summary}}
+<span class="ui-ticket-summary">{{.}}</span>{{end}}
+{{- if .Tags}}
+<div class="ui-ticket-tags">{{range .Tags}}{{template "ui/pill" .}}{{end}}</div>{{end}}
+<div class="ui-ticket-foot"><span>{{with .Turn}}turn <b>{{.}}</b>{{end}}{{with .Age}} · <span class="ui-num">{{.}}</span>{{end}}</span>{{with .ID}}<button class="ui-id" type="button" data-ui-copy="{{.}}" title="Copy {{.}}">{{.}}</button>{{end}}</div>
+</article>
+{{- end}}

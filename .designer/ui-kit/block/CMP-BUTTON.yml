@@ -1,0 +1,15 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-BUTTON"
+  title: "Buttons"
+spec:
+  place:
+    group: "GRP-PARTS"
+    release: "v0.1.0"
+  caption:
+    - "`ui/button`"
+  description: "Primary, secondary, quiet, danger, small; busy says what it does."
+  code:
+    implements: "partials/basics.html"
+

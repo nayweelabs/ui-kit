@@ -1,0 +1,15 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-TABS"
+  title: "Tabs"
+spec:
+  place:
+    group: "GRP-PARTS"
+    release: "v0.1.0"
+  caption:
+    - "`ui/tabs`"
+  description: "Links with their own address, or buttons that switch panels."
+  code:
+    implements: "partials/controls.html"
+

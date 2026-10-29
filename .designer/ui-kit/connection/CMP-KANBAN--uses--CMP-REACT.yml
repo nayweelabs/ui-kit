@@ -1,0 +1,9 @@
+apiVersion: "core/design/v2"
+kind: "Connection"
+metadata:
+  id: "CMP-KANBAN--uses--CMP-REACT"
+spec:
+  from: "CMP-KANBAN"
+  to: "CMP-REACT"
+  label: "uses"
+

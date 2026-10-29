@@ -1,0 +1,39 @@
+{{/* The status light of the top bar: a dot, an icon and a word, as a link to the app's page for it; kit.js opens its popover instead. */}}
+
+{{define "ui/light" -}}
+{{- if .Src -}}
+<div class="ui-lazy" data-ui-src="{{.Src}}"{{with .Back}} data-ui-back="{{.}}"{{end}}><div class="ui-light"><a class="ui-light-btn" href="{{.Href}}"{{ext .Href}} aria-busy="true">{{template "ui/light-face" (lazyLight .)}}</a></div><template data-ui-failed>{{template "ui/light" (failedLight .)}}</template></div>
+{{- else -}}
+<div class="ui-light"{{with .ID}} id="{{.}}"{{end}}><a class="ui-light-btn" href="{{.Href}}"{{ext .Href}} data-ui-light aria-controls="{{.ID}}-pop" aria-expanded="{{.Open}}" aria-haspopup="dialog"{{with .Title}} title="{{.}}"{{end}}>{{template "ui/light-face" .}}</a>
+<div class="ui-pop" id="{{.ID}}-pop" role="dialog" aria-labelledby="{{.ID}}-pop-title" tabindex="-1"{{if not .Open}} hidden{{end}}>
+<b class="ui-pop-title" id="{{.ID}}-pop-title">{{orDefault .Label .Title}}</b>
+{{- if .Retry}}<p class="ui-pop-text" data-ui-cause>{{.Text}}</p>{{else}}{{with .Text}}<p class="ui-pop-text">{{.}}</p>{{end}}{{end}}
+{{- if .Details}}
+<dl class="ui-kv">{{range .Details}}<dt>{{.Label}}</dt><dd>{{.Value}}</dd>{{end}}</dl>
+{{- end}}
+{{- with .Retry}}
+<p><a class="ui-btn" data-size="sm" href="{{.}}" data-ui-retry>Retry</a></p>
+{{- end}}
+{{- if .Actions}}
+<details class="ui-menu"><summary class="ui-btn" data-size="sm">Actions</summary><div class="ui-menu-list">
+{{- range $i, $a := .Actions}}
+{{- if .Href}}<a class="ui-menu-item" href="{{.Href}}"{{ext .Href}}{{with .Variant}} data-variant="{{.}}"{{end}}>{{.Label}}</a>
+{{- else if .Opens}}<button class="ui-menu-item" type="button"{{with .Variant}} data-variant="{{.}}"{{end}} data-ui-open="{{.Opens}}" aria-haspopup="dialog">{{.Label}}</button>
+{{- else if .Confirm}}<button class="ui-menu-item" type="button"{{with .Variant}} data-variant="{{.}}"{{end}} data-ui-step aria-controls="{{$.ID}}-step-{{$i}}" aria-expanded="false">{{.Label}}</button>
+{{- end}}
+{{- end}}
+</div></details>
+{{- range $i, $a := .Actions}}{{with .Confirm}}
+<form class="ui-pop-step" id="{{$.ID}}-step-{{$i}}" method="post" action="{{.Action}}" hidden><p>{{.Text}}</p>{{range .Hidden}}<input type="hidden" name="{{.Name}}" value="{{.Value}}"{{if .Back}} data-ui-back{{end}}>{{end}}<div class="ui-dialog-acts"><button class="ui-btn" type="button" data-size="sm" data-ui-step-cancel>Cancel</button><button class="ui-btn" type="submit"{{with $a.Variant}} data-variant="{{.}}"{{end}} data-size="sm">{{.Label}}</button></div></form>
+{{- end}}{{end}}
+{{- end}}
+</div>
+{{- range .Dialogs}}
+{{template "ui/dialog" .}}{{end}}
+</div>
+{{- end}}
+{{- end}}
+
+{{define "ui/light-face" -}}
+<span class="ui-dot" data-tone="{{orDefault "none" .Tone}}"></span>{{with .Icon}}{{template "ui/icon" .}}{{end}}<span class="ui-light-word">{{.Label}}</span>{{with .Title}}<span class="ui-sr">: {{.}}</span>{{end}}
+{{- end}}

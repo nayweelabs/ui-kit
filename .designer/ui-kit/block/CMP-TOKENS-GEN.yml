@@ -1,0 +1,16 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-TOKENS-GEN"
+  title: "ui-kit-tokens"
+spec:
+  place:
+    group: "GRP-SOURCE"
+    release: "v0.1.0"
+  caption:
+    - "`go run ./cmd/ui-kit-tokens`"
+    - "writes `css/tokens.css`"
+  description: "Writes `css/tokens.css` from `tokens.json`, whole or not at all. A test and CI fail when the file is stale. A contrast test checks text at 4.5:1 and shapes at 3:1 in both themes."
+  code:
+    implements: "cmd/ui-kit-tokens/main.go"
+

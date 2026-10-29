@@ -1,0 +1,124 @@
+/* Generated from tokens/tokens.json by `go run ./cmd/ui-kit-tokens`. Do not edit. */
+/* Light first; dark by system or [data-theme="dark"] on :root or on any element. */
+:root,[data-theme="light"] {
+  --ui-bg:#F3F5F7;
+  --ui-surface:#FFFFFF;
+  --ui-sunk:#E9EDF1;
+  --ui-ink:#16202A;
+  --ui-muted:#5A6977;
+  --ui-faint:#7D8995;
+  --ui-rule:#DCE2E8;
+  --ui-rule-strong:#C3CCD5;
+  --ui-accent:#2C5C8F;
+  --ui-accent-soft:#E3ECF6;
+  --ui-on-accent:#FFFFFF;
+  --ui-good:#2F7D5A;
+  --ui-good-soft:#EDF7F2;
+  --ui-warn:#975D0E;
+  --ui-warn-soft:#FBEFD9;
+  --ui-bad:#B5452A;
+  --ui-bad-soft:#F9E9E4;
+  --ui-info:#1F6F8B;
+  --ui-info-soft:#DDEFF4;
+  --ui-focus:#A67C00;
+  --ui-focus-soft:#FFF3C4;
+  --ui-ring:#2C5C8F;
+  --ui-scrim:rgba(16,22,28,.45);
+  --ui-shadow-pop:0 8px 24px rgba(16,22,28,.16);
+  --ui-code-bg:#16202A;
+  --ui-code-ink:#DCE5EC;
+  --ui-code-dim:#8FA0AE;
+  --ui-code-key:#9CC3EA;
+  --ui-code-str:#A9D9BE;
+  color-scheme:light;
+}
+:root {
+  --ui-font:"Hanken Grotesk","Helvetica Neue",Arial,sans-serif;
+  --ui-font-data:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --ui-text-xs:12px;
+  --ui-text-sm:13px;
+  --ui-text-md:15px;
+  --ui-text-lg:17px;
+  --ui-text-xl:21px;
+  --ui-text-2xl:30px;
+  --ui-space-1:4px;
+  --ui-space-2:8px;
+  --ui-space-3:12px;
+  --ui-space-4:16px;
+  --ui-space-5:24px;
+  --ui-space-6:32px;
+  --ui-space-7:48px;
+  --ui-radius-sm:4px;
+  --ui-radius-md:8px;
+  --ui-radius-lg:12px;
+  --ui-radius-pill:999px;
+  --ui-bar-h:52px;
+  --ui-page-w:1080px;
+  --ui-rail-w:200px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ui-bg:#11161B;
+    --ui-surface:#182027;
+    --ui-sunk:#1E2730;
+    --ui-ink:#E4EAEF;
+    --ui-muted:#9AA8B4;
+    --ui-faint:#76848F;
+    --ui-rule:#2A3540;
+    --ui-rule-strong:#3A4754;
+    --ui-accent:#86AEDA;
+    --ui-accent-soft:#1E3046;
+    --ui-on-accent:#0E1A26;
+    --ui-good:#6CC59A;
+    --ui-good-soft:#173327;
+    --ui-warn:#E3AE5C;
+    --ui-warn-soft:#3A2C14;
+    --ui-bad:#EE8D72;
+    --ui-bad-soft:#3D2019;
+    --ui-info:#6FC3D6;
+    --ui-info-soft:#12303A;
+    --ui-focus:#F2C230;
+    --ui-focus-soft:#3A3110;
+    --ui-ring:#86AEDA;
+    --ui-scrim:rgba(0,0,0,.6);
+    --ui-shadow-pop:0 8px 24px rgba(0,0,0,.5);
+    --ui-code-bg:#0B1014;
+    --ui-code-ink:#DCE5EC;
+    --ui-code-dim:#7D8C99;
+    --ui-code-key:#9CC3EA;
+    --ui-code-str:#A9D9BE;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"],[data-theme="dark"] {
+  --ui-bg:#11161B;
+  --ui-surface:#182027;
+  --ui-sunk:#1E2730;
+  --ui-ink:#E4EAEF;
+  --ui-muted:#9AA8B4;
+  --ui-faint:#76848F;
+  --ui-rule:#2A3540;
+  --ui-rule-strong:#3A4754;
+  --ui-accent:#86AEDA;
+  --ui-accent-soft:#1E3046;
+  --ui-on-accent:#0E1A26;
+  --ui-good:#6CC59A;
+  --ui-good-soft:#173327;
+  --ui-warn:#E3AE5C;
+  --ui-warn-soft:#3A2C14;
+  --ui-bad:#EE8D72;
+  --ui-bad-soft:#3D2019;
+  --ui-info:#6FC3D6;
+  --ui-info-soft:#12303A;
+  --ui-focus:#F2C230;
+  --ui-focus-soft:#3A3110;
+  --ui-ring:#86AEDA;
+  --ui-scrim:rgba(0,0,0,.6);
+  --ui-shadow-pop:0 8px 24px rgba(0,0,0,.5);
+  --ui-code-bg:#0B1014;
+  --ui-code-ink:#DCE5EC;
+  --ui-code-dim:#7D8C99;
+  --ui-code-key:#9CC3EA;
+  --ui-code-str:#A9D9BE;
+  color-scheme:dark;
+}

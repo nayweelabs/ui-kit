@@ -1,0 +1,39 @@
+# The kit's checks. release.yml calls it on main; a red check means no release.
+name: ci
+
+on:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - name: vet
+        run: go vet ./...
+      - name: gofmt
+        run: test -z "$(gofmt -l .)"
+      - name: test
+        run: go test -race -count=1 ./...
+      - name: tokens.css is generated from tokens.json
+        run: |
+          go run ./cmd/ui-kit-tokens
+          git diff --exit-code -- css/tokens.css || { echo "css/tokens.css is stale: run go run ./cmd/ui-kit-tokens and commit it"; exit 1; }
+
+  react:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npm test

@@ -1,0 +1,11 @@
+apiVersion: "core/design/v2"
+kind: "Question"
+metadata:
+  id: "QST-RELEASE-DATES"
+  title: "Are the release dates right"
+spec:
+  state:
+    status: "open"
+    severity: "low"
+  description: "The target dates on v0.1.0 to v0.3.0 are proposals; the owner sets them."
+

@@ -1,0 +1,15 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-MILES"
+  title: "Milestone strip"
+spec:
+  place:
+    group: "GRP-PARTS"
+    release: "v0.1.0"
+  caption:
+    - "`ui/milestones`"
+  description: "Track to scale and one column per milestone; positions come from the server."
+  code:
+    implements: "partials/work.html"
+

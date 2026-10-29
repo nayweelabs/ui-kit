@@ -1,0 +1,16 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-KITJS"
+  title: "kit.js"
+spec:
+  place:
+    group: "GRP-DELIVERY"
+    release: "v0.1.0"
+  caption:
+    - "`js/kit.js`"
+    - "theme, view, fold, tabs"
+  description: "No app logic. Every part works without it; it saves a reload. Also the small helpers of parts: secret Show, dialog open, copy id."
+  code:
+    implements: "js/kit.js"
+

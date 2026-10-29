@@ -1,0 +1,15 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-CONTROLROOM"
+  title: "Control room adopts the kit"
+spec:
+  place:
+    group: "GRP-APPS"
+    release: "v0.2.0"
+  caption:
+    - "focus page and the new Products page"
+  description: "Roadmap stays on top; Open PRs and Do now side by side; Products moves to its own page as cards or a list."
+  ui-design:
+    look: "later"
+

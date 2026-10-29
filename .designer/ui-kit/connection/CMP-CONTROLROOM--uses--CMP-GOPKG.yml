@@ -1,0 +1,9 @@
+apiVersion: "core/design/v2"
+kind: "Connection"
+metadata:
+  id: "CMP-CONTROLROOM--uses--CMP-GOPKG"
+spec:
+  from: "CMP-CONTROLROOM"
+  to: "CMP-GOPKG"
+  label: "uses"
+

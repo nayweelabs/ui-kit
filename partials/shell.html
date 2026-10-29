@@ -1,0 +1,81 @@
+{{/* The shell: top bar, optional left rail (apps over 6 pages), page header, sections, footer status bar. */}}
+
+{{define "ui/assets" -}}
+<link rel="stylesheet" href="{{assets .}}css/kit.css">
+<script src="{{assets .}}js/kit.js"></script>
+{{- end}}
+
+{{define "ui/shell" -}}
+<!doctype html>
+<html lang="{{orDefault "en" .Lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{if .Header.Title}}{{.Header.Title}} · {{end}}{{orDefault .Bar.App .Title}}</title>
+{{template "ui/assets" .}}
+{{- with .Full}}
+<noscript><meta http-equiv="refresh" content="0; url={{.}}"></noscript>{{end}}
+{{.Head}}
+</head>
+<body class="ui-page"{{if .Wide}} data-wide{{end}}>
+{{template "ui/bar" .Bar}}
+<div class="ui-body"{{if .Rail}} data-rail{{end}}>
+{{- if .Rail}}
+{{template "ui/rail" .Rail}}{{end}}
+<main class="ui-main ui-gutter" id="main"><div class="ui-wrap">
+{{- if .Header.Title}}
+{{template "ui/page-header" .Header}}{{end}}
+{{- with .Notice}}
+{{template "ui/notice" .}}{{end}}
+{{.Body}}
+</div></main>
+</div>
+{{template "ui/footer" .Footer}}
+</body>
+</html>
+{{- end}}
+
+{{define "ui/bar" -}}
+<header class="ui-bar ui-gutter"><div class="ui-wrap">
+{{- if .Apps}}
+<details class="ui-apps"><summary class="ui-brand">{{.App}}{{with .Sub}} <small>{{.}}</small>{{end}}</summary><nav class="ui-apps-menu" aria-label="Apps">{{range .Apps}}<a href="{{.Href}}"{{ext .Href}}{{if .Current}} aria-current="page"{{end}}>{{.Label}}</a>{{end}}</nav></details>
+{{- else}}
+<a class="ui-brand" href="{{orDefault "/" .Href}}"{{ext (orDefault "/" .Href)}}>{{.App}}{{with .Sub}} <small>{{.}}</small>{{end}}</a>
+{{- end}}
+{{- if .Pages}}
+<nav class="ui-nav" aria-label="Pages">{{range .Pages}}<a href="{{.Href}}"{{ext .Href}}{{if .Current}} aria-current="page"{{end}}>{{.Label}}{{with .Count}} {{template "ui/count" .}}{{end}}</a>{{end}}</nav>
+{{- end}}
+<div class="ui-bar-end">
+{{- range .Status}}<span class="ui-status" title="{{.Label}}"><span class="ui-dot" data-tone="{{orDefault "none" .Tone}}"></span><span class="ui-status-word">{{.Label}}</span></span>{{end}}
+{{- range .Lights}}{{template "ui/light" .}}{{end}}
+{{- with .Read}}{{template "ui/read-at" .}}{{end}}
+{{- with .Refresh}}<a class="ui-iconbtn" href="{{.Href}}"{{ext .Href}}{{with .Carry}} data-ui-carry="{{.}}"{{end}} aria-label="{{orDefault "Refresh" .Label}}" title="{{orDefault "Refresh" .Label}}">{{template "ui/icon" "refresh"}}</a>{{end}}
+{{- if not .NoTheme}}<button class="ui-iconbtn" type="button" data-ui-theme-toggle aria-label="Switch light or dark theme" title="Switch light or dark theme">{{template "ui/icon" "theme"}}</button>{{end -}}
+</div>
+</div></header>
+{{- end}}
+
+{{define "ui/rail" -}}
+<nav class="ui-rail" aria-label="All pages">
+{{- range .}}{{with .Label}}<span class="ui-label">{{.}}</span>{{end}}{{range .Links}}<a href="{{.Href}}"{{ext .Href}}{{if .Current}} aria-current="page"{{end}}>{{.Label}}{{with .Count}}{{template "ui/count" .}}{{end}}</a>{{end}}{{end -}}
+</nav>
+{{- end}}
+
+{{define "ui/page-header" -}}
+<div class="ui-head">
+{{- if .Crumb}}
+{{template "ui/crumb" .Crumb}}{{end}}
+<div class="ui-head-text"><h1>{{.Title}}</h1>{{with .Lede}}<p class="ui-lede">{{.}}</p>{{end}}</div>
+{{- if .Actions}}
+<div class="ui-actions">{{range .Actions}}{{template "ui/button" .}}{{end}}</div>{{end}}
+</div>
+{{- end}}
+
+{{define "ui/footer" -}}
+<footer class="ui-footer ui-gutter"><div class="ui-wrap">
+{{- with .Version}}{{if $.VersionHref}}<a class="ui-num" href="{{$.VersionHref}}"{{ext $.VersionHref}}>{{.}}</a>{{else}}<span class="ui-num">{{.}}</span>{{end}}{{end}}
+{{- with .Branch}}<span class="ui-branch">on <b>{{.}}</b></span>{{end}}
+{{- with .Fresh.Label}}<span class="ui-status" data-ui-live><span class="ui-dot" data-tone="{{orDefault "none" $.Fresh.Tone}}"></span>{{.}}</span>{{end}}
+{{- if .Links}}<span class="ui-footer-end">{{range .Links}}<a href="{{.Href}}"{{ext .Href}}>{{.Label}}</a>{{end}}</span>{{end -}}
+</div></footer>
+{{- end}}
