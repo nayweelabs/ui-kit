@@ -95,6 +95,30 @@ func TestShellDrawsAWholePage(t *testing.T) {
 	}
 }
 
+func TestShellDrawsThePreviewBannerOnlyForABuildThatIsNotARelease(t *testing.T) {
+	page := func(b *kit.Build) string {
+		var w bytes.Buffer
+		if err := kit.Render(&w, "ui/shell", kit.Page{Bar: kit.Bar{App: "x"}, Build: b}); err != nil {
+			t.Fatal(err)
+		}
+		return w.String()
+	}
+	preview := page(&kit.Build{Version: "v0.4.0-3-g758ac48", Branch: "feat/road-focus", Commit: "758ac48", Dirty: true})
+	for _, want := range []string{
+		`<body class="ui-page">` + "\n" + `<div class="ui-preview-banner" role="note" aria-label="Preview build" title="PREVIEW · branch feat/road-focus · 758ac48 · not a release · uncommitted changes · version v0.4.0-3-g758ac48">`,
+		`<b>PREVIEW</b> · branch feat/road-focus · 758ac48 · not a release · uncommitted changes</span></div>` + "\n" + `<header class="ui-bar`,
+	} {
+		if !strings.Contains(preview, want) {
+			t.Errorf("preview page lacks %q:\n%s", want, preview)
+		}
+	}
+	for name, b := range map[string]*kit.Build{"no build": nil, "released": {Version: "v0.4.0", Branch: "main", Commit: "9a1b2c3", Released: true}} {
+		if got := page(b); strings.Contains(got, "ui-preview-banner") || !strings.Contains(got, `<body class="ui-page">`+"\n"+`<header class="ui-bar`) {
+			t.Errorf("%s: page draws the preview banner or a gap where it would be:\n%s", name, got)
+		}
+	}
+}
+
 func TestAppTemplatesCanUseThePartials(t *testing.T) {
 	tpl, err := kit.Templates().Parse(`{{define "app"}}{{template "ui/pill" (pill .Tone .Label)}}{{end}}`)
 	if err != nil {

@@ -439,6 +439,17 @@ type Head struct {
 	Actions []Button
 }
 
+// Build is what the running build was made from, as the app's server knows it (usually from -ldflags at build time).
+// Released is the app's own answer to "is this a release from main"; when it is false, "ui/preview-banner" says so above the top bar.
+// Commit is drawn as sent, so send it short.
+type Build struct {
+	Version  string
+	Branch   string
+	Commit   string
+	Dirty    bool
+	Released bool
+}
+
 // Footer is the status bar: version, branch when not main, freshness with a live dot, links.
 type Footer struct {
 	Version     string
@@ -467,5 +478,6 @@ type Page struct {
 	Notice *Notice
 	Body   template.HTML
 	Footer Footer
+	Build  *Build // nil draws no preview banner; a build that is not Released draws it above the top bar
 	Full   string // the address of this page drawn whole on the server: a browser without JavaScript goes there, for pages with lazy sections
 }

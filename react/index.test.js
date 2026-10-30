@@ -71,6 +71,14 @@ test("shell draws bar, header, body and footer", () => {
   for (const want of ["ui-bar", 'aria-current="page"', "<h1>Focus</h1>", "body", "ui-footer"]) assert.ok(s.includes(want), want);
 });
 
+test("preview banner draws the same markup as the Go partial, and nothing for a release", () => {
+  const banner = render(h(kit.PreviewBanner, { version: "v0.4.0-3-g758ac48", branch: "feat/road-focus", commit: "758ac48", dirty: true }));
+  assert.equal(banner, '<div class="ui-preview-banner" role="note" aria-label="Preview build" title="PREVIEW · branch feat/road-focus · 758ac48 · not a release · uncommitted changes · version v0.4.0-3-g758ac48"><span class="ui-preview-banner-text"><b>PREVIEW</b> · branch feat/road-focus · 758ac48 · not a release · uncommitted changes</span></div>');
+  assert.equal(render(h(kit.PreviewBanner, { branch: "main", commit: "9a1b2c3", released: true })), "");
+  const shell = render(h(kit.Shell, { build: { branch: "feat/x", commit: "abc1234" }, bar: { app: "kanban" } }));
+  assert.match(shell, /^<div class="ui-preview-banner"[^]*<header class="ui-bar/);
+});
+
 test("light draws the same link, dot and hidden popover as the Go partial", () => {
   const light = render(h(kit.Light, { id: "gh", tone: "warn", icon: "github", label: "GitHub", href: "/settings/github", title: "Connected, the last read failed.", details: [{ label: "Account", value: "bot" }], actions: [{ label: "Disconnect", variant: "danger", confirm: { text: "x", label: "Disconnect now" } }] }));
   assert.match(light, /<a class="ui-light-btn" href="\/settings\/github" aria-controls="gh-pop" aria-expanded="false" aria-haspopup="dialog"/);

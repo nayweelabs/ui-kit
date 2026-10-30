@@ -1,0 +1,9 @@
+apiVersion: "core/design/v2"
+kind: "Connection"
+metadata:
+  id: "CMP-SHELL--uses--CMP-BANNER"
+spec:
+  from: "CMP-SHELL"
+  to: "CMP-BANNER"
+  label: "uses"
+

@@ -354,6 +354,14 @@ export function PageHeader({ crumb, title, lede, actions = [] }) {
     actions.length ? h("div", { className: "ui-actions" }, actions.map((a) => h(Button, { key: a.label, ...a }))) : null);
 }
 
+// PreviewBanner draws nothing for a released build; any other build says so above the top bar.
+export function PreviewBanner({ version, branch, commit, dirty, released }) {
+  if (released) return null;
+  const facts = (branch ? ` · branch ${branch}` : "") + (commit ? ` · ${commit}` : "") + " · not a release" + (dirty ? " · uncommitted changes" : "");
+  return h("div", { className: "ui-preview-banner", role: "note", "aria-label": "Preview build", title: "PREVIEW" + facts + (version ? ` · version ${version}` : "") },
+    h("span", { className: "ui-preview-banner-text" }, h("b", null, "PREVIEW"), facts));
+}
+
 export function Footer({ version, versionHref, branch, fresh, links = [] }) {
   return h("footer", { className: "ui-footer ui-gutter" }, h("div", { className: "ui-wrap" },
     version ? (versionHref ? h("a", { className: "ui-num", href: versionHref }, version) : h("span", { className: "ui-num" }, version)) : null,
@@ -369,8 +377,9 @@ export function Rail({ groups = [] }) {
 }
 
 // Shell draws the frame inside the app's root; the app puts class "ui-page" on <body> once.
-export function Shell({ bar, rail, header, notice, footer, wide, children }) {
+export function Shell({ build, bar, rail, header, notice, footer, wide, children }) {
   return h(Fragment, null,
+    build ? h(PreviewBanner, build) : null,
     h(Bar, bar),
     h("div", { className: "ui-body", "data-rail": rail ? "" : undefined },
       rail ? h(Rail, { groups: rail }) : null,
