@@ -1,0 +1,15 @@
+apiVersion: "core/design/v2"
+kind: "Block"
+metadata:
+  id: "CMP-BANNER"
+  title: "Preview banner"
+spec:
+  place:
+    group: "GRP-SHELL"
+    release: "v0.2.0"
+  caption:
+    - "`ui/preview-banner` · `.ui-preview-banner`"
+    - "branch, commit, not a release"
+  description: "Above the top bar of every build that is not a release from main: amber and black stripes, the branch, the commit, and uncommitted changes. The app decides Released from its build info; a release draws nothing. Not dismissible."
+  code:
+    implements: "partials/shell.html"

@@ -22,6 +22,8 @@
   --ui-info-soft:#DDEFF4;
   --ui-focus:#A67C00;
   --ui-focus-soft:#FFF3C4;
+  --ui-preview:#F5B700;
+  --ui-on-preview:#17130A;
   --ui-ring:#2C5C8F;
   --ui-scrim:rgba(16,22,28,.45);
   --ui-shadow-pop:0 8px 24px rgba(16,22,28,.16);
@@ -53,6 +55,7 @@
   --ui-radius-lg:12px;
   --ui-radius-pill:999px;
   --ui-bar-h:52px;
+  --ui-preview-h:26px;
   --ui-page-w:1080px;
   --ui-rail-w:200px;
 }
@@ -79,6 +82,8 @@
     --ui-info-soft:#12303A;
     --ui-focus:#F2C230;
     --ui-focus-soft:#3A3110;
+    --ui-preview:#F5B700;
+    --ui-on-preview:#17130A;
     --ui-ring:#86AEDA;
     --ui-scrim:rgba(0,0,0,.6);
     --ui-shadow-pop:0 8px 24px rgba(0,0,0,.5);
@@ -112,6 +117,8 @@
   --ui-info-soft:#12303A;
   --ui-focus:#F2C230;
   --ui-focus-soft:#3A3110;
+  --ui-preview:#F5B700;
+  --ui-on-preview:#17130A;
   --ui-ring:#86AEDA;
   --ui-scrim:rgba(0,0,0,.6);
   --ui-shadow-pop:0 8px 24px rgba(0,0,0,.5);

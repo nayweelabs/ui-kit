@@ -1,4 +1,4 @@
-{{/* The shell: top bar, optional left rail (apps over 6 pages), page header, sections, footer status bar. */}}
+{{/* The shell: preview banner (builds that are not a release), top bar, optional left rail (apps over 6 pages), page header, sections, footer status bar. */}}
 
 {{define "ui/assets" -}}
 <link rel="stylesheet" href="{{assets .}}css/kit.css">
@@ -18,6 +18,8 @@
 {{.Head}}
 </head>
 <body class="ui-page"{{if .Wide}} data-wide{{end}}>
+{{- with .Build}}{{if not .Released}}
+{{template "ui/preview-banner" .}}{{end}}{{end}}
 {{template "ui/bar" .Bar}}
 <div class="ui-body"{{if .Rail}} data-rail{{end}}>
 {{- if .Rail}}
@@ -70,6 +72,14 @@
 <div class="ui-actions">{{range .Actions}}{{template "ui/button" .}}{{end}}</div>{{end}}
 </div>
 {{- end}}
+
+{{define "ui/preview-banner" -}}
+{{- if not .Released -}}
+<div class="ui-preview-banner" role="note" aria-label="Preview build" title="PREVIEW{{template "ui/preview-banner-facts" .}}{{with .Version}} · version {{.}}{{end}}"><span class="ui-preview-banner-text"><b>PREVIEW</b>{{template "ui/preview-banner-facts" .}}</span></div>
+{{- end -}}
+{{- end}}
+
+{{define "ui/preview-banner-facts"}}{{with .Branch}} · branch {{.}}{{end}}{{with .Commit}} · {{.}}{{end}} · not a release{{if .Dirty}} · uncommitted changes{{end}}{{end}}
 
 {{define "ui/footer" -}}
 <footer class="ui-footer ui-gutter"><div class="ui-wrap">

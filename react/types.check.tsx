@@ -5,7 +5,7 @@ const prs: PR[] = [{ repo: "checkman", number: "5", title: "chore: close the acc
 const products: Product[] = [{ name: "hubman", href: "/p/hubman", focus: true, facts: [{ label: "Installed", tone: "good", num: { text: "v0.7.0" }, text: "current" }] }];
 
 export const page = (
-  <Shell bar={{ app: "Control room", pages: [{ label: "Focus", href: "/", current: true }] }} header={{ title: "Focus" }} footer={{ version: "v0.4.0" }}>
+  <Shell build={{ branch: "feat/road-focus", commit: "758ac48", dirty: true, released: false }} bar={{ app: "Control room", pages: [{ label: "Focus", href: "/", current: true }] }} header={{ title: "Focus" }} footer={{ version: "v0.4.0" }}>
     <Section id="prs" title="Open pull requests" count={{ tone: "accent", n: 1 }}>
       <PrList items={prs} />
     </Section>

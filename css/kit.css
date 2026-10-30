@@ -97,6 +97,14 @@ a.ui-num:hover{color:var(--ui-accent)}
 .ui-lede{color:var(--ui-muted);font-size:var(--ui-text-md);max-width:70ch}
 .ui-actions{display:flex;flex-wrap:wrap;gap:var(--ui-space-2);justify-content:flex-end}
 
+/* ---------- shell: preview banner (a build that is not a release) ---------- */
+.ui-preview-banner{position:sticky;top:0;z-index:21;display:flex;align-items:center;justify-content:center;height:var(--ui-preview-h);padding-inline:var(--ui-space-3);background:repeating-linear-gradient(-45deg,var(--ui-preview) 0 12px,var(--ui-on-preview) 12px 24px);color:var(--ui-on-preview);font:500 var(--ui-text-xs)/1 var(--ui-font-data);border-bottom:2px solid var(--ui-on-preview)}
+.ui-preview-banner-text{min-width:0;max-width:100%;padding:4px var(--ui-space-2);border-radius:var(--ui-radius-sm);background:var(--ui-preview);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ui-preview-banner b{font-weight:700;letter-spacing:.08em}
+.ui-preview-banner+.ui-bar{top:var(--ui-preview-h)}
+.ui-preview-banner~.ui-body .ui-rail{top:calc(var(--ui-bar-h) + var(--ui-preview-h));max-height:calc(100vh - var(--ui-bar-h) - var(--ui-preview-h))}
+.ui-preview-banner~.ui-body .ui-section{scroll-margin-top:calc(var(--ui-bar-h) + var(--ui-preview-h) + 12px)}
+
 /* ---------- shell: footer status bar (never fixed) ---------- */
 .ui-footer{border-top:1px solid var(--ui-rule);background:var(--ui-surface);position:sticky;bottom:0;z-index:20;margin-top:auto;padding-bottom:env(safe-area-inset-bottom,0px)}
 .ui-footer>.ui-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;min-height:40px;padding-block:8px;font-size:var(--ui-text-xs);color:var(--ui-muted)}
@@ -371,6 +379,7 @@ button.ui-id[data-copied]::after{content:" copied";color:var(--ui-good)}
   .ui-bar-end .ui-light-word{display:none}
   .ui-bar .ui-light{position:static}
   .ui-bar .ui-pop{position:fixed;top:calc(var(--ui-bar-h) + 4px);left:16px;right:16px;width:auto}
+  .ui-preview-banner+.ui-bar .ui-pop{top:calc(var(--ui-bar-h) + var(--ui-preview-h) + 4px)}
   .ui-body[data-rail]{grid-template-columns:minmax(0,1fr);align-content:start}
   .ui-rail{position:static;max-height:none;display:flex;align-items:center;align-self:start;overflow-x:auto;border-right:0;border-bottom:1px solid var(--ui-rule);padding:6px}
   .ui-rail .ui-label{display:none}

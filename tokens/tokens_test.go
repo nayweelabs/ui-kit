@@ -73,6 +73,7 @@ func TestContrast(t *testing.T) {
 		{"surface", "warn"}, {"surface", "bad"},
 		{"ink", "focus-soft"}, {"ink", "good-soft"}, {"ink", "bad-soft"},
 		{"code-ink", "code-bg"}, {"code-key", "code-bg"}, {"code-str", "code-bg"},
+		{"on-preview", "preview"},
 	}
 	shape := [][2]string{
 		{"focus", "surface"}, {"focus", "bg"}, {"ring", "surface"}, {"ring", "bg"},

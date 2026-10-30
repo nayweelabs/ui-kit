@@ -78,7 +78,7 @@ Put `class="ui-page"` on `<body>`. The wrappers are plain ES modules with types;
 
 ### Partials
 
-Shell: `ui/shell`, `ui/assets`, `ui/bar`, `ui/light`, `ui/rail`, `ui/page-header`, `ui/footer`.
+Shell: `ui/shell`, `ui/assets`, `ui/preview-banner`, `ui/bar`, `ui/light`, `ui/rail`, `ui/page-header`, `ui/footer`.
 Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/drawer`, `ui/star`, `ui/skeleton`.
 Pieces they share: `ui/icon`, `ui/num`, `ui/fact`, `ui/cell`, `ui/read-at`.
 
