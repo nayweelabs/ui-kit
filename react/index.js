@@ -268,11 +268,52 @@ function useModal(open, onClose) {
   };
 }
 
-export function Dialog({ id, title, text, cancel = "Cancel", confirm, open, onClose, onConfirm }) {
+export function Dialog({ id, title, text, cancel = "Cancel", confirm, open, onClose, onConfirm, children }) {
   return h("dialog", { className: "ui-dialog", id, "aria-labelledby": id + "-title", ref: useModal(open, onClose) },
     h("form", { method: "dialog", onSubmit: (e) => { if (e.nativeEvent.submitter && e.nativeEvent.submitter.value === "confirm" && onConfirm) onConfirm(); } },
-      h("h2", { className: "ui-dialog-title", id: id + "-title" }, title), text ? h("p", { className: "ui-dialog-text" }, text) : null,
+      h("h2", { className: "ui-dialog-title", id: id + "-title" }, title), text ? h("p", { className: "ui-dialog-text" }, text) : null, children,
       h("div", { className: "ui-dialog-acts" }, h("button", { className: "ui-btn", type: "submit", value: "cancel" }, cancel), h(Button, { type: "submit", value: "confirm", ...confirm }))));
+}
+
+// ConfirmForm asks question in the kit's Dialog before it is sent, like a form marked data-ui-confirm: Cancel gets first
+// focus, and the confirm button repeats label or the pressed button's text. undoable adds "Don't ask again", which sends
+// confirm=skip. With onSubmit, the confirmed form's data goes to it instead of the browser sending the form.
+export function ConfirmForm({ id, question, label, undoable, onSubmit, children, ...rest }) {
+  const form = useRef(null);
+  const confirmed = useRef(false);
+  const [asking, setAsking] = useState(null);
+  const [sending, setSending] = useState(null);
+  const [skip, setSkip] = useState(false);
+  useEffect(() => {
+    const cancel = asking && document.getElementById(id).querySelector("button[value='cancel']");
+    if (cancel) cancel.focus();
+  }, [asking]);
+  useEffect(() => {
+    if (!sending) return;
+    confirmed.current = true;
+    if (sending.submitter) form.current.requestSubmit(sending.submitter);
+    else form.current.requestSubmit();
+    setSending(null);
+  }, [sending]);
+  const submit = (e) => {
+    const submitter = e.nativeEvent.submitter || null;
+    if (!confirmed.current) {
+      e.preventDefault();
+      setSkip(false);
+      setAsking({ submitter });
+      return;
+    }
+    confirmed.current = false;
+    if (!onSubmit) return;
+    e.preventDefault();
+    onSubmit(new FormData(e.currentTarget, submitter));
+  };
+  const pressed = asking && asking.submitter;
+  const confirm = { label: label || (pressed && pressed.textContent.trim()) || "Confirm", variant: pressed && pressed.getAttribute("data-variant") === "danger" ? "danger" : "primary" };
+  return h(Fragment, null,
+    h("form", { ...rest, ref: form, onSubmit: submit }, children, sending && sending.skip ? h("input", { type: "hidden", name: "confirm", value: "skip" }) : null),
+    h(Dialog, { id, title: question, confirm, open: !!asking, onClose: () => setAsking(null), onConfirm: () => setSending({ submitter: pressed, skip: undoable && skip }) },
+      undoable ? h("label", { className: "ui-check" }, h("input", { type: "checkbox", checked: skip, onChange: (e) => setSkip(e.target.checked) }), h("span", null, "Don’t ask again")) : null));
 }
 
 export function Drawer({ id, title, open, onClose, children }) {

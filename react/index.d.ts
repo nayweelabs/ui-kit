@@ -1,5 +1,5 @@
 // Types for the kit's React wrappers. The shapes match the Go types in types.go, in camelCase.
-import type { ReactElement, ReactNode, ChangeEventHandler, MouseEventHandler } from "react";
+import type { ReactElement, ReactNode, ChangeEventHandler, MouseEventHandler, FormHTMLAttributes } from "react";
 
 export type Tone = "good" | "warn" | "bad" | "info" | "accent" | "none" | "";
 
@@ -59,7 +59,10 @@ export interface FieldProps {
 }
 export interface Tab { label: string; href?: string; panel?: string; count?: CountProps; selected?: boolean }
 export interface TabsProps { label: string; items?: Tab[]; onSelect?: (tab: Tab) => void }
-export interface DialogProps { id: string; title: string; text?: string; cancel?: string; confirm: ButtonProps; open?: boolean; onClose?: () => void; onConfirm?: () => void }
+export interface DialogProps { id: string; title: string; text?: string; cancel?: string; confirm: ButtonProps; open?: boolean; onClose?: () => void; onConfirm?: () => void; children?: ReactNode }
+export interface ConfirmFormProps extends Omit<FormHTMLAttributes<HTMLFormElement>, "id" | "onSubmit"> {
+  id: string; question: string; label?: string; undoable?: boolean; onSubmit?: (data: FormData) => void; children?: ReactNode;
+}
 export interface DrawerProps { id: string; title: string; open?: boolean; onClose?: () => void; children?: ReactNode }
 export interface LightDetail { label: string; value: string }
 export interface LightConfirm { text: string; label: string; action?: string; hidden?: { name: string; value: string }[]; onConfirm?: () => void }
@@ -98,6 +101,7 @@ export function Toolbar(props: ToolbarProps): ReactElement;
 export function Tabs(props: TabsProps): ReactElement;
 export function Crumb(props: { items?: Link[] }): ReactElement;
 export function Dialog(props: DialogProps): ReactElement;
+export function ConfirmForm(props: ConfirmFormProps): ReactElement;
 export function Drawer(props: DrawerProps): ReactElement;
 export function ThemeToggle(): ReactElement;
 export function Light(props: LightProps): ReactElement;
