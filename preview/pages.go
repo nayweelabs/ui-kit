@@ -111,16 +111,18 @@ func admin(tpl *template.Template, r *http.Request) (kit.Page, error) {
 // machineActions restart m-02 (run) and delete m-04 (delete), each asking its type's default way; Remember my answer stops asking for the pressed button's type.
 func machineActions(tpl *template.Template, r *http.Request) template.HTML {
 	q := r.URL.Query()
-	chosen := map[string]string{}
+	app := map[string]string{}
 	for _, t := range []string{"run", "delete"} {
 		if q.Get("confirm") == "remember" && q.Has(t) {
-			chosen[t] = kit.AskNever
+			app[t] = kit.AskNever
 		}
 	}
+	run, _ := kit.ResolveConfirm(app, nil, "run")
+	del, _ := kit.ResolveConfirm(app, nil, "delete")
 	restart := kit.Button{Label: "Restart m-02", Type: "submit", Name: "run", Value: "m-02"}
 	remove := kit.Button{Label: "Delete m-04", Variant: "danger", Type: "submit", Name: "delete", Value: "m-04"}
-	return mustHTML(tpl, "ui/button", restart.Ask(kit.ConfirmStyle(chosen, "run"), "Restart m-02?", "m-02")) + " " +
-		mustHTML(tpl, "ui/button", remove.Ask(kit.ConfirmStyle(chosen, "delete"), "Delete machine m-04?", "m-04"))
+	return mustHTML(tpl, "ui/button", restart.Ask(run, "Restart m-02?", "m-02")) + " " +
+		mustHTML(tpl, "ui/button", remove.Ask(del, "Delete machine m-04?", "m-04"))
 }
 
 // lazySections are the sections of the lazy page: one quick with a toolbar, one slow, one that fails.

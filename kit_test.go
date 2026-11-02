@@ -316,36 +316,52 @@ func TestAHiddenBackValueIsMarkedForKitJS(t *testing.T) {
 	}
 }
 
-// A change asks the way the user chose for its type; a type not chosen asks its default.
-func TestAButtonAsksTheWayTheUserChoseForItsType(t *testing.T) {
-	chosen := map[string]string{"move": kit.AskNever, "edit": kit.AskName, "run": "bogus"}
-	save := kit.Button{Label: "Delete", Type: "submit"}
-	for typ, want := range map[string]kit.Button{
-		"delete": {Label: "Delete", Type: "submit", Confirm: "Delete 7?", ConfirmName: "7", Remember: true},
-		"edit":   {Label: "Delete", Type: "submit", Confirm: "Delete 7?", ConfirmName: "7", Remember: true},
-		"run":    {Label: "Delete", Type: "submit", Confirm: "Delete 7?", Remember: true},
-		"move":   save,
+// A change asks the way this app says, else the global file, else its type's default, and says where that came from.
+func TestAButtonAsksTheWayTheLayersSay(t *testing.T) {
+	app := map[string]string{"move": kit.AskNever, "run": "bogus"}
+	global := map[string]string{"move": kit.AskName, "edit": kit.AskName, "run": kit.AskNever}
+	del := kit.Button{Label: "Delete", Type: "submit"}
+	asked := kit.Button{Label: "Delete", Type: "submit", Confirm: "Delete 7?", Remember: true}
+	named := asked
+	named.ConfirmName = "7"
+	for typ, want := range map[string]struct {
+		source string
+		button kit.Button
+	}{
+		"move":   {kit.FromApp, del},
+		"edit":   {kit.FromGlobal, named},
+		"run":    {kit.FromGlobal, del},
+		"delete": {kit.FromDefault, named},
+		"focus":  {kit.FromDefault, asked},
 	} {
-		if got := save.Ask(kit.ConfirmStyle(chosen, typ), "Delete 7?", "7"); got != want {
-			t.Errorf("%s: got %+v, want %+v", typ, got, want)
+		style, source := kit.ResolveConfirm(app, global, typ)
+		if got := del.Ask(style, "Delete 7?", "7"); source != want.source || got != want.button {
+			t.Errorf("%s: got %s %+v, want %s %+v", typ, source, got, want.source, want.button)
 		}
 	}
 }
 
-// The Settings form posts back the choices it shows, and only real types and styles are read.
+// Each scope of the Settings form posts back what it shows, with its scope, and only real types and choices are read.
 func TestConfirmSettingsPostsBackWhatItShows(t *testing.T) {
-	var b bytes.Buffer
-	if err := kit.Render(&b, "ui/confirm-settings", kit.ConfirmSettings{Action: "/settings", Chosen: map[string]string{"move": kit.AskNever}}); err != nil {
-		t.Fatal(err)
-	}
-	form := url.Values{}
-	for _, m := range regexp.MustCompile(`name="(confirm\.[a-z]+)" value="([a-z-]+)" checked`).FindAllStringSubmatch(b.String(), -1) {
-		form.Set(m[1], m[2])
-	}
-	form.Set("confirm.bogus", kit.AskNever)
-	form.Set("confirm.run", "sometimes")
-	got := kit.ConfirmChoices(form)
-	if len(got) != len(kit.ActionTypes)-1 || got["move"] != kit.AskNever || got["delete"] != kit.AskName || got["edit"] != kit.AskYesNo || got["run"] != "" {
-		t.Errorf("choices %v", got)
+	app, global := map[string]string{"move": kit.AskNever}, map[string]string{"edit": kit.AskName}
+	for scope, want := range map[string]map[string]string{
+		kit.ScopeApp:    {"move": kit.AskNever, "edit": kit.AskInherit, "delete": kit.AskInherit},
+		kit.ScopeGlobal: {"move": kit.AskInherit, "edit": kit.AskName, "delete": kit.AskInherit},
+	} {
+		var b bytes.Buffer
+		if err := kit.Render(&b, "ui/confirm-settings", kit.ConfirmSettings{Action: "/settings", Scope: scope, App: app, Global: global}); err != nil {
+			t.Fatal(err)
+		}
+		form := url.Values{}
+		for _, m := range regexp.MustCompile(`name="(confirm\.[a-z]+)" value="([a-z-]+)"( checked)?`).FindAllStringSubmatch(b.String(), -1) {
+			if m[3] != "" || m[1] == "confirm.scope" {
+				form.Set(m[1], m[2])
+			}
+		}
+		form.Set("confirm.bogus", kit.AskNever)
+		gotScope, got := kit.ConfirmChoices(form)
+		if gotScope != scope || len(got) != len(kit.ActionTypes) || got["move"] != want["move"] || got["edit"] != want["edit"] || got["delete"] != want["delete"] {
+			t.Errorf("%s: scope %s, choices %v", scope, gotScope, got)
+		}
 	}
 }
