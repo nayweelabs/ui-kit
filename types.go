@@ -93,6 +93,10 @@ type Skeleton struct {
 }
 
 // Button acts ("ui/button"). With Href it is drawn as a link; with Opens it opens the dialog of that id.
+//
+// With Confirm, a submit button asks that question in the kit's dialog before its form is sent: Cancel gets first
+// focus, and the confirm button repeats Label. Undoable adds "Don't ask again"; checked, the form also sends
+// confirm=skip, and the server, once it remembers that, draws the button without Confirm. Without JavaScript the form is sent at once.
 type Button struct {
 	Label    string
 	Variant  string
@@ -106,6 +110,8 @@ type Button struct {
 	Disabled bool
 	Busy     bool
 	Carry    string // with Href, the link's own query values; it carries the page's others (see Link)
+	Confirm  string // the question asked before the form is sent
+	Undoable bool   // the question offers "Don't ask again"
 }
 
 // Fact is one label and value row of a product card, and one cell of its list row ("ui/fact").
