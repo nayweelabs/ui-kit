@@ -275,9 +275,7 @@ export function Dialog({ id, title, text, cancel = "Cancel", confirm, open, onCl
       h("div", { className: "ui-dialog-acts" }, h("button", { className: "ui-btn", type: "submit", value: "cancel" }, cancel), h(Button, { type: "submit", value: "confirm", ...confirm }))));
 }
 
-// ConfirmForm asks question in the kit's Dialog before it is sent, like a form marked data-ui-confirm: Cancel gets first
-// focus, and the confirm button repeats label or the pressed button's text. undoable adds "Don't ask again", which sends
-// confirm=skip. With onSubmit, the confirmed form's data goes to it instead of the browser sending the form.
+// ConfirmForm asks question in the kit's Dialog before it is sent, as data-ui-confirm does; onSubmit, when given, gets the confirmed data.
 export function ConfirmForm({ id, question, label, undoable, onSubmit, children, ...rest }) {
   const form = useRef(null);
   const confirmed = useRef(false);

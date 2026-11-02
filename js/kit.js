@@ -352,9 +352,7 @@
     document.querySelectorAll(".ui-lazy[data-ui-src]").forEach(function (box) { load(box); });
   }
 
-  // Asking first: a form, or its submit button, marked data-ui-confirm asks that question in the kit's dialog
-  // before it is sent; Escape or Cancel sends nothing. The confirm button repeats data-ui-confirm-label or the
-  // button's text. data-ui-undoable adds "Don't ask again", which sends confirm=skip with the form.
+  // Asking first: a form or submit button marked data-ui-confirm asks in the kit's dialog; data-ui-undoable adds "Don't ask again" (confirm=skip).
   function el(tag, attrs, text) {
     var e = document.createElement(tag);
     Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
@@ -406,11 +404,11 @@
   // asks stops a marked form and asks first; the form sent after the answer goes on.
   function asks(e) {
     var form = e.target, submitter = e.submitter || null;
-    var from = submitter && submitter.hasAttribute("data-ui-confirm") ? submitter : form.hasAttribute("data-ui-confirm") ? form : null;
     if (form.uiAsked) {
       form.uiAsked = false;
       return false;
     }
+    var from = submitter && submitter.hasAttribute("data-ui-confirm") ? submitter : form.hasAttribute("data-ui-confirm") ? form : null;
     if (!from || !form.requestSubmit) return false;
     e.preventDefault();
     ask(form, submitter, from);
