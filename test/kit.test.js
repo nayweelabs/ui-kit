@@ -39,6 +39,8 @@ class El {
   hasAttribute(k) { return k in this.attrs; }
   removeAttribute(k) { delete this.attrs[k]; }
   addEventListener() {}
+  focus() { El.focused = this; }
+  showModal() { this.open = true; }
   remove() { if (this.parent) { this.parent.children.splice(this.parent.children.indexOf(this), 1); this.parent = null; } }
   appendChild(c) {
     if (c.parent) c.parent.children.splice(c.parent.children.indexOf(c), 1);
@@ -79,6 +81,7 @@ function page(href, children, fetched = {}) {
     documentElement: new El("html"), readyState: "complete",
     querySelectorAll: (s) => body.querySelectorAll(s), querySelector: (s) => body.querySelector(s),
     getElementById: (id) => body.all().find((e) => e.attrs.id === id) || null,
+    body, createElement: (tag) => new El(tag),
     addEventListener: (type, fn) => { handlers[type] = fn; },
   };
   const window = {
@@ -94,7 +97,7 @@ function page(href, children, fetched = {}) {
   window.window = window;
   vm.runInNewContext(source, { ...window, localStorage: { getItem: () => null, setItem() {} },
     FormData: function (form) { return form.fields; }, matchMedia: () => ({ matches: false }), setTimeout, clearTimeout });
-  const fire = (type, target) => { const e = { target, preventDefault() { e.prevented = true; } }; handlers[type](e); return e; };
+  const fire = (type, target, more) => { const e = { target, ...more, preventDefault() { e.prevented = true; } }; handlers[type](e); return e; };
   return { location, fetches, fire };
 }
 
@@ -179,4 +182,72 @@ test("a section link reloads only its section at the link's address, and carries
   assert.equal(p.location.search, "?road=r6&open=kit%2Fcards");
   assert.equal(p.fetches.at(-1), "/part/roads/road-graph?road=r6&open=kit%2Fcards");
   assert.equal(refresh.getAttribute("href"), "/roads?road=r6&open=kit%2Fcards&fresh=1");
+});
+
+// A POST form that records what it sends: requestSubmit fires submit again and sends unless it is stopped, as a browser does.
+function postForm(attrs, children) {
+  const form = new El("form", { method: "post", ...attrs }, children);
+  form.method = "post";
+  form.sent = [];
+  form.requestSubmit = (submitter) => { if (!form.page.fire("submit", form, { submitter }).prevented) form.sent.push(submitter); };
+  return form;
+}
+
+// answer closes the kit's confirm dialog the way the viewer did: "confirm", "cancel", or "" for Escape.
+function answer(dlg, value) {
+  dlg.returnValue = value;
+  dlg.open = false;
+  dlg.onclose();
+}
+
+test("a button marked data-ui-confirm asks in the kit's dialog first, and Cancel or Escape sends nothing", () => {
+  const btn = new El("button", { class: "ui-btn", type: "submit", name: "do", value: "disconnect", "data-variant": "danger", "data-ui-confirm": "Disconnect GitHub?" });
+  btn.textContent = "Disconnect";
+  const form = postForm({ action: "/settings" }, [btn]);
+  const p = page("http://localhost/settings", [form]);
+  form.page = p;
+  assert.ok(p.fire("submit", form, { submitter: btn }).prevented, "the form waits for the answer");
+  const dlg = form.parent.querySelector("dialog.ui-dialog");
+  assert.ok(dlg.open);
+  assert.equal(dlg.querySelector(".ui-dialog-title").textContent, "Disconnect GitHub?");
+  const yes = dlg.querySelector("button[value='confirm']");
+  assert.equal(yes.textContent, "Disconnect", "the confirm button repeats the verb");
+  assert.equal(yes.getAttribute("data-variant"), "danger");
+  assert.equal(El.focused, dlg.querySelector("button[value='cancel']"), "Cancel gets first focus");
+  assert.equal(dlg.querySelector(".ui-check").hidden, true, "no Don't ask again for a change that cannot be undone");
+  answer(dlg, "cancel");
+  p.fire("submit", form, { submitter: btn });
+  answer(dlg, "");
+  assert.deepEqual(form.sent, []);
+});
+
+test("confirm sends the form once, with the button's name and value; a form without the mark is sent at once", () => {
+  const btn = new El("button", { type: "submit", name: "do", value: "disconnect", "data-ui-confirm": "Disconnect GitHub?" });
+  const form = postForm({}, [btn]);
+  const plain = postForm({}, []);
+  const p = page("http://localhost/settings", [form, plain]);
+  form.page = p;
+  p.fire("submit", form, { submitter: btn });
+  const dlg = form.parent.querySelector("dialog");
+  answer(dlg, "confirm");
+  assert.deepEqual(form.sent, [btn], "the browser sends the button's name and value with it");
+  assert.equal(form.querySelector("input[data-ui-skip]"), null);
+  assert.equal(p.fire("submit", form, { submitter: btn }).prevented, true, "the next press asks again");
+  assert.equal(p.fire("submit", plain).prevented, undefined);
+});
+
+test("Don't ask again sends confirm=skip with the form, so the server can remember", () => {
+  const form = postForm({ action: "/focus", "data-ui-confirm": "Focus on kanban?", "data-ui-confirm-label": "Focus", "data-ui-undoable": "" }, []);
+  const p = page("http://localhost/", [form]);
+  form.page = p;
+  p.fire("submit", form);
+  const dlg = form.parent.querySelector("dialog");
+  assert.equal(dlg.querySelector("button[value='confirm']").textContent, "Focus");
+  const skip = dlg.querySelector(".ui-check");
+  assert.equal(skip.hidden, false);
+  skip.querySelector("input").checked = true;
+  answer(dlg, "confirm");
+  const mark = form.querySelector("input[data-ui-skip]");
+  assert.deepEqual([mark.getAttribute("name"), mark.getAttribute("value"), mark.getAttribute("type")], ["confirm", "skip", "hidden"]);
+  assert.equal(form.sent.length, 1);
 });

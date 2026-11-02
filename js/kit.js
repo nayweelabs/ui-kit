@@ -1,4 +1,4 @@
-/* ui-kit/js/kit.js: theme switch, cards/list toggle, fold, tabs, lazy sections, carried links, status lights, and the small helpers of the field, id and dialog parts.
+/* ui-kit/js/kit.js: theme switch, cards/list toggle, fold, tabs, lazy sections, carried links, status lights, asking before a form is sent, and the small helpers of the field, id and dialog parts.
    No app logic and no data. Every part works without it; this only saves a reload. Load it in <head> without defer. */
 (function () {
   "use strict";
@@ -352,9 +352,75 @@
     document.querySelectorAll(".ui-lazy[data-ui-src]").forEach(function (box) { load(box); });
   }
 
+  // Asking first: a form, or its submit button, marked data-ui-confirm asks that question in the kit's dialog
+  // before it is sent; Escape or Cancel sends nothing. The confirm button repeats data-ui-confirm-label or the
+  // button's text. data-ui-undoable adds "Don't ask again", which sends confirm=skip with the form.
+  function el(tag, attrs, text) {
+    var e = document.createElement(tag);
+    Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+    if (text) e.textContent = text;
+    return e;
+  }
+
+  function confirmDialog() {
+    var dlg = document.getElementById("ui-confirm");
+    if (dlg) return dlg;
+    dlg = el("dialog", { class: "ui-dialog", id: "ui-confirm", "aria-labelledby": "ui-confirm-title" });
+    var form = dlg.appendChild(el("form", { method: "dialog" }));
+    form.appendChild(el("h2", { class: "ui-dialog-title", id: "ui-confirm-title" }));
+    var skip = form.appendChild(el("label", { class: "ui-check" }));
+    skip.appendChild(el("input", { type: "checkbox" }));
+    skip.appendChild(el("span", {}, "Don’t ask again"));
+    var acts = form.appendChild(el("div", { class: "ui-dialog-acts" }));
+    acts.appendChild(el("button", { class: "ui-btn", type: "submit", value: "cancel", autofocus: "" }, "Cancel"));
+    acts.appendChild(el("button", { class: "ui-btn", type: "submit", value: "confirm" }));
+    document.body.appendChild(dlg);
+    return dlg;
+  }
+
+  function ask(form, submitter, from) {
+    var dlg = confirmDialog();
+    var yes = dlg.querySelector("button[value='confirm']");
+    var skip = dlg.querySelector(".ui-check");
+    var box = skip.querySelector("input");
+    var label = from.getAttribute("data-ui-confirm-label") || (submitter && submitter.textContent.trim());
+    dlg.querySelector(".ui-dialog-title").textContent = from.getAttribute("data-ui-confirm");
+    yes.textContent = label || "Confirm";
+    yes.setAttribute("data-variant", submitter && submitter.getAttribute("data-variant") === "danger" ? "danger" : "primary");
+    skip.hidden = !from.hasAttribute("data-ui-undoable");
+    box.checked = false;
+    dlg.returnValue = "";
+    dlg.onclose = function () {
+      if (dlg.returnValue !== "confirm") return;
+      var mark = form.querySelector("input[data-ui-skip]");
+      if (mark) mark.remove();
+      if (!skip.hidden && box.checked) form.appendChild(el("input", { type: "hidden", name: "confirm", value: "skip", "data-ui-skip": "" }));
+      form.uiAsked = true;
+      if (submitter) form.requestSubmit(submitter);
+      else form.requestSubmit();
+    };
+    dlg.showModal();
+    dlg.querySelector("button[value='cancel']").focus();
+  }
+
+  // asks stops a marked form and asks first; the form sent after the answer goes on.
+  function asks(e) {
+    var form = e.target, submitter = e.submitter || null;
+    var from = submitter && submitter.hasAttribute("data-ui-confirm") ? submitter : form.hasAttribute("data-ui-confirm") ? form : null;
+    if (form.uiAsked) {
+      form.uiAsked = false;
+      return false;
+    }
+    if (!from || !form.requestSubmit) return false;
+    e.preventDefault();
+    ask(form, submitter, from);
+    return true;
+  }
+
   // A GET form inside a lazy section reloads only that section; the address keeps the form's values.
   function onSubmit(e) {
     var form = e.target;
+    if (asks(e)) return;
     var box = form.closest && form.closest(".ui-lazy[data-ui-src]");
     if (!box || !window.fetch || !window.URLSearchParams || (form.method || "get").toLowerCase() !== "get") return;
     e.preventDefault();

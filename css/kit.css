@@ -359,6 +359,9 @@ button.ui-id[data-copied]::after{content:" copied";color:var(--ui-good)}
 .ui-dialog-title{font-size:var(--ui-text-md);font-weight:700;margin:0}
 .ui-dialog-text{color:var(--ui-muted)}
 .ui-dialog-acts{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.ui-check{display:flex;align-items:center;gap:8px;color:var(--ui-muted);cursor:pointer}
+.ui-check[hidden]{display:none}
+.ui-check input{margin:0;accent-color:var(--ui-accent)}
 .ui-drawer{position:fixed;inset:0 0 0 auto;margin:0;height:100%;max-height:none;width:min(100vw,380px);border:0;border-left:1px solid var(--ui-rule);padding:16px;background:var(--ui-surface);color:var(--ui-ink);box-shadow:var(--ui-shadow-pop);font-size:var(--ui-text-sm)}
 .ui-drawer[open]{display:grid;align-content:start;gap:10px;animation:ui-slide .18s ease-out}
 .ui-drawer-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
