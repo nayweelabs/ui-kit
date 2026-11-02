@@ -1,4 +1,4 @@
-{{/* Toolbar with view toggle, tabs, breadcrumb, form field, modal and drawer. All work without JavaScript; kit.js only makes them quicker. */}}
+{{/* Toolbar with view toggle, tabs, breadcrumb, form field, modal, how changes ask, and drawer. All work without JavaScript; kit.js only makes them quicker. */}}
 
 {{define "ui/view-toggle" -}}
 <div class="ui-seg" role="group" aria-label="View"{{with .Target}} data-ui-views="{{.}}"{{end}}><button type="submit" name="view" value="cards" data-view="cards" aria-pressed="{{if ne .View "list"}}true{{else}}false{{end}}">{{template "ui/icon" "cards"}}Cards</button><button type="submit" name="view" value="list" data-view="list" aria-pressed="{{if eq .View "list"}}true{{else}}false{{end}}">{{template "ui/icon" "list"}}List</button></div>
@@ -50,6 +50,16 @@
 <dialog class="ui-dialog" id="{{.ID}}" aria-labelledby="{{.ID}}-title"{{if .Open}} open{{end}}>
 <form method="{{if .Action}}post{{else}}dialog{{end}}"{{with .Action}} action="{{.}}"{{end}}><h2 class="ui-dialog-title" id="{{.ID}}-title">{{.Title}}</h2>{{with .Text}}<p class="ui-dialog-text">{{.}}</p>{{end}}{{.Body}}<div class="ui-dialog-acts"><button class="ui-btn" type="submit" value="cancel" formmethod="dialog" formnovalidate>{{orDefault "Cancel" .Cancel}}</button>{{template "ui/button" .Confirm}}</div></form>
 </dialog>
+{{- end}}
+
+{{define "ui/confirm-settings" -}}
+<form class="ui-confirm-settings" method="post"{{with .Action}} action="{{.}}"{{end}}>
+{{- range .Rows}}
+<fieldset class="ui-choice"><legend>{{.Type}}</legend><label><input type="radio" name="confirm.{{.Type}}" value="name"{{if eq .Style "name"}} checked{{end}}>Type the name</label><label><input type="radio" name="confirm.{{.Type}}" value="yes-no"{{if eq .Style "yes-no"}} checked{{end}}>Ask y/N</label><label><input type="radio" name="confirm.{{.Type}}" value="never"{{if eq .Style "never"}} checked{{end}}>Don’t ask</label></fieldset>
+{{- end}}
+{{- range .Hidden}}<input type="hidden" name="{{.Name}}" value="{{.Value}}"{{if .Back}} data-ui-back{{end}}>{{end}}
+<div class="ui-dialog-acts">{{with .Save}}{{template "ui/button" .}}{{else}}<button class="ui-btn" type="submit" data-variant="primary">Save</button>{{end}}</div>
+</form>
 {{- end}}
 
 {{define "ui/drawer" -}}

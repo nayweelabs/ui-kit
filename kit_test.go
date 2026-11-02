@@ -5,6 +5,7 @@ import (
 	"flag"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -312,5 +313,39 @@ func TestAHiddenBackValueIsMarkedForKitJS(t *testing.T) {
 	got := b.String()
 	if !strings.Contains(got, `<input type="hidden" name="back" value="/?pr_sort=newest" data-ui-back>`) || !strings.Contains(got, `<input type="hidden" name="tab" value="prs">`) {
 		t.Errorf("only a Back value carries data-ui-back:\n%s", got)
+	}
+}
+
+// A change asks the way the user chose for its type; a type not chosen asks its default.
+func TestAButtonAsksTheWayTheUserChoseForItsType(t *testing.T) {
+	chosen := map[string]string{"move": kit.AskNever, "edit": kit.AskName, "run": "bogus"}
+	save := kit.Button{Label: "Delete", Type: "submit"}
+	for typ, want := range map[string]kit.Button{
+		"delete": {Label: "Delete", Type: "submit", Confirm: "Delete 7?", ConfirmName: "7", Remember: true},
+		"edit":   {Label: "Delete", Type: "submit", Confirm: "Delete 7?", ConfirmName: "7", Remember: true},
+		"run":    {Label: "Delete", Type: "submit", Confirm: "Delete 7?", Remember: true},
+		"move":   save,
+	} {
+		if got := save.Ask(kit.ConfirmStyle(chosen, typ), "Delete 7?", "7"); got != want {
+			t.Errorf("%s: got %+v, want %+v", typ, got, want)
+		}
+	}
+}
+
+// The Settings form posts back the choices it shows, and only real types and styles are read.
+func TestConfirmSettingsPostsBackWhatItShows(t *testing.T) {
+	var b bytes.Buffer
+	if err := kit.Render(&b, "ui/confirm-settings", kit.ConfirmSettings{Action: "/settings", Chosen: map[string]string{"move": kit.AskNever}}); err != nil {
+		t.Fatal(err)
+	}
+	form := url.Values{}
+	for _, m := range regexp.MustCompile(`name="(confirm\.[a-z]+)" value="([a-z-]+)" checked`).FindAllStringSubmatch(b.String(), -1) {
+		form.Set(m[1], m[2])
+	}
+	form.Set("confirm.bogus", kit.AskNever)
+	form.Set("confirm.run", "sometimes")
+	got := kit.ConfirmChoices(form)
+	if len(got) != len(kit.ActionTypes)-1 || got["move"] != kit.AskNever || got["delete"] != kit.AskName || got["edit"] != kit.AskYesNo || got["run"] != "" {
+		t.Errorf("choices %v", got)
 	}
 }
