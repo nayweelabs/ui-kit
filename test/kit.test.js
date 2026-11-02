@@ -217,7 +217,7 @@ test("a button marked data-ui-confirm asks in the kit's dialog first, and Cancel
   assert.equal(yes.textContent, "Disconnect", "the confirm button repeats the verb");
   assert.equal(yes.getAttribute("data-variant"), "danger");
   assert.equal(El.focused, dlg.querySelector("button[value='cancel']"), "Cancel gets first focus");
-  assert.equal(dlg.querySelector(".ui-check").hidden, true, "no Don't ask again for a change that cannot be undone");
+  assert.equal(dlg.querySelector(".ui-check").hidden, true, "no Remember my answer unless asked for");
   answer(dlg, "cancel");
   p.fire("submit", form, { submitter: btn });
   answer(dlg, "");
@@ -239,17 +239,17 @@ test("confirm sends the form once, with the button's name and value; a form with
   assert.equal(p.fire("submit", plain).prevented, undefined);
 });
 
-test("Don't ask again sends confirm=skip with the form, so the server can remember", () => {
-  const form = postForm({ action: "/focus", "data-ui-confirm": "Focus on kanban?", "data-ui-confirm-label": "Focus", "data-ui-undoable": "" }, []);
+test("Remember my answer sends confirm=remember with the form, so the server can remember", () => {
+  const form = postForm({ action: "/focus", "data-ui-confirm": "Focus on kanban?", "data-ui-confirm-label": "Focus", "data-ui-remember": "" }, []);
   const p = page("http://localhost/", [form]);
   form.page = p;
   p.fire("submit", form);
   const dlg = form.parent.querySelector("dialog");
   assert.equal(dlg.querySelector("button[value='confirm']").textContent, "Focus");
-  const skip = dlg.querySelector(".ui-check");
-  assert.equal(skip.hidden, false);
-  skip.querySelector("input").checked = true;
+  const remember = dlg.querySelector(".ui-check");
+  assert.equal(remember.hidden, false);
+  remember.querySelector("input").checked = true;
   answer(dlg, "confirm");
-  assert.deepEqual(form.sent, [["confirm=skip"]]);
+  assert.deepEqual(form.sent, [["confirm=remember"]]);
   assert.equal(form.querySelector("input[name=confirm]"), null, "a form sent again later does not carry it");
 });

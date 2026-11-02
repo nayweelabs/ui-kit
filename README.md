@@ -47,19 +47,19 @@ A status light (`kit.Light`, in `kit.Bar.Lights`) is a dot, an icon and a word i
 
 ### A change asks first
 
-Every change asks before it is made (the org rule). Give the form's submit button a `Confirm`, the question, and `kit.js` asks it in the kit's dialog before the form is sent: the question, Cancel (it gets first focus), and a button that repeats the verb. Escape or Cancel sends nothing; the confirm button sends the form with the pressed button's name and value. `Undoable` adds "Don't ask again" for a change that can be undone; checked, the form also sends `confirm=skip`. The server decides: once it remembers the skip for that action, it draws the button without `Confirm`, and the form is sent at once.
+Every change asks before it is made (the org rule). Give the form's submit button a `Confirm`, the question, and `kit.js` asks it in the kit's dialog before the form is sent: the question, Cancel (it gets first focus), and a button that repeats the verb. Escape or Cancel sends nothing; the confirm button sends the form with the pressed button's name and value. `Remember` adds "Remember my answer"; ticked, the form also sends `confirm=remember`. The server decides: once it remembers the answer for that action, it draws the button without `Confirm`, and the form is sent at once.
 
 ```go
-kit.Button{Label: "Save settings", Variant: "primary", Type: "submit", Confirm: "Save the settings?", Undoable: !skipped}
+kit.Button{Label: "Save settings", Variant: "primary", Type: "submit", Confirm: "Save the settings?", Remember: true}
 ```
 
 | Mark | On | Means |
 |---|---|---|
 | `data-ui-confirm="Save the settings?"` | a form or its submit button | ask this question before the form is sent |
 | `data-ui-confirm-label="Save"` | the same element | the confirm button's words; default, the pressed button's text |
-| `data-ui-undoable` | the same element | offer "Don't ask again", which sends `confirm=skip` |
+| `data-ui-remember` | the same element | offer "Remember my answer", which sends `confirm=remember` |
 
-In React, `<ConfirmForm id question label undoable onSubmit>` does the same around its fields. Without JavaScript the form is sent at once, without asking. A form that posts to a page listing the exact changes needs no dialog: that page is the question. `/admin` in the preview has a Restart button that asks until you tick "Don't ask again".
+In React, `<ConfirmForm id question label remember onSubmit>` does the same around its fields. Without JavaScript the form is sent at once, without asking. A form that posts to a page listing the exact changes needs no dialog: that page is the question. `/admin` in the preview has a Restart button that asks until you tick "Remember my answer".
 
 A page that does not use `ui/shell` links `/ui-kit/css/kit.css` and `/ui-kit/js/kit.js` (in `<head>`, without `defer`) and puts `class="ui-page"` on its body.
 

@@ -107,7 +107,7 @@ type Button struct {
 	Busy     bool
 	Carry    string // with Href, the link's own query values; it carries the page's others (see Link)
 	Confirm  string // the question kit.js asks in the kit's dialog before the form is sent, Cancel first and Label again; without JavaScript it is sent at once
-	Undoable bool   // with Confirm, offers "Don't ask again", which also sends confirm=skip; the server then draws the button without Confirm
+	Remember bool   // with Confirm, offers "Remember my answer", which also sends confirm=remember; the server then draws the button without Confirm
 }
 
 // Fact is one label and value row of a product card, and one cell of its list row ("ui/fact").

@@ -352,7 +352,7 @@
     document.querySelectorAll(".ui-lazy[data-ui-src]").forEach(function (box) { load(box); });
   }
 
-  // Asking first: a form or submit button marked data-ui-confirm asks in the kit's dialog; data-ui-undoable adds "Don't ask again" (confirm=skip).
+  // Asking first: a form or submit button marked data-ui-confirm asks in the kit's dialog; data-ui-remember adds "Remember my answer" (confirm=remember).
   function el(tag, attrs, text) {
     var e = document.createElement(tag);
     Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
@@ -366,9 +366,9 @@
     dlg = el("dialog", { class: "ui-dialog", id: "ui-confirm", "aria-labelledby": "ui-confirm-title" });
     var form = dlg.appendChild(el("form", { method: "dialog" }));
     form.appendChild(el("h2", { class: "ui-dialog-title", id: "ui-confirm-title" }));
-    var skip = form.appendChild(el("label", { class: "ui-check" }));
-    skip.appendChild(el("input", { type: "checkbox" }));
-    skip.appendChild(el("span", {}, "Don’t ask again"));
+    var remember = form.appendChild(el("label", { class: "ui-check" }));
+    remember.appendChild(el("input", { type: "checkbox" }));
+    remember.appendChild(el("span", {}, "Remember my answer"));
     var acts = form.appendChild(el("div", { class: "ui-dialog-acts" }));
     acts.appendChild(el("button", { class: "ui-btn", type: "submit", value: "cancel", autofocus: "" }, "Cancel"));
     acts.appendChild(el("button", { class: "ui-btn", type: "submit", value: "confirm" }));
@@ -379,18 +379,18 @@
   function ask(form, submitter, from) {
     var dlg = confirmDialog();
     var yes = dlg.querySelector("button[value='confirm']");
-    var skip = dlg.querySelector(".ui-check");
-    var box = skip.querySelector("input");
+    var remember = dlg.querySelector(".ui-check");
+    var box = remember.querySelector("input");
     var label = from.getAttribute("data-ui-confirm-label") || (submitter && submitter.textContent.trim());
     dlg.querySelector(".ui-dialog-title").textContent = from.getAttribute("data-ui-confirm");
     yes.textContent = label || "Confirm";
     yes.setAttribute("data-variant", submitter && submitter.getAttribute("data-variant") === "danger" ? "danger" : "primary");
-    skip.hidden = !from.hasAttribute("data-ui-undoable");
+    remember.hidden = !from.hasAttribute("data-ui-remember");
     box.checked = false;
     dlg.returnValue = "";
     dlg.onclose = function () {
       if (dlg.returnValue !== "confirm") return;
-      var mark = !skip.hidden && box.checked && form.appendChild(el("input", { type: "hidden", name: "confirm", value: "skip" }));
+      var mark = !remember.hidden && box.checked && form.appendChild(el("input", { type: "hidden", name: "confirm", value: "remember" }));
       form.uiAsked = true;
       try {
         if (submitter) form.requestSubmit(submitter);

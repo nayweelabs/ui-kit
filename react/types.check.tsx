@@ -14,7 +14,7 @@ export const page = (
     <Count n={128} tone="accent" />
     <Field id="token" label="GitHub token" secret />
     <Dialog id="d" title="Archive 4 cards?" confirm={{ label: "Archive 4 cards", variant: "danger" }} />
-    <ConfirmForm id="ask-save" question="Save the settings?" undoable method="post" action="/settings" onSubmit={(data) => data.get("confirm")}><button type="submit">Save</button></ConfirmForm>
+    <ConfirmForm id="ask-save" question="Save the settings?" remember method="post" action="/settings" onSubmit={(data) => data.get("confirm")}><button type="submit">Save</button></ConfirmForm>
     <Light id="gh" tone="good" icon="github" label="GitHub" details={[{ label: "Account", value: "bot" }]} actions={[{ label: "Enter a new token…", opens: "d" }, { label: "Disconnect", variant: "danger", confirm: { text: "Removes it.", label: "Disconnect now", onConfirm: () => {} } }]} />
   </Shell>
 );

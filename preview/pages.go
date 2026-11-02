@@ -108,11 +108,11 @@ func admin(tpl *template.Template, r *http.Request) (kit.Page, error) {
 	}, err
 }
 
-// restart asks before it restarts m-02, until the form came back with Don't ask again (confirm=skip).
+// restart asks before it restarts m-02, until the form came back with Remember my answer (confirm=remember).
 func restart(r *http.Request) kit.Button {
 	b := kit.Button{Label: "Restart m-02", Type: "submit", Name: "restart", Value: "m-02"}
-	if r.URL.Query().Get("confirm") != "skip" {
-		b.Confirm, b.Undoable = "Restart m-02?", true
+	if r.URL.Query().Get("confirm") != "remember" {
+		b.Confirm, b.Remember = "Restart m-02?", true
 	}
 	return b
 }

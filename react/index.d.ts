@@ -61,7 +61,7 @@ export interface Tab { label: string; href?: string; panel?: string; count?: Cou
 export interface TabsProps { label: string; items?: Tab[]; onSelect?: (tab: Tab) => void }
 export interface DialogProps { id: string; title: string; text?: string; cancel?: string; confirm: ButtonProps; open?: boolean; onClose?: () => void; onConfirm?: () => void; children?: ReactNode }
 export interface ConfirmFormProps extends Omit<FormHTMLAttributes<HTMLFormElement>, "id" | "onSubmit"> {
-  id: string; question: string; label?: string; undoable?: boolean; onSubmit?: (data: FormData) => void; children?: ReactNode;
+  id: string; question: string; label?: string; remember?: boolean; onSubmit?: (data: FormData) => void; children?: ReactNode;
 }
 export interface DrawerProps { id: string; title: string; open?: boolean; onClose?: () => void; children?: ReactNode }
 export interface LightDetail { label: string; value: string }

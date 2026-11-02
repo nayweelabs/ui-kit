@@ -276,12 +276,12 @@ export function Dialog({ id, title, text, cancel = "Cancel", confirm, open, onCl
 }
 
 // ConfirmForm asks question in the kit's Dialog before it is sent, as data-ui-confirm does; onSubmit, when given, gets the confirmed data.
-export function ConfirmForm({ id, question, label, undoable, onSubmit, children, ...rest }) {
+export function ConfirmForm({ id, question, label, remember, onSubmit, children, ...rest }) {
   const form = useRef(null);
   const confirmed = useRef(false);
   const [asking, setAsking] = useState(null);
   const [sending, setSending] = useState(null);
-  const [skip, setSkip] = useState(false);
+  const [remembered, setRemembered] = useState(false);
   useEffect(() => {
     const cancel = asking && document.getElementById(id).querySelector("button[value='cancel']");
     if (cancel) cancel.focus();
@@ -301,7 +301,7 @@ export function ConfirmForm({ id, question, label, undoable, onSubmit, children,
     const submitter = e.nativeEvent.submitter || null;
     if (!confirmed.current) {
       e.preventDefault();
-      setSkip(false);
+      setRemembered(false);
       setAsking({ submitter });
       return;
     }
@@ -312,9 +312,9 @@ export function ConfirmForm({ id, question, label, undoable, onSubmit, children,
   const pressed = asking && asking.submitter;
   const confirm = { label: label || (pressed && pressed.textContent.trim()) || "Confirm", variant: pressed && pressed.getAttribute("data-variant") === "danger" ? "danger" : "primary" };
   return h(Fragment, null,
-    h("form", { ...rest, ref: form, onSubmit: submit }, children, sending && sending.skip ? h("input", { type: "hidden", name: "confirm", value: "skip" }) : null),
-    h(Dialog, { id, title: question, confirm, open: !!asking, onClose: () => setAsking(null), onConfirm: () => setSending({ submitter: pressed, skip: undoable && skip }) },
-      undoable ? h("label", { className: "ui-check" }, h("input", { type: "checkbox", checked: skip, onChange: (e) => setSkip(e.target.checked) }), h("span", null, "Don’t ask again")) : null));
+    h("form", { ...rest, ref: form, onSubmit: submit }, children, sending && sending.remember ? h("input", { type: "hidden", name: "confirm", value: "remember" }) : null),
+    h(Dialog, { id, title: question, confirm, open: !!asking, onClose: () => setAsking(null), onConfirm: () => setSending({ submitter: pressed, remember: remember && remembered }) },
+      remember ? h("label", { className: "ui-check" }, h("input", { type: "checkbox", checked: remembered, onChange: (e) => setRemembered(e.target.checked) }), h("span", null, "Remember my answer")) : null));
 }
 
 export function Drawer({ id, title, open, onClose, children }) {

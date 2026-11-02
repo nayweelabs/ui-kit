@@ -102,14 +102,14 @@ func TestTheLazyPageLoadsEachSectionOnItsOwn(t *testing.T) {
 	}
 }
 
-// The admin page's Restart asks first, until the form came back with Don't ask again.
+// The admin page's Restart asks first, until the form came back with Remember my answer.
 func TestRestartAsksUntilTheServerRemembers(t *testing.T) {
 	srv := httptest.NewServer(preview.Handler())
 	defer srv.Close()
 	if body := get(t, srv, "/admin"); !strings.Contains(body, `data-ui-confirm="Restart m-02?"`) {
 		t.Error("Restart does not ask first")
 	}
-	if body := get(t, srv, "/admin?restart=m-02&confirm=skip"); strings.Contains(body, "data-ui-confirm") || !strings.Contains(body, "Restart m-02") {
-		t.Error("Restart still asks after Don't ask again")
+	if body := get(t, srv, "/admin?restart=m-02&confirm=remember"); strings.Contains(body, "data-ui-confirm") || !strings.Contains(body, "Restart m-02") {
+		t.Error("Restart still asks after Remember my answer")
 	}
 }

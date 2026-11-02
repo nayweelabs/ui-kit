@@ -97,9 +97,9 @@ test("count with an icon is a badge whose label is its tooltip, and with href a 
   assert.match(link, /^<a class="ui-count" data-icon="" data-tip="2 to review" href="#review">/);
 });
 
-test("confirm form draws the form and, beside it, the kit's dialog with the question and Don't ask again", () => {
-  const f = render(h(kit.ConfirmForm, { id: "ask-save", question: "Save the settings?", label: "Save", undoable: true, method: "post", action: "/settings" }, h("button", { type: "submit" }, "Save")));
+test("confirm form draws the form and, beside it, the kit's dialog with the question and Remember my answer", () => {
+  const f = render(h(kit.ConfirmForm, { id: "ask-save", question: "Save the settings?", label: "Save", remember: true, method: "post", action: "/settings" }, h("button", { type: "submit" }, "Save")));
   assert.match(f, /^<form action="\/settings" method="post"><button type="submit">Save<\/button><\/form><dialog class="ui-dialog" id="ask-save"/);
-  assert.match(f, /<h2 class="ui-dialog-title" id="ask-save-title">Save the settings\?<\/h2><label class="ui-check"><input type="checkbox"\/><span>Don’t ask again<\/span><\/label><div class="ui-dialog-acts"><button class="ui-btn" type="submit" value="cancel">Cancel<\/button><button class="ui-btn" data-variant="primary" value="confirm" type="submit">Save<\/button>/);
+  assert.match(f, /<h2 class="ui-dialog-title" id="ask-save-title">Save the settings\?<\/h2><label class="ui-check"><input type="checkbox"\/><span>Remember my answer<\/span><\/label><div class="ui-dialog-acts"><button class="ui-btn" type="submit" value="cancel">Cancel<\/button><button class="ui-btn" data-variant="primary" value="confirm" type="submit">Save<\/button>/);
   assert.doesNotMatch(render(h(kit.ConfirmForm, { id: "a", question: "Disconnect?" })), /ui-check/);
 });
