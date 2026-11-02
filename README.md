@@ -47,19 +47,27 @@ A status light (`kit.Light`, in `kit.Bar.Lights`) is a dot, an icon and a word i
 
 ### A change asks first
 
-Every change asks before it is made (the org rule). Give the form's submit button a `Confirm`, the question, and `kit.js` asks it in the kit's dialog before the form is sent: the question, Cancel (it gets first focus), and a button that repeats the verb. Escape or Cancel sends nothing; the confirm button sends the form with the pressed button's name and value. `Remember` adds "Remember my answer"; ticked, the form also sends `confirm=remember`. The server decides: once it remembers the answer for that action, it draws the button without `Confirm`, and the form is sent at once.
+Every change asks before it is made (the org rule), and the user picks how, per action type. The types are the same words in every product (`kit.ActionTypes`): create, edit, move, focus, archive, close, delete, settings, connect, run. Each type asks in one of three ways: `name` (type the name to go ahead), `yes-no`, or `never`. By default delete asks for the name and every other type asks yes-no.
+
+The server keeps the user's choices (in the product's config) and draws each button the way its type asks:
 
 ```go
-kit.Button{Label: "Save settings", Variant: "primary", Type: "submit", Confirm: "Save the settings?", Remember: true}
+style := kit.ConfirmStyle(cfg.Confirm, "delete")                 // the user's choice, or the type's default
+btn := kit.Button{Label: "Delete card", Variant: "danger", Type: "submit"}.Ask(style, "Delete card 20261102-e472?", "20261102-e472")
 ```
+
+`Ask` sets the button's `Confirm` (the question), `ConfirmName` (only for `name`) and `Remember`; for `never` it leaves them empty and the form is sent at once. `kit.js` asks the question in the kit's dialog before the form is sent: the question, Cancel (it gets first focus), and a button that repeats the verb. With a name, the dialog says "Type 20261102-e472 to go ahead" and the button works only once the text is exactly the name; the text box gets first focus. Escape or Cancel sends nothing; the confirm button sends the form with the pressed button's name and value. Every question offers "Remember my answer"; ticked, the form also sends `confirm=remember`, and the server sets that type to `never`.
 
 | Mark | On | Means |
 |---|---|---|
 | `data-ui-confirm="Save the settings?"` | a form or its submit button | ask this question before the form is sent |
+| `data-ui-confirm-name="20261102-e472"` | the same element | the user types this name before the confirm button works |
 | `data-ui-confirm-label="Save"` | the same element | the confirm button's words; default, the pressed button's text |
 | `data-ui-remember` | the same element | offer "Remember my answer", which sends `confirm=remember` |
 
-In React, `<ConfirmForm id question label remember onSubmit>` does the same around its fields. Without JavaScript the form is sent at once, without asking. A form that posts to a page listing the exact changes needs no dialog: that page is the question. `/admin` in the preview has a Restart button that asks until you tick "Remember my answer".
+The Settings page draws `ui/confirm-settings` with a `kit.ConfirmSettings` (`Action`, the product's `Types`, the user's `Chosen`): one row per type with Type the name, Ask y/N and Don't ask. It posts `confirm.<type>=<style>`; `kit.ConfirmChoices(r.PostForm)` reads it back, ready to keep.
+
+In React: `<ConfirmForm id question label confirmName remember onSubmit>` around a form's fields, `confirmStyle(chosen, type)`, `actionTypes` and `<ConfirmSettings action types chosen onSubmit>`. Without JavaScript the form is sent at once, without asking. A form that posts to a page listing the exact changes needs no dialog: that page is the question. `/admin` in the preview has Restart (asks yes-no) and Delete (asks for the name), each asking until you tick "Remember my answer"; the gallery shows the Settings rows.
 
 A page that does not use `ui/shell` links `/ui-kit/css/kit.css` and `/ui-kit/js/kit.js` (in `<head>`, without `defer`) and puts `class="ui-page"` on its body.
 
@@ -88,14 +96,14 @@ Put `class="ui-page"` on `<body>`. The wrappers are plain ES modules with types;
 | `js/kit.js` | theme switch, cards/list toggle, fold, tabs, lazy sections, carried links, asking before a form is sent; no app logic |
 | `react/` | the React wrappers and their types |
 | `test/` | the tests of `kit.js`, in a small stand-in DOM |
-| `kit.go`, `types.go` | package `kit` |
+| `kit.go`, `types.go`, `confirm.go` | package `kit`; `confirm.go` holds how a change asks |
 | `preview/`, `cmd/ui-kit-preview` | the gallery |
 | `cmd/ui-kit-tokens` | writes `css/tokens.css` |
 
 ### Partials
 
 Shell: `ui/shell`, `ui/assets`, `ui/preview-banner`, `ui/bar`, `ui/light`, `ui/rail`, `ui/page-header`, `ui/footer`.
-Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/drawer`, `ui/star`, `ui/skeleton`.
+Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/confirm-settings`, `ui/drawer`, `ui/star`, `ui/skeleton`.
 Pieces they share: `ui/icon`, `ui/num`, `ui/fact`, `ui/cell`, `ui/read-at`.
 
 A count with an `Icon` (`eye`, `check`, `alert`, `edit`, or any `ui/icon`) is a badge: icon and number in its tone, and its `Label` as a tooltip on hover and on keyboard focus, read out through the same hidden label. With `Href` it is a link, such as to a group further down the page (an anchor inside the page; it opens no new tab).
