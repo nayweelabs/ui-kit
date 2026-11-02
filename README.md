@@ -45,6 +45,22 @@ A link inside a lazy section can change only that section's view, like a toolbar
 
 A status light (`kit.Light`, in `kit.Bar.Lights`) is a dot, an icon and a word in the top bar for one connection, such as GitHub. It is a link to the app's full page for it; `kit.js` makes it open a popover under it with the facts (`Details`) and an Actions menu. An action links, opens a dialog of `Dialogs` (a `kit.Dialog` whose `Body` holds its fields), or asks once more inside the popover (`Confirm`) before it posts. Give it a `Src` and the bar draws it grey at once and fetches it, like a lazy section.
 
+### A change asks first
+
+Every change asks before it is made (the org rule). Give the form's submit button a `Confirm`, the question, and `kit.js` asks it in the kit's dialog before the form is sent: the question, Cancel (it gets first focus), and a button that repeats the verb. Escape or Cancel sends nothing; the confirm button sends the form with the pressed button's name and value. `Undoable` adds "Don't ask again" for a change that can be undone; checked, the form also sends `confirm=skip`. The server decides: once it remembers the skip for that action, it draws the button without `Confirm`, and the form is sent at once.
+
+```go
+kit.Button{Label: "Save settings", Variant: "primary", Type: "submit", Confirm: "Save the settings?", Undoable: !skipped}
+```
+
+| Mark | On | Means |
+|---|---|---|
+| `data-ui-confirm="Save the settings?"` | a form or its submit button | ask this question before the form is sent |
+| `data-ui-confirm-label="Save"` | the same element | the confirm button's words; default, the pressed button's text |
+| `data-ui-undoable` | the same element | offer "Don't ask again", which sends `confirm=skip` |
+
+In React, `<ConfirmForm id question label undoable onSubmit>` does the same around its fields. Without JavaScript the form is sent at once, without asking. A form that posts to a page listing the exact changes needs no dialog: that page is the question. `/admin` in the preview has a Restart button that asks until you tick "Don't ask again".
+
 A page that does not use `ui/shell` links `/ui-kit/css/kit.css` and `/ui-kit/js/kit.js` (in `<head>`, without `defer`) and puts `class="ui-page"` on its body.
 
 ## In a Vite app
@@ -69,7 +85,7 @@ Put `class="ui-page"` on `<body>`. The wrappers are plain ES modules with types;
 | `css/kit.css` | the shell and every part; imports `tokens.css` and the fonts |
 | `fonts/` | Hanken Grotesk and IBM Plex Mono (SIL OFL 1.1, licences beside them) |
 | `partials/` | the Go partials, `ui/…` |
-| `js/kit.js` | theme switch, cards/list toggle, fold, tabs, lazy sections, carried links; no app logic |
+| `js/kit.js` | theme switch, cards/list toggle, fold, tabs, lazy sections, carried links, asking before a form is sent; no app logic |
 | `react/` | the React wrappers and their types |
 | `test/` | the tests of `kit.js`, in a small stand-in DOM |
 | `kit.go`, `types.go` | package `kit` |
