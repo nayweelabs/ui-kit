@@ -352,7 +352,7 @@
     document.querySelectorAll(".ui-lazy[data-ui-src]").forEach(function (box) { load(box); });
   }
 
-  // Asking first: a form or submit button marked data-ui-confirm asks in the kit's dialog; data-ui-remember adds "Remember my answer" (confirm=remember).
+  // Asking first: data-ui-confirm asks in the kit's dialog, data-ui-confirm-name wants that name typed, data-ui-remember adds "Remember my answer".
   function el(tag, attrs, text) {
     var e = document.createElement(tag);
     Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
@@ -366,6 +366,12 @@
     dlg = el("dialog", { class: "ui-dialog", id: "ui-confirm", "aria-labelledby": "ui-confirm-title" });
     var form = dlg.appendChild(el("form", { method: "dialog" }));
     form.appendChild(el("h2", { class: "ui-dialog-title", id: "ui-confirm-title" }));
+    var field = form.appendChild(el("div", { class: "ui-field", "data-ui-name": "" }));
+    var label = field.appendChild(el("label", { for: "ui-confirm-name" }, ""));
+    label.appendChild(el("span", {}, "Type "));
+    label.appendChild(el("code", {}));
+    label.appendChild(el("span", {}, " to go ahead"));
+    field.appendChild(el("div", { class: "ui-input" })).appendChild(el("input", { id: "ui-confirm-name", autocomplete: "off", spellcheck: "false", autocapitalize: "off" }));
     var remember = form.appendChild(el("label", { class: "ui-check" }));
     remember.appendChild(el("input", { type: "checkbox" }));
     remember.appendChild(el("span", {}, "Remember my answer"));
@@ -381,15 +387,28 @@
     var yes = dlg.querySelector("button[value='confirm']");
     var remember = dlg.querySelector(".ui-check");
     var box = remember.querySelector("input");
+    var field = dlg.querySelector("[data-ui-name]");
+    var typed = field.querySelector("input");
+    var name = from.getAttribute("data-ui-confirm-name") || "";
     var label = from.getAttribute("data-ui-confirm-label") || (submitter && submitter.textContent.trim());
     dlg.querySelector(".ui-dialog-title").textContent = from.getAttribute("data-ui-confirm");
     yes.textContent = label || "Confirm";
     yes.setAttribute("data-variant", submitter && submitter.getAttribute("data-variant") === "danger" ? "danger" : "primary");
     remember.hidden = !from.hasAttribute("data-ui-remember");
     box.checked = false;
+    field.hidden = !name;
+    field.querySelector("code").textContent = name;
+    typed.value = "";
+    yes.disabled = !!name;
+    typed.oninput = function () { yes.disabled = typed.value !== name; };
+    typed.onkeydown = function (k) {
+      if (k.key !== "Enter") return;
+      k.preventDefault();
+      if (!yes.disabled) yes.click();
+    };
     dlg.returnValue = "";
     dlg.onclose = function () {
-      if (dlg.returnValue !== "confirm") return;
+      if (dlg.returnValue !== "confirm" || typed.value !== name && name) return;
       var mark = !remember.hidden && box.checked && form.appendChild(el("input", { type: "hidden", name: "confirm", value: "remember" }));
       form.uiAsked = true;
       try {
@@ -401,7 +420,7 @@
       }
     };
     dlg.showModal();
-    dlg.querySelector("button[value='cancel']").focus();
+    (name ? typed : dlg.querySelector("button[value='cancel']")).focus();
   }
 
   // asks stops a marked form and asks first; the form sent after the answer goes on.

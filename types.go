@@ -94,20 +94,21 @@ type Skeleton struct {
 
 // Button acts ("ui/button"). With Href it is drawn as a link; with Opens it opens the dialog of that id; with Confirm, a submit button asks first.
 type Button struct {
-	Label    string
-	Variant  string
-	Size     string
-	Type     string
-	Href     string
-	Kbd      string
-	Name     string
-	Value    string
-	Opens    string
-	Disabled bool
-	Busy     bool
-	Carry    string // with Href, the link's own query values; it carries the page's others (see Link)
-	Confirm  string // the question kit.js asks in the kit's dialog before the form is sent, Cancel first and Label again; without JavaScript it is sent at once
-	Remember bool   // with Confirm, offers "Remember my answer", which also sends confirm=remember; the server then draws the button without Confirm
+	Label       string
+	Variant     string
+	Size        string
+	Type        string
+	Href        string
+	Kbd         string
+	Name        string
+	Value       string
+	Opens       string
+	Disabled    bool
+	Busy        bool
+	Carry       string // with Href, the link's own query values; it carries the page's others (see Link)
+	Confirm     string // the question kit.js asks in the kit's dialog before the form is sent, Cancel first and Label again; without JavaScript it is sent at once
+	ConfirmName string // with Confirm, the name (a card id) the user types before the confirm button works
+	Remember    bool   // with Confirm, offers "Remember my answer", which also sends confirm=remember; the server then draws the button without Confirm
 }
 
 // Fact is one label and value row of a product card, and one cell of its list row ("ui/fact").

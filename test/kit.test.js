@@ -253,3 +253,32 @@ test("Remember my answer sends confirm=remember with the form, so the server can
   assert.deepEqual(form.sent, [["confirm=remember"]]);
   assert.equal(form.querySelector("input[name=confirm]"), null, "a form sent again later does not carry it");
 });
+
+test("a name to type keeps the confirm button off until the text is exactly the name", () => {
+  const btn = new El("button", { type: "submit", "data-variant": "danger", "data-ui-confirm": "Delete card 20261102-e472?", "data-ui-confirm-name": "20261102-e472", "data-ui-remember": "" });
+  btn.textContent = "Delete card";
+  const form = postForm({}, [btn]);
+  const p = page("http://localhost/", [form]);
+  form.page = p;
+  p.fire("submit", form, { submitter: btn });
+  const dlg = form.parent.querySelector("dialog");
+  const field = dlg.querySelector("[data-ui-name]");
+  const typed = field.querySelector("input");
+  const yes = dlg.querySelector("button[value='confirm']");
+  assert.equal(field.hidden, false);
+  assert.equal(field.querySelector("code").textContent, "20261102-e472", "it says Type 20261102-e472 to go ahead");
+  assert.equal(El.focused, typed);
+  assert.equal(dlg.querySelector(".ui-check").hidden, false, "Remember my answer is offered here too");
+  assert.equal(yes.disabled, true);
+  typed.value = "20261102-e47";
+  typed.oninput();
+  assert.equal(yes.disabled, true, "almost the name is not the name");
+  typed.value = "20261102-e472";
+  typed.oninput();
+  assert.equal(yes.disabled, false);
+  answer(dlg, "confirm");
+  assert.deepEqual(form.sent, [btn]);
+  p.fire("submit", form, { submitter: btn });
+  assert.equal(typed.value, "", "the next question starts empty");
+  assert.equal(yes.disabled, true);
+});
