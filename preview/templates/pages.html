@@ -38,7 +38,7 @@
 {{define "preview/admin" -}}
 <div class="pv-tabs">
 {{.Tabs}}
-<div id="pane-machines" role="tabpanel" aria-labelledby="pane-machines-tab">{{.Machines}}</div>
+<div id="pane-machines" role="tabpanel" aria-labelledby="pane-machines-tab"><form method="get" action="/admin">{{.Restart}}</form>{{.Machines}}</div>
 <div id="pane-logs" role="tabpanel" aria-labelledby="pane-logs-tab" hidden>{{.Logs}}</div>
 <div id="pane-settings" role="tabpanel" aria-labelledby="pane-settings-tab" hidden>{{.Settings}}</div>
 </div>

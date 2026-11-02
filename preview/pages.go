@@ -87,6 +87,7 @@ func admin(tpl *template.Template, r *http.Request) (kit.Page, error) {
 			{Label: "Settings", Panel: "pane-settings"},
 		}}),
 		"Machines": mustHTML(tpl, "ui/table", machines),
+		"Restart":  mustHTML(tpl, "ui/button", restart(r)),
 		"Logs":     mustHTML(tpl, "ui/empty", kit.Empty{Title: "No logs in the last hour.", Text: "Machines write logs when a deploy runs.", Command: "fleet logs --since 1h"}),
 		"Settings": mustHTML(tpl, "ui/field", kit.Field{ID: "provider-token", Label: "Provider token", Secret: true, Hint: "Kept in the Keychain. Never shown back after saving."}),
 	}
@@ -105,6 +106,15 @@ func admin(tpl *template.Template, r *http.Request) (kit.Page, error) {
 		},
 		Body: body + must(liveDialogs(tpl)),
 	}, err
+}
+
+// restart asks before it restarts m-02, until the form came back with Don't ask again (confirm=skip).
+func restart(r *http.Request) kit.Button {
+	b := kit.Button{Label: "Restart m-02", Type: "submit", Name: "restart", Value: "m-02"}
+	if r.URL.Query().Get("confirm") != "skip" {
+		b.Confirm, b.Undoable = "Restart m-02?", true
+	}
+	return b
 }
 
 // lazySections are the sections of the lazy page: one quick with a toolbar, one slow, one that fails.
