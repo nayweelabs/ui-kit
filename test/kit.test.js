@@ -189,7 +189,10 @@ function postForm(attrs, children) {
   const form = new El("form", { method: "post", ...attrs }, children);
   form.method = "post";
   form.sent = [];
-  form.requestSubmit = (submitter) => { if (!form.page.fire("submit", form, { submitter }).prevented) form.sent.push(submitter); };
+  form.requestSubmit = (submitter) => {
+    const fields = form.querySelectorAll("input[type=hidden]").map((i) => i.getAttribute("name") + "=" + i.getAttribute("value"));
+    if (!form.page.fire("submit", form, { submitter }).prevented) form.sent.push(submitter || fields);
+  };
   return form;
 }
 
@@ -231,7 +234,7 @@ test("confirm sends the form once, with the button's name and value; a form with
   const dlg = form.parent.querySelector("dialog");
   answer(dlg, "confirm");
   assert.deepEqual(form.sent, [btn], "the browser sends the button's name and value with it");
-  assert.equal(form.querySelector("input[data-ui-skip]"), null);
+  assert.equal(form.querySelector("input[name=confirm]"), null);
   assert.equal(p.fire("submit", form, { submitter: btn }).prevented, true, "the next press asks again");
   assert.equal(p.fire("submit", plain).prevented, undefined);
 });
@@ -247,7 +250,6 @@ test("Don't ask again sends confirm=skip with the form, so the server can rememb
   assert.equal(skip.hidden, false);
   skip.querySelector("input").checked = true;
   answer(dlg, "confirm");
-  const mark = form.querySelector("input[data-ui-skip]");
-  assert.deepEqual([mark.getAttribute("name"), mark.getAttribute("value"), mark.getAttribute("type")], ["confirm", "skip", "hidden"]);
-  assert.equal(form.sent.length, 1);
+  assert.deepEqual(form.sent, [["confirm=skip"]]);
+  assert.equal(form.querySelector("input[name=confirm]"), null, "a form sent again later does not carry it");
 });

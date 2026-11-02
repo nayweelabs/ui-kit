@@ -390,12 +390,15 @@
     dlg.returnValue = "";
     dlg.onclose = function () {
       if (dlg.returnValue !== "confirm") return;
-      var mark = form.querySelector("input[data-ui-skip]");
-      if (mark) mark.remove();
-      if (!skip.hidden && box.checked) form.appendChild(el("input", { type: "hidden", name: "confirm", value: "skip", "data-ui-skip": "" }));
+      var mark = !skip.hidden && box.checked && form.appendChild(el("input", { type: "hidden", name: "confirm", value: "skip" }));
       form.uiAsked = true;
-      if (submitter) form.requestSubmit(submitter);
-      else form.requestSubmit();
+      try {
+        if (submitter) form.requestSubmit(submitter);
+        else form.requestSubmit();
+      } finally {
+        form.uiAsked = false;
+        if (mark) mark.remove();
+      }
     };
     dlg.showModal();
     dlg.querySelector("button[value='cancel']").focus();
@@ -404,10 +407,7 @@
   // asks stops a marked form and asks first; the form sent after the answer goes on.
   function asks(e) {
     var form = e.target, submitter = e.submitter || null;
-    if (form.uiAsked) {
-      form.uiAsked = false;
-      return false;
-    }
+    if (form.uiAsked || e.defaultPrevented) return false;
     var from = submitter && submitter.hasAttribute("data-ui-confirm") ? submitter : form.hasAttribute("data-ui-confirm") ? form : null;
     if (!from || !form.requestSubmit) return false;
     e.preventDefault();
