@@ -110,12 +110,19 @@ test("confirm form with a name to type draws Type <name> to go ahead, and the co
   assert.match(f, /<button class="ui-btn" data-variant="primary" value="confirm" type="submit" disabled="">Delete<\/button>/);
 });
 
-test("confirm settings draws the same rows as the Go partial, defaults included", () => {
-  assert.equal(kit.confirmStyle({}, "delete"), "name");
-  assert.equal(kit.confirmStyle({ run: "bogus" }, "run"), "yes-no");
-  const f = render(h(kit.ConfirmSettings, { action: "/settings", types: ["move", "delete"], chosen: { move: "never" } }));
-  assert.match(f, /^<form class="ui-confirm-settings" action="\/settings" method="post"><fieldset class="ui-choice"><legend>move<\/legend>/);
-  assert.match(f, /name="confirm.move" checked="" value="never"\/>Don’t ask/);
-  assert.match(f, /name="confirm.delete" checked="" value="name"\/>Type the name/);
-  assert.match(f, /<div class="ui-dialog-acts"><button class="ui-btn" data-variant="primary" type="submit">Save<\/button><\/div><\/form>$/);
+test("confirm settings says the style in use and where it comes from, in this app's scope and the global one", () => {
+  assert.deepEqual(kit.resolveConfirm({ move: "never" }, { move: "name", edit: "never" }, "move"), { style: "never", source: "this app" });
+  assert.deepEqual(kit.resolveConfirm({ run: "bogus" }, { edit: "never" }, "edit"), { style: "never", source: "global" });
+  assert.deepEqual(kit.resolveConfirm({}, {}, "delete"), { style: "name", source: "default" });
+  const props = { action: "/settings", types: ["edit", "move"], app: { move: "never" }, global: { edit: "never" } };
+  const app = render(h(kit.ConfirmSettings, props));
+  assert.match(app, /^<form class="ui-confirm-settings" action="\/settings" method="post"><input type="hidden" name="confirm.scope" value="app"\/>/);
+  assert.match(app, /<legend>edit<\/legend><span class="ui-choice-now">Don’t ask <span class="ui-pill" data-variant="tag">global<\/span><\/span>/);
+  assert.match(app, /name="confirm.edit" checked="" value="inherit"\/>Use the global value/);
+  assert.match(app, /name="confirm.move" checked="" value="never"\/>Don’t ask/);
+  const global = render(h(kit.ConfirmSettings, { ...props, scope: "global" }));
+  assert.match(global, /name="confirm.scope" value="global"/);
+  assert.match(global, /<legend>move<\/legend><span class="ui-choice-now">Ask y\/N <span class="ui-pill" data-variant="tag">default<\/span>/);
+  assert.match(global, /name="confirm.move" checked="" value="inherit"\/>Use the default/);
+  assert.match(global, /<div class="ui-dialog-acts"><button class="ui-btn" data-variant="primary" type="submit">Save<\/button><\/div><\/form>$/);
 });

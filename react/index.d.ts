@@ -65,8 +65,9 @@ export interface ConfirmFormProps extends Omit<FormHTMLAttributes<HTMLFormElemen
 }
 export type ActionType = "create" | "edit" | "move" | "focus" | "archive" | "close" | "delete" | "settings" | "connect" | "run";
 export type ConfirmStyle = "name" | "yes-no" | "never";
+export type ConfirmSource = "this app" | "global" | "default";
 export interface ConfirmSettingsProps {
-  action?: string; types?: string[]; chosen?: Record<string, string>; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
+  action?: string; scope?: "app" | "global"; types?: string[]; app?: Record<string, string>; global?: Record<string, string>; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
 }
 export interface DrawerProps { id: string; title: string; open?: boolean; onClose?: () => void; children?: ReactNode }
 export interface LightDetail { label: string; value: string }
@@ -108,7 +109,7 @@ export function Crumb(props: { items?: Link[] }): ReactElement;
 export function Dialog(props: DialogProps): ReactElement;
 export function ConfirmForm(props: ConfirmFormProps): ReactElement;
 export const actionTypes: ActionType[];
-export function confirmStyle(chosen: Record<string, string> | undefined, type: string): ConfirmStyle;
+export function resolveConfirm(app: Record<string, string> | undefined, global: Record<string, string> | undefined, type: string): { style: ConfirmStyle; source: ConfirmSource };
 export function ConfirmSettings(props: ConfirmSettingsProps): ReactElement;
 export function Drawer(props: DrawerProps): ReactElement;
 export function ThemeToggle(): ReactElement;
