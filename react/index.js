@@ -285,13 +285,17 @@ export function ConfirmForm({ id, question, label, undoable, onSubmit, children,
   useEffect(() => {
     const cancel = asking && document.getElementById(id).querySelector("button[value='cancel']");
     if (cancel) cancel.focus();
-  }, [asking]);
+  }, [asking, id]);
   useEffect(() => {
     if (!sending) return;
     confirmed.current = true;
-    if (sending.submitter) form.current.requestSubmit(sending.submitter);
-    else form.current.requestSubmit();
-    setSending(null);
+    try {
+      if (sending.submitter) form.current.requestSubmit(sending.submitter);
+      else form.current.requestSubmit();
+    } finally {
+      confirmed.current = false;
+      setSending(null);
+    }
   }, [sending]);
   const submit = (e) => {
     const submitter = e.nativeEvent.submitter || null;
@@ -301,7 +305,6 @@ export function ConfirmForm({ id, question, label, undoable, onSubmit, children,
       setAsking({ submitter });
       return;
     }
-    confirmed.current = false;
     if (!onSubmit) return;
     e.preventDefault();
     onSubmit(new FormData(e.currentTarget, submitter));
