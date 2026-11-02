@@ -103,3 +103,19 @@ test("confirm form draws the form and, beside it, the kit's dialog with the ques
   assert.match(f, /<h2 class="ui-dialog-title" id="ask-save-title">Save the settings\?<\/h2><label class="ui-check"><input type="checkbox"\/><span>Remember my answer<\/span><\/label><div class="ui-dialog-acts"><button class="ui-btn" type="submit" value="cancel">Cancel<\/button><button class="ui-btn" data-variant="primary" value="confirm" type="submit">Save<\/button>/);
   assert.doesNotMatch(render(h(kit.ConfirmForm, { id: "a", question: "Disconnect?" })), /ui-check/);
 });
+
+test("confirm form with a name to type draws Type <name> to go ahead, and the confirm button starts off", () => {
+  const f = render(h(kit.ConfirmForm, { id: "ask-del", question: "Delete card 7?", confirmName: "7", label: "Delete" }));
+  assert.match(f, /<div class="ui-field"><label for="ask-del-name">Type <code>7<\/code> to go ahead<\/label><div class="ui-input"><input id="ask-del-name" autoComplete="off" spellCheck="false" autoCapitalize="off" value=""\/><\/div><\/div>/);
+  assert.match(f, /<button class="ui-btn" data-variant="primary" value="confirm" type="submit" disabled="">Delete<\/button>/);
+});
+
+test("confirm settings draws the same rows as the Go partial, defaults included", () => {
+  assert.equal(kit.confirmStyle({}, "delete"), "name");
+  assert.equal(kit.confirmStyle({ run: "bogus" }, "run"), "yes-no");
+  const f = render(h(kit.ConfirmSettings, { action: "/settings", types: ["move", "delete"], chosen: { move: "never" } }));
+  assert.match(f, /^<form class="ui-confirm-settings" action="\/settings" method="post"><fieldset class="ui-choice"><legend>move<\/legend>/);
+  assert.match(f, /name="confirm.move" checked="" value="never"\/>Don’t ask/);
+  assert.match(f, /name="confirm.delete" checked="" value="name"\/>Type the name/);
+  assert.match(f, /<div class="ui-dialog-acts"><button class="ui-btn" data-variant="primary" type="submit">Save<\/button><\/div><\/form>$/);
+});

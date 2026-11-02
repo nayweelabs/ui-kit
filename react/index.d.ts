@@ -61,7 +61,12 @@ export interface Tab { label: string; href?: string; panel?: string; count?: Cou
 export interface TabsProps { label: string; items?: Tab[]; onSelect?: (tab: Tab) => void }
 export interface DialogProps { id: string; title: string; text?: string; cancel?: string; confirm: ButtonProps; open?: boolean; onClose?: () => void; onConfirm?: () => void; children?: ReactNode }
 export interface ConfirmFormProps extends Omit<FormHTMLAttributes<HTMLFormElement>, "id" | "onSubmit"> {
-  id: string; question: string; label?: string; remember?: boolean; onSubmit?: (data: FormData) => void; children?: ReactNode;
+  id: string; question: string; label?: string; confirmName?: string; remember?: boolean; onSubmit?: (data: FormData) => void; children?: ReactNode;
+}
+export type ActionType = "create" | "edit" | "move" | "focus" | "archive" | "close" | "delete" | "settings" | "connect" | "run";
+export type ConfirmStyle = "name" | "yes-no" | "never";
+export interface ConfirmSettingsProps {
+  action?: string; types?: string[]; chosen?: Record<string, string>; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
 }
 export interface DrawerProps { id: string; title: string; open?: boolean; onClose?: () => void; children?: ReactNode }
 export interface LightDetail { label: string; value: string }
@@ -102,6 +107,9 @@ export function Tabs(props: TabsProps): ReactElement;
 export function Crumb(props: { items?: Link[] }): ReactElement;
 export function Dialog(props: DialogProps): ReactElement;
 export function ConfirmForm(props: ConfirmFormProps): ReactElement;
+export const actionTypes: ActionType[];
+export function confirmStyle(chosen: Record<string, string> | undefined, type: string): ConfirmStyle;
+export function ConfirmSettings(props: ConfirmSettingsProps): ReactElement;
 export function Drawer(props: DrawerProps): ReactElement;
 export function ThemeToggle(): ReactElement;
 export function Light(props: LightProps): ReactElement;

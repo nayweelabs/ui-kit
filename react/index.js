@@ -276,16 +276,17 @@ export function Dialog({ id, title, text, cancel = "Cancel", confirm, open, onCl
 }
 
 // ConfirmForm asks question in the kit's Dialog before it is sent, as data-ui-confirm does; onSubmit, when given, gets the confirmed data.
-export function ConfirmForm({ id, question, label, remember, onSubmit, children, ...rest }) {
+export function ConfirmForm({ id, question, label, confirmName, remember, onSubmit, children, ...rest }) {
   const form = useRef(null);
   const confirmed = useRef(false);
   const [asking, setAsking] = useState(null);
   const [sending, setSending] = useState(null);
   const [remembered, setRemembered] = useState(false);
+  const [typed, setTyped] = useState("");
   useEffect(() => {
-    const cancel = asking && document.getElementById(id).querySelector("button[value='cancel']");
-    if (cancel) cancel.focus();
-  }, [asking, id]);
+    const first = asking && document.getElementById(id).querySelector(confirmName ? "input:not([type])" : "button[value='cancel']");
+    if (first) first.focus();
+  }, [asking, id, confirmName]);
   useEffect(() => {
     if (!sending) return;
     confirmed.current = true;
@@ -302,6 +303,7 @@ export function ConfirmForm({ id, question, label, remember, onSubmit, children,
     if (!confirmed.current) {
       e.preventDefault();
       setRemembered(false);
+      setTyped("");
       setAsking({ submitter });
       return;
     }
@@ -310,11 +312,39 @@ export function ConfirmForm({ id, question, label, remember, onSubmit, children,
     onSubmit(new FormData(e.currentTarget, submitter));
   };
   const pressed = asking && asking.submitter;
-  const confirm = { label: label || (pressed && pressed.textContent.trim()) || "Confirm", variant: pressed && pressed.getAttribute("data-variant") === "danger" ? "danger" : "primary" };
+  const named = !confirmName || typed === confirmName;
+  const confirm = { label: label || (pressed && pressed.textContent.trim()) || "Confirm", variant: pressed && pressed.getAttribute("data-variant") === "danger" ? "danger" : "primary", disabled: !named };
+  const enter = (e) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    if (named) e.currentTarget.form.querySelector("button[value='confirm']").click();
+  };
   return h(Fragment, null,
     h("form", { ...rest, ref: form, onSubmit: submit }, children, sending && sending.remember ? h("input", { type: "hidden", name: "confirm", value: "remember" }) : null),
-    h(Dialog, { id, title: question, confirm, open: !!asking, onClose: () => setAsking(null), onConfirm: () => setSending({ submitter: pressed, remember: remember && remembered }) },
+    h(Dialog, { id, title: question, confirm, open: !!asking, onClose: () => setAsking(null), onConfirm: () => named && setSending({ submitter: pressed, remember: remember && remembered }) },
+      confirmName ? h("div", { className: "ui-field" }, h("label", { htmlFor: id + "-name" }, "Type ", h("code", null, confirmName), " to go ahead"),
+        h("div", { className: "ui-input" }, h("input", { id: id + "-name", value: typed, onChange: (e) => setTyped(e.target.value), onKeyDown: enter, autoComplete: "off", spellCheck: false, autoCapitalize: "off" }))) : null,
       remember ? h("label", { className: "ui-check" }, h("input", { type: "checkbox", checked: remembered, onChange: (e) => setRemembered(e.target.checked) }), h("span", null, "Remember my answer")) : null));
+}
+
+// The action types every change belongs to, and how a type asks when the user chose nothing: delete the name, the rest yes-no.
+export const actionTypes = ["create", "edit", "move", "focus", "archive", "close", "delete", "settings", "connect", "run"];
+export function confirmStyle(chosen = {}, type) {
+  const s = chosen[type];
+  if (s === "name" || s === "yes-no" || s === "never") return s;
+  return type === "delete" ? "name" : "yes-no";
+}
+
+const styles = [["name", "Type the name"], ["yes-no", "Ask y/N"], ["never", "Don’t ask"]];
+
+// ConfirmSettings is the form where the user picks how each action type asks; it posts confirm.<type>=<style>, or gives onSubmit the FormData.
+export function ConfirmSettings({ action, types = actionTypes, chosen, hidden = [], save, onSubmit }) {
+  const submit = onSubmit ? (e) => { e.preventDefault(); onSubmit(new FormData(e.currentTarget)); } : undefined;
+  return h("form", { className: "ui-confirm-settings", method: "post", action, onSubmit: submit },
+    types.map((t) => h("fieldset", { key: t, className: "ui-choice" }, h("legend", null, t),
+      styles.map(([value, text]) => h("label", { key: value }, h("input", { type: "radio", name: "confirm." + t, value, defaultChecked: confirmStyle(chosen, t) === value }), text)))),
+    hidden.map((x) => h("input", { key: x.name, type: "hidden", name: x.name, value: x.value })),
+    h("div", { className: "ui-dialog-acts" }, h(Button, { label: "Save", variant: "primary", type: "submit", ...save })));
 }
 
 export function Drawer({ id, title, open, onClose, children }) {
