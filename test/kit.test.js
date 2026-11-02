@@ -178,5 +178,6 @@ test("a section link reloads only its section at the link's address, and carries
   assert.ok(e.prevented);
   assert.equal(p.location.search, "?road=r6&open=kit%2Fcards");
   assert.equal(p.fetches.at(-1), "/part/roads/road-graph?road=r6&open=kit%2Fcards");
+  assert.ok(box.querySelector("section").hasAttribute("data-ui-reloading"), "the old section dims under a bar until the new one lands");
   assert.equal(refresh.getAttribute("href"), "/roads?road=r6&open=kit%2Fcards&fresh=1");
 });

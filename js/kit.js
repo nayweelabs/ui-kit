@@ -364,12 +364,15 @@
     reloadAt(box, page);
   }
 
-  // reloadAt makes page the address and reloads only box, from its src with the page's query.
+  // reloadAt makes page the address and reloads only box, from its src with the page's query; the old
+  // section dims under a bar until the new HTML lands, so a view that changes never changes unannounced.
   function reloadAt(box, page) {
     if (window.history && history.replaceState) {
       history.replaceState(null, "", page);
       carry();
     }
+    var sec = box.querySelector(".ui-section");
+    if (sec) sec.setAttribute("data-ui-reloading", "");
     var src = new URL(box.getAttribute("data-ui-src"), location.href);
     src.search = page.search;
     load(box, src.pathname + src.search);
