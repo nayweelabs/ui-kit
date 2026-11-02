@@ -71,6 +71,20 @@ The form posts `confirm.scope` (`app` or `global`) and `confirm.<type>`, a style
 
 In React: `<ConfirmForm id question label confirmName remember onSubmit>` around a form's fields, `resolveConfirm(app, global, type)` (gives `{style, source}`), `actionTypes` and `<ConfirmSettings action scope types app global onSubmit>`. Without JavaScript the form is sent at once, without asking. A form that posts to a page listing the exact changes needs no dialog: that page is the question. `/admin` in the preview has Restart (asks yes-no) and Delete (asks for the name), each asking until you tick "Remember my answer"; the gallery shows the Settings rows.
 
+### Where things are kept
+
+Every product's Settings page says where it keeps its files, with `ui/locations`. The server passes the real paths, resolved through mankit's `home`; the kit shows the home folder as `~`, and each path is a copy button that copies the full path.
+
+```go
+kit.Locations{Items: []kit.Location{
+	{Label: "Shared config", Path: globalConfigPath, Note: "every app reads it"}, // ~/.config/elderlygate/global-config.yaml
+	{Label: "This app’s config", Path: configPath},                               // ~/.config/elderlygate/<product>/config.yaml
+	{Label: "This app’s data", Path: dataDir},                                     // ~/.local/share/elderlygate/<product>/
+}}
+```
+
+`Home` sets the folder shown as `~`; left empty, it is the home of the user the server runs as. In React, `<Locations home items>` draws the same; pass `home`, since a browser does not know it.
+
 A page that does not use `ui/shell` links `/ui-kit/css/kit.css` and `/ui-kit/js/kit.js` (in `<head>`, without `defer`) and puts `class="ui-page"` on its body.
 
 ## In a Vite app
@@ -105,7 +119,7 @@ Put `class="ui-page"` on `<body>`. The wrappers are plain ES modules with types;
 ### Partials
 
 Shell: `ui/shell`, `ui/assets`, `ui/preview-banner`, `ui/bar`, `ui/light`, `ui/rail`, `ui/page-header`, `ui/footer`.
-Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/confirm-settings`, `ui/drawer`, `ui/star`, `ui/skeleton`.
+Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/confirm-settings`, `ui/locations`, `ui/drawer`, `ui/star`, `ui/skeleton`.
 Pieces they share: `ui/icon`, `ui/num`, `ui/fact`, `ui/cell`, `ui/read-at`.
 
 A count with an `Icon` (`eye`, `check`, `alert`, `edit`, or any `ui/icon`) is a badge: icon and number in its tone, and its `Label` as a tooltip on hover and on keyboard focus, read out through the same hidden label. With `Href` it is a link, such as to a group further down the page (an anchor inside the page; it opens no new tab).
