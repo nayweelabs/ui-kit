@@ -69,6 +69,8 @@ export type ConfirmSource = "this app" | "global" | "default";
 export interface ConfirmSettingsProps {
   action?: string; scope?: "app" | "global"; types?: string[]; app?: Record<string, string>; global?: Record<string, string>; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
 }
+export interface Location { label: string; path: string; note?: string }
+export interface LocationsProps { home?: string; items?: Location[] }
 export interface DrawerProps { id: string; title: string; open?: boolean; onClose?: () => void; children?: ReactNode }
 export interface LightDetail { label: string; value: string }
 export interface LightConfirm { text: string; label: string; action?: string; hidden?: { name: string; value: string }[]; onConfirm?: () => void }
@@ -111,6 +113,7 @@ export function ConfirmForm(props: ConfirmFormProps): ReactElement;
 export const actionTypes: ActionType[];
 export function resolveConfirm(app: Record<string, string> | undefined, global: Record<string, string> | undefined, type: string): { style: ConfirmStyle; source: ConfirmSource };
 export function ConfirmSettings(props: ConfirmSettingsProps): ReactElement;
+export function Locations(props: LocationsProps): ReactElement;
 export function Drawer(props: DrawerProps): ReactElement;
 export function ThemeToggle(): ReactElement;
 export function Light(props: LightProps): ReactElement;

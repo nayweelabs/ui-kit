@@ -126,3 +126,10 @@ test("confirm settings says the style in use and where it comes from, in this ap
   assert.match(global, /name="confirm.move" checked="" value="inherit"\/>Use the default/);
   assert.match(global, /<div class="ui-dialog-acts"><button class="ui-btn" data-variant="primary" type="submit">Save<\/button><\/div><\/form>$/);
 });
+
+test("locations draw the same markup as the Go partial: home as ~, the full path copied", () => {
+  const l = render(h(kit.Locations, { home: "/home/ada/", items: [{ label: "This app’s data", path: "/home/ada/.local/share/elderlygate/kanban/", note: "cards and archive" }, { label: "Other", path: "/home/adam/x" }] }));
+  assert.match(l, /^<div class="ui-locations"><h3 class="ui-locations-title">Where things are kept<\/h3><dl>/);
+  assert.match(l, /<div><dt>This app’s data<\/dt><dd><button class="ui-id" type="button" data-ui-copy="\/home\/ada\/.local\/share\/elderlygate\/kanban\/" title="Copy \/home\/ada\/.local\/share\/elderlygate\/kanban\/">~\/.local\/share\/elderlygate\/kanban\/<\/button><span class="ui-hint">cards and archive<\/span><\/dd><\/div>/);
+  assert.match(l, />\/home\/adam\/x<\/button>/);
+});

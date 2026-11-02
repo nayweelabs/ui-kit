@@ -357,6 +357,16 @@ export function ConfirmSettings({ action, scope = "app", types = actionTypes, ap
     h("div", { className: "ui-dialog-acts" }, h(Button, { label: "Save", variant: "primary", type: "submit", ...save })));
 }
 
+// Locations says where the app keeps its files: each path shows home as ~ and copies whole on click.
+export function Locations({ home, items = [] }) {
+  const root = home ? home.replace(/\/$/, "") : "";
+  const short = (p) => (root && (p === root || p.startsWith(root + "/")) ? "~" + p.slice(root.length) : p);
+  return h("div", { className: "ui-locations" }, h("h3", { className: "ui-locations-title" }, "Where things are kept"),
+    h("dl", null, items.map((l) => h("div", { key: l.label }, h("dt", null, l.label),
+      h("dd", null, h("button", { className: "ui-id", type: "button", "data-ui-copy": l.path, title: "Copy " + l.path, onClick: () => navigator.clipboard && navigator.clipboard.writeText(l.path) }, short(l.path)),
+        l.note ? h("span", { className: "ui-hint" }, l.note) : null)))));
+}
+
 export function Drawer({ id, title, open, onClose, children }) {
   return h("dialog", { className: "ui-drawer", id, "aria-labelledby": id + "-title", ref: useModal(open, onClose) },
     h("div", { className: "ui-drawer-head" }, h("h2", { className: "ui-dialog-title", id: id + "-title" }, title),
