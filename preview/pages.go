@@ -87,7 +87,7 @@ func admin(tpl *template.Template, r *http.Request) (kit.Page, error) {
 			{Label: "Settings", Panel: "pane-settings"},
 		}}),
 		"Machines": mustHTML(tpl, "ui/table", machines),
-		"Restart":  mustHTML(tpl, "ui/button", restart(r)),
+		"Actions":  machineActions(tpl, r),
 		"Logs":     mustHTML(tpl, "ui/empty", kit.Empty{Title: "No logs in the last hour.", Text: "Machines write logs when a deploy runs.", Command: "fleet logs --since 1h"}),
 		"Settings": mustHTML(tpl, "ui/field", kit.Field{ID: "provider-token", Label: "Provider token", Secret: true, Hint: "Kept in the Keychain. Never shown back after saving."}),
 	}
@@ -108,13 +108,19 @@ func admin(tpl *template.Template, r *http.Request) (kit.Page, error) {
 	}, err
 }
 
-// restart asks before it restarts m-02, until the form came back with Remember my answer (confirm=remember).
-func restart(r *http.Request) kit.Button {
-	b := kit.Button{Label: "Restart m-02", Type: "submit", Name: "restart", Value: "m-02"}
-	if r.URL.Query().Get("confirm") != "remember" {
-		b.Confirm, b.Remember = "Restart m-02?", true
+// machineActions restart m-02 (run) and delete m-04 (delete), each asking its type's default way; Remember my answer stops asking for the pressed button's type.
+func machineActions(tpl *template.Template, r *http.Request) template.HTML {
+	q := r.URL.Query()
+	chosen := map[string]string{}
+	for _, t := range []string{"run", "delete"} {
+		if q.Get("confirm") == "remember" && q.Has(t) {
+			chosen[t] = kit.AskNever
+		}
 	}
-	return b
+	restart := kit.Button{Label: "Restart m-02", Type: "submit", Name: "run", Value: "m-02"}
+	remove := kit.Button{Label: "Delete m-04", Variant: "danger", Type: "submit", Name: "delete", Value: "m-04"}
+	return mustHTML(tpl, "ui/button", restart.Ask(kit.ConfirmStyle(chosen, "run"), "Restart m-02?", "m-02")) + " " +
+		mustHTML(tpl, "ui/button", remove.Ask(kit.ConfirmStyle(chosen, "delete"), "Delete machine m-04?", "m-04"))
 }
 
 // lazySections are the sections of the lazy page: one quick with a toolbar, one slow, one that fails.
