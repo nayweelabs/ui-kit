@@ -365,3 +365,24 @@ func TestConfirmSettingsPostsBackWhatItShows(t *testing.T) {
 		}
 	}
 }
+
+// A path in the home folder shows ~ and copies whole; a path outside it, or in a folder that only starts like it, shows whole.
+func TestLocationsShowTheHomeFolderAsTilde(t *testing.T) {
+	var b bytes.Buffer
+	err := kit.Render(&b, "ui/locations", kit.Locations{Home: "/home/ada/", Items: []kit.Location{
+		{Label: "Data", Path: "/home/ada/.local/share/elderlygate/kanban/"},
+		{Label: "Other", Path: "/home/adam/x"},
+		{Label: "Board", Path: "/srv/b"},
+	}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{
+		`data-ui-copy="/home/ada/.local/share/elderlygate/kanban/" title="Copy /home/ada/.local/share/elderlygate/kanban/">~/.local/share/elderlygate/kanban/</button>`,
+		`>/home/adam/x</button>`, `>/srv/b</button>`,
+	} {
+		if !strings.Contains(b.String(), want) {
+			t.Errorf("locations lack %q:\n%s", want, b.String())
+		}
+	}
+}

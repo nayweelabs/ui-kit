@@ -1,4 +1,4 @@
-{{/* Toolbar with view toggle, tabs, breadcrumb, form field, modal, how changes ask, and drawer. All work without JavaScript; kit.js only makes them quicker. */}}
+{{/* Toolbar with view toggle, tabs, breadcrumb, form field, modal, how changes ask, where files are kept, and drawer. All work without JavaScript; kit.js only makes them quicker. */}}
 
 {{define "ui/view-toggle" -}}
 <div class="ui-seg" role="group" aria-label="View"{{with .Target}} data-ui-views="{{.}}"{{end}}><button type="submit" name="view" value="cards" data-view="cards" aria-pressed="{{if ne .View "list"}}true{{else}}false{{end}}">{{template "ui/icon" "cards"}}Cards</button><button type="submit" name="view" value="list" data-view="list" aria-pressed="{{if eq .View "list"}}true{{else}}false{{end}}">{{template "ui/icon" "list"}}List</button></div>
@@ -60,6 +60,14 @@
 {{- range .Hidden}}<input type="hidden" name="{{.Name}}" value="{{.Value}}"{{if .Back}} data-ui-back{{end}}>{{end}}
 <div class="ui-dialog-acts">{{with .Save}}{{template "ui/button" .}}{{else}}<button class="ui-btn" type="submit" data-variant="primary">Save</button>{{end}}</div>
 </form>
+{{- end}}
+
+{{define "ui/locations" -}}
+<div class="ui-locations"><h3 class="ui-locations-title">Where things are kept</h3><dl>
+{{- range .Items}}
+<div><dt>{{.Label}}</dt><dd><button class="ui-id" type="button" data-ui-copy="{{.Path}}" title="Copy {{.Path}}">{{$.Short .Path}}</button>{{with .Note}}<span class="ui-hint">{{.}}</span>{{end}}</dd></div>
+{{- end}}
+</dl></div>
 {{- end}}
 
 {{define "ui/drawer" -}}

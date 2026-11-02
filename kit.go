@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/fs"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 )
@@ -129,4 +130,17 @@ func HTML(t *template.Template, name string, data any) (template.HTML, error) {
 		return "", err
 	}
 	return template.HTML(b.String()), nil // #nosec G203 -- output of html/template, already escaped
+}
+
+// Short is path with the home folder written as ~.
+func (l Locations) Short(path string) string {
+	home := l.Home
+	if home == "" {
+		home, _ = os.UserHomeDir()
+	}
+	home = strings.TrimSuffix(home, "/")
+	if home != "" && (path == home || strings.HasPrefix(path, home+"/")) {
+		return "~" + path[len(home):]
+	}
+	return path
 }

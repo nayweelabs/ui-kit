@@ -369,6 +369,19 @@ type Dialog struct {
 	Body    template.HTML // between the text and the buttons, inside the form: fields, steps, hidden values
 }
 
+// Locations says where the app keeps its files, for its Settings page ("ui/locations"): each path shows the home folder as ~ and copies whole.
+type Locations struct {
+	Home  string // the home folder shown as ~; empty is the user's home on the server
+	Items []Location
+}
+
+// Location is one place the app keeps files: what it holds, its full path, and a short note.
+type Location struct {
+	Label string
+	Path  string
+	Note  string
+}
+
 // Drawer shows detail next to the list you came from ("ui/drawer").
 type Drawer struct {
 	ID    string
