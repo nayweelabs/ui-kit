@@ -275,7 +275,7 @@ export function Dialog({ id, title, text, cancel = "Cancel", confirm, open, onCl
       h("div", { className: "ui-dialog-acts" }, h("button", { className: "ui-btn", type: "submit", value: "cancel" }, cancel), h(Button, { type: "submit", value: "confirm", ...confirm }))));
 }
 
-// ConfirmForm asks question in the kit's Dialog before it is sent, as data-ui-confirm does; onSubmit, when given, gets the confirmed data.
+// ConfirmForm asks question in the kit's Dialog before it is sent with confirm=yes (or confirm=remember), as data-ui-confirm does; onSubmit, when given, gets the confirmed data.
 export function ConfirmForm({ id, question, label, confirmName, remember, onSubmit, children, ...rest }) {
   const form = useRef(null);
   const confirmed = useRef(false);
@@ -320,7 +320,7 @@ export function ConfirmForm({ id, question, label, confirmName, remember, onSubm
     if (named) e.currentTarget.form.querySelector("button[value='confirm']").click();
   };
   return h(Fragment, null,
-    h("form", { ...rest, ref: form, onSubmit: submit }, children, sending && sending.remember ? h("input", { type: "hidden", name: "confirm", value: "remember" }) : null),
+    h("form", { ...rest, ref: form, onSubmit: submit }, children, sending ? h("input", { type: "hidden", name: "confirm", value: sending.remember ? "remember" : "yes" }) : null),
     h(Dialog, { id, title: question, confirm, open: !!asking, onClose: () => setAsking(null), onConfirm: () => named && setSending({ submitter: pressed, remember: remember && remembered }) },
       confirmName ? h("div", { className: "ui-field" }, h("label", { htmlFor: id + "-name" }, "Type ", h("code", null, confirmName), " to go ahead"),
         h("div", { className: "ui-input" }, h("input", { id: id + "-name", value: typed, onChange: (e) => setTyped(e.target.value), onKeyDown: enter, autoComplete: "off", spellCheck: false, autoCapitalize: "off" }))) : null,
