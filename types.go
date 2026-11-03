@@ -106,7 +106,7 @@ type Button struct {
 	Disabled    bool
 	Busy        bool
 	Carry       string // with Href, the link's own query values; it carries the page's others (see Link)
-	Confirm     string // the question kit.js asks in the kit's dialog before the form is sent (see Ask); without JavaScript it is sent at once
+	Confirm     string // the question kit.js asks in the kit's dialog before the form is sent with confirm=yes (see Ask); a server refuses it without (Confirmed)
 	ConfirmName string // with Confirm, the name (a card id) the user types before the confirm button works
 	Remember    bool   // with Confirm, offers "Remember my answer", which also sends confirm=remember; the server then draws the button without Confirm
 }

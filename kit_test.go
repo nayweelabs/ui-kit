@@ -382,3 +382,19 @@ func TestLocationsShowTheHomeFolderAsTilde(t *testing.T) {
 		}
 	}
 }
+
+// A change that asks goes ahead only with the yes kit.js sends; a form sent without it, such as one without JavaScript, is refused.
+func TestConfirmedReadsTheYesTheFormCarries(t *testing.T) {
+	for body, want := range map[string][2]bool{"confirm=yes": {true, false}, "confirm=remember": {true, true}, "": {false, false}, "confirm=no": {false, false}} {
+		r := httptest.NewRequest(http.MethodPost, "/delete", strings.NewReader(body))
+		r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		if ok, remember := kit.Confirmed(r); ok != want[0] || remember != want[1] {
+			t.Errorf("%q: Confirmed = %v, %v; want %v", body, ok, remember, want)
+		}
+	}
+	w := httptest.NewRecorder()
+	kit.RefuseUnconfirmed(w)
+	if w.Code != http.StatusPreconditionRequired || !strings.Contains(w.Body.String(), "Nothing was changed") {
+		t.Errorf("refusal %d %q", w.Code, w.Body.String())
+	}
+}

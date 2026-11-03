@@ -1,6 +1,9 @@
 package kit
 
-import "net/url"
+import (
+	"net/http"
+	"net/url"
+)
 
 // ActionTypes are the types every change belongs to, the same words in every product.
 var ActionTypes = []string{"create", "edit", "move", "focus", "archive", "close", "delete", "settings", "connect", "run"}
@@ -32,6 +35,26 @@ func ResolveConfirm(app, def string) (style, source string) {
 }
 
 func isStyle(s string) bool { return s == AskName || s == AskYesNo || s == AskNever }
+
+// Confirmed reads the confirm field kit.js and ConfirmForm send with a form the user said yes to: ok for "yes" or "remember", remember for "remember".
+// A server refuses a change that asks (its style is not AskNever) when ok is false, with RefuseUnconfirmed: the web twin of "refused without --yes".
+func Confirmed(r *http.Request) (ok, remember bool) {
+	switch r.FormValue("confirm") {
+	case "yes":
+		return true, false
+	case "remember":
+		return true, true
+	}
+	return false, false
+}
+
+// StatusUnconfirmed is the answer to a change that asks but came without a yes: 428 Precondition Required.
+const StatusUnconfirmed = http.StatusPreconditionRequired
+
+// RefuseUnconfirmed answers a change that came without a yes, such as a form sent without JavaScript, and makes nothing.
+func RefuseUnconfirmed(w http.ResponseWriter) {
+	http.Error(w, "Nothing was changed: this change asks first, and asking needs JavaScript. Turn it on and try again.", StatusUnconfirmed)
+}
 
 // Ask gives a submit button the question its style asks, with Remember my answer; AskName also wants name typed, AskNever asks nothing.
 func (b Button) Ask(style, question, name string) Button {

@@ -56,14 +56,29 @@ style, source := kit.ResolveConfirm(appCfg.Confirm["delete"], kit.AskYesNo) // s
 btn := kit.Button{Label: "Delete card", Variant: "danger", Type: "submit"}.Ask(style, "Delete card 20261102-e472?", "20261102-e472")
 ```
 
-`Ask` sets the button's `Confirm` (the question), `ConfirmName` (only for `name`) and `Remember`; for `never` it leaves them empty and the form is sent at once. `kit.js` asks the question in the kit's dialog before the form is sent: the question, Cancel (it gets first focus), and a button that repeats the verb. With a name, the dialog says "Type 20261102-e472 to go ahead" and the button works only once the text is exactly the name; the text box gets first focus. Escape or Cancel sends nothing; the confirm button sends the form with the pressed button's name and value. Every question offers "Remember my answer"; ticked, the form also sends `confirm=remember`, and the server sets that type to `never` in this app's config.
+`Ask` sets the button's `Confirm` (the question), `ConfirmName` (only for `name`) and `Remember`; for `never` it leaves them empty and the form is sent at once. `kit.js` asks the question in the kit's dialog before the form is sent: the question, Cancel (it gets first focus), and a button that repeats the verb. With a name, the dialog says "Type 20261102-e472 to go ahead" and the button works only once the text is exactly the name; the text box gets first focus. Escape or Cancel sends nothing; the confirm button sends the form with the pressed button's name and value and `confirm=yes`. Every question offers "Remember my answer"; ticked, the form sends `confirm=remember` instead, and the server sets that type to `never` in this app's config.
+
+`kit.js` stops a marked form in the capture phase, before any handler of the app sees it, so no app code can send it first; only the answered form goes on. A browser without `requestSubmit` still asks, then sends the form itself with the pressed button's value; one without `<dialog>` asks with its own question.
+
+**The server checks the yes.** A change that asks (its style is not `never`) goes ahead only when `kit.Confirmed(r)` says so; otherwise it answers `kit.RefuseUnconfirmed(w)`: `428 Precondition Required` and "Nothing was changed", and makes no change. That is the web twin of "refused without `--yes`": a form sent without JavaScript, or by a script, never acts unasked.
+
+```go
+ok, remember := kit.Confirmed(r)
+if !ok && style != kit.AskNever {
+	kit.RefuseUnconfirmed(w)
+	return
+}
+if remember {
+	appCfg.Confirm["delete"] = kit.AskNever
+}
+```
 
 | Mark | On | Means |
 |---|---|---|
 | `data-ui-confirm="Save the settings?"` | a form or its submit button | ask this question before the form is sent |
 | `data-ui-confirm-name="20261102-e472"` | the same element | the user types this name before the confirm button works |
 | `data-ui-confirm-label="Save"` | the same element | the confirm button's words; default, the pressed button's text |
-| `data-ui-remember` | the same element | offer "Remember my answer", which sends `confirm=remember` |
+| `data-ui-remember` | the same element | offer "Remember my answer", which sends `confirm=remember` instead of `confirm=yes` |
 
 The Settings page draws `ui/confirm-settings` from a `kit.ConfirmSettings`: `Action`, the product's `Types` and this app's values in `App`. Each row shows the style in use and whether this app sets it or it is the default (a `this app` or `default` tag), and four choices: Type the name, Ask y/N, Don't ask, and Use the default, which drops this app's own value.
 
