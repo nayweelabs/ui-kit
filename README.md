@@ -47,12 +47,12 @@ A status light (`kit.Light`, in `kit.Bar.Lights`) is a dot, an icon and a word i
 
 ### A change asks first
 
-Every change asks before it is made (the org rule), and the user picks how, per action type. The types are the same words in every product (`kit.ActionTypes`): create, edit, move, focus, archive, close, delete, settings, connect, run. Each type asks in one of three ways: `name` (type the name to go ahead), `yes-no`, or `never`. By default delete asks for the name and every other type asks yes-no.
+Every change asks before it is made (the org rule), and the user picks how, per action type. The types are the same words in every product (`kit.ActionTypes`): create, edit, move, focus, archive, close, delete, settings, connect, run. Each type asks in one of three ways: `name` (type the name to go ahead), `yes-no`, or `never`. By default every type asks yes-no, delete included. A change to the system itself (uninstalling, removing a token, dropping data, deleting a board) asks for the name; the product names those changes, and the user can still pick another way.
 
-The choices come in layers. The global file (`~/.config/elderlygate/global-config.yaml`, read and written by the products through mankit) holds the values every app shares; each app may override a type in its own config; a type set in neither takes its default. The server reads both and draws each button the way its type asks:
+The choices live in this app's own config only; a type it does not set takes the change's default. The server reads them and draws each button the way its type asks, passing the default: `kit.AskYesNo`, or `kit.AskName` for a change to the system itself.
 
 ```go
-style, source := kit.ResolveConfirm(appCfg.Confirm, globalCfg.Confirm, "delete") // source: "this app", "global" or "default"
+style, source := kit.ResolveConfirm(appCfg.Confirm["delete"], kit.AskYesNo) // source: "this app" or "default"
 btn := kit.Button{Label: "Delete card", Variant: "danger", Type: "submit"}.Ask(style, "Delete card 20261102-e472?", "20261102-e472")
 ```
 
@@ -65,11 +65,11 @@ btn := kit.Button{Label: "Delete card", Variant: "danger", Type: "submit"}.Ask(s
 | `data-ui-confirm-label="Save"` | the same element | the confirm button's words; default, the pressed button's text |
 | `data-ui-remember` | the same element | offer "Remember my answer", which sends `confirm=remember` |
 
-The Settings page draws `ui/confirm-settings` from a `kit.ConfirmSettings`: `Action`, the product's `Types`, this app's values in `App` and the global ones in `Global`. Each row shows the style in use and where it comes from (a `this app`, `global` or `default` tag), and four choices: Type the name, Ask y/N, Don't ask, and Use the global value, which drops this app's own value. With `Scope: kit.ScopeGlobal` the same form edits the global file instead, and the fourth choice is Use the default. A Settings page shows both, in two sections: "For every app" and "Only in kanban".
+The Settings page draws `ui/confirm-settings` from a `kit.ConfirmSettings`: `Action`, the product's `Types` and this app's values in `App`. Each row shows the style in use and whether this app sets it or it is the default (a `this app` or `default` tag), and four choices: Type the name, Ask y/N, Don't ask, and Use the default, which drops this app's own value.
 
-The form posts `confirm.scope` (`app` or `global`) and `confirm.<type>`, a style or `inherit`. `kit.ConfirmChoices(r.PostForm)` returns the scope and the choices: keep each style in that scope's config, and drop each type that says `inherit`.
+The form posts `confirm.<type>`, a style or `default`. `kit.ConfirmChoices(r.PostForm)` returns the choices: keep each style in this app's config, and drop each type that says `default`.
 
-In React: `<ConfirmForm id question label confirmName remember onSubmit>` around a form's fields, `resolveConfirm(app, global, type)` (gives `{style, source}`), `actionTypes` and `<ConfirmSettings action scope types app global onSubmit>`. Without JavaScript the form is sent at once, without asking. A form that posts to a page listing the exact changes needs no dialog: that page is the question. `/admin` in the preview has Restart (asks yes-no) and Delete (asks for the name), each asking until you tick "Remember my answer"; the gallery shows the Settings rows.
+In React: `<ConfirmForm id question label confirmName remember onSubmit>` around a form's fields, `resolveConfirm(app, def)` (this app's value for the type and the change's default, `yes-no` when left out; gives `{style, source}`), `actionTypes` and `<ConfirmSettings action types app onSubmit>`. Without JavaScript the form is sent at once, without asking. A form that posts to a page listing the exact changes needs no dialog: that page is the question. `/admin` in the preview has Restart (asks yes-no) and Delete (a change to the system itself, asks for the name), each asking until you tick "Remember my answer"; the gallery shows the Settings rows.
 
 ### Where things are kept
 
@@ -77,9 +77,8 @@ Every product's Settings page says where it keeps its files, with `ui/locations`
 
 ```go
 kit.Locations{Items: []kit.Location{
-	{Label: "Shared config", Path: globalConfigPath, Note: "every app reads it"}, // ~/.config/elderlygate/global-config.yaml
-	{Label: "This app’s config", Path: configPath},                               // ~/.config/elderlygate/<product>/config.yaml
-	{Label: "This app’s data", Path: dataDir},                                     // ~/.local/share/elderlygate/<product>/
+	{Label: "This app’s config", Path: configPath}, // ~/.config/elderlygate/<product>/config.yaml
+	{Label: "This app’s data", Path: dataDir},     // ~/.local/share/elderlygate/<product>/
 }}
 ```
 
