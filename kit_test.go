@@ -415,3 +415,19 @@ func TestConfirmedReadsTheYesTheFormCarries(t *testing.T) {
 		t.Errorf("refusal %d %q", w.Code, w.Body.String())
 	}
 }
+
+// A type with a change to the system itself says its real default, and says it beside never too, since never does not silence that change.
+func TestConfirmSettingsSayTheDefaultOfASystemType(t *testing.T) {
+	rows := kit.ConfirmSettings{Types: []string{"delete", "move", "run"}, System: []string{"delete", "run"},
+		App: map[string]string{"run": kit.AskNever}}.Rows()
+	want := []string{"Ask y/N · name for changes to the system", "Ask y/N", "Don’t ask · name for changes to the system"}
+	for i, r := range rows {
+		if r.Now != want[i] {
+			t.Errorf("%s: Now = %q, want %q", r.Type, r.Now, want[i])
+		}
+	}
+	set := kit.ConfirmSettings{Types: []string{"delete"}, System: []string{"delete"}, App: map[string]string{"delete": kit.AskYesNo}}.Rows()
+	if set[0].Now != "Ask y/N" {
+		t.Errorf("a yes-no this app sets holds for the system change too: Now = %q", set[0].Now)
+	}
+}

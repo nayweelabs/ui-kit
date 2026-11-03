@@ -3,6 +3,7 @@ package kit
 import (
 	"net/http"
 	"net/url"
+	"slices"
 )
 
 // ActionTypes are the types every change belongs to, the same words in every product.
@@ -74,9 +75,13 @@ type ConfirmSettings struct {
 	Action string
 	Types  []string          // the product's action types; empty means all of ActionTypes
 	App    map[string]string // this app's values; a type not set asks y/N
+	System []string          // the types with a verb that changes the system itself: a change of those asks the name unless this app sets yes-no or name
 	Hidden []Hidden
 	Save   *Button // nil draws a primary Save
 }
+
+// SystemNote follows the words of a System type whose changes to the system still ask the name: by default, and when this app says never.
+const SystemNote = " · name for changes to the system"
 
 // ConfirmRow is one action type of the Settings form: the choice checked, and the style in use with where it comes from.
 type ConfirmRow struct {
@@ -98,7 +103,11 @@ func (s ConfirmSettings) Rows() []ConfirmRow {
 		if !isStyle(value) {
 			value = AskDefault
 		}
-		rows[i] = ConfirmRow{Type: t, Value: value, Style: style, Now: words[style], Source: source}
+		now := words[style]
+		if slices.Contains(s.System, t) && (source == FromDefault || style == AskNever) {
+			now += SystemNote
+		}
+		rows[i] = ConfirmRow{Type: t, Value: value, Style: style, Now: now, Source: source}
 	}
 	return rows
 }

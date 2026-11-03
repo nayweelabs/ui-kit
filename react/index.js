@@ -336,9 +336,11 @@ export function resolveConfirm(app, def = "yes-no") {
 }
 
 const styleWords = { name: "Type the name", "yes-no": "Ask y/N", never: "Don’t ask" };
+// systemNote follows the words of a system type whose changes to the system still ask the name, as kit.SystemNote.
+const systemNote = " · name for changes to the system";
 
-// ConfirmSettings is the form for how each action type asks in this app; it posts confirm.<type>, a style or default, or gives onSubmit the FormData.
-export function ConfirmSettings({ action, types = actionTypes, app = {}, hidden = [], save, onSubmit }) {
+// ConfirmSettings is the form for how each action type asks in this app (system: the types with a change to the system itself); it posts confirm.<type>, a style or default, or gives onSubmit the FormData.
+export function ConfirmSettings({ action, types = actionTypes, app = {}, system = [], hidden = [], save, onSubmit }) {
   const submit = onSubmit ? (e) => { e.preventDefault(); onSubmit(new FormData(e.currentTarget)); } : undefined;
   const choices = [...Object.entries(styleWords), ["default", "Use the default"]];
   return h("form", { className: "ui-confirm-settings", method: "post", action, onSubmit: submit },
@@ -346,7 +348,7 @@ export function ConfirmSettings({ action, types = actionTypes, app = {}, hidden 
       const now = resolveConfirm(app[t]);
       const checked = isStyle(app[t]) ? app[t] : "default";
       return h("fieldset", { key: t + ":" + checked, className: "ui-choice" }, h("legend", null, t), // a new app value draws its radios again
-        h("span", { className: "ui-choice-now" }, styleWords[now.style], " ", h(Pill, { variant: "tag", label: now.source })),
+        h("span", { className: "ui-choice-now" }, styleWords[now.style], system.includes(t) && (now.source === "default" || now.style === "never") ? systemNote : "", " ", h(Pill, { variant: "tag", label: now.source })),
         h("span", { className: "ui-choice-opts" }, choices.map(([value, text]) =>
           h("label", { key: value }, h("input", { type: "radio", name: "confirm." + t, value, defaultChecked: checked === value }), text))));
     }),

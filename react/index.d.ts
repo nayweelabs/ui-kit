@@ -67,7 +67,7 @@ export type ActionType = "create" | "edit" | "move" | "focus" | "archive" | "clo
 export type ConfirmStyle = "name" | "yes-no" | "never";
 export type ConfirmSource = "this app" | "default";
 export interface ConfirmSettingsProps {
-  action?: string; types?: string[]; app?: Record<string, string>; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
+  action?: string; types?: string[]; app?: Record<string, string>; system?: string[]; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
 }
 export interface Location { label: string; path: string; note?: string }
 export interface LocationsProps { home?: string; items?: Location[] }

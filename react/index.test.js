@@ -131,3 +131,9 @@ test("locations draw the same markup as the Go partial: home as ~, the full path
   assert.match(l, /<div><dt>This app’s data<\/dt><dd><button class="ui-id" type="button" data-ui-copy="\/home\/ada\/.local\/share\/elderlygate\/kanban\/" title="Copy \/home\/ada\/.local\/share\/elderlygate\/kanban\/">~\/.local\/share\/elderlygate\/kanban\/<\/button><span class="ui-hint">cards and archive<\/span><\/dd><\/div>/);
   assert.match(l, />\/home\/adam\/x<\/button>/);
 });
+
+test("confirm settings say the real default of a type with a change to the system itself", () => {
+  const html = render(h(kit.ConfirmSettings, { types: ["delete", "move"], system: ["delete"] }));
+  assert.match(html, /<legend>delete<\/legend><span class="ui-choice-now">Ask y\/N · name for changes to the system /);
+  assert.match(html, /<legend>move<\/legend><span class="ui-choice-now">Ask y\/N <span/);
+});
