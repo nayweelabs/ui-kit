@@ -356,9 +356,26 @@ func TestConfirmSettingsPostsBackWhatItShows(t *testing.T) {
 		}
 	}
 	form.Set("confirm.bogus", kit.AskNever)
-	got := kit.ConfirmChoices(form)
+	got := kit.ConfirmChoices(form, nil)
 	if len(got) != len(kit.ActionTypes) || got["move"] != kit.AskNever || got["edit"] != kit.AskDefault || got["delete"] != kit.AskDefault {
 		t.Errorf("choices %v", got)
+	}
+}
+
+// A form drawn with its own types gives back a choice for each of them, none dropped and none more.
+func TestConfirmChoicesReadExactlyTheTypesTheFormDrew(t *testing.T) {
+	types := []string{"move", "deploy"}
+	var b bytes.Buffer
+	if err := kit.Render(&b, "ui/confirm-settings", kit.ConfirmSettings{Types: types, App: map[string]string{"deploy": kit.AskName}}); err != nil {
+		t.Fatal(err)
+	}
+	form := url.Values{}
+	for _, m := range regexp.MustCompile(`name="(confirm\.[a-z]+)" value="([a-z-]+)" checked`).FindAllStringSubmatch(b.String(), -1) {
+		form.Set(m[1], m[2])
+	}
+	form.Set("confirm.delete", kit.AskNever)
+	if got := kit.ConfirmChoices(form, types); len(got) != 2 || got["move"] != kit.AskDefault || got["deploy"] != kit.AskName {
+		t.Errorf("choices %v, want move: default and deploy: name only", got)
 	}
 }
 

@@ -89,10 +89,7 @@ type ConfirmRow struct {
 
 // Rows are the form's rows, one per action type.
 func (s ConfirmSettings) Rows() []ConfirmRow {
-	types := s.Types
-	if len(types) == 0 {
-		types = ActionTypes
-	}
+	types := typesOr(s.Types)
 	words := map[string]string{AskName: "Type the name", AskYesNo: "Ask y/N", AskNever: "Don’t ask"}
 	rows := make([]ConfirmRow, len(types))
 	for i, t := range types {
@@ -106,13 +103,21 @@ func (s ConfirmSettings) Rows() []ConfirmRow {
 	return rows
 }
 
-// ConfirmChoices reads a posted "ui/confirm-settings" form: per type, a style to keep in this app's config or AskDefault to drop.
-func ConfirmChoices(form url.Values) map[string]string {
+// ConfirmChoices reads a posted "ui/confirm-settings" form drawn with types (the form's Types; empty means all of ActionTypes): per type, a style to keep in this app's config or AskDefault to drop.
+func ConfirmChoices(form url.Values, types []string) map[string]string {
 	chosen := map[string]string{}
-	for _, t := range ActionTypes {
+	for _, t := range typesOr(types) {
 		if s := form.Get("confirm." + t); isStyle(s) || s == AskDefault {
 			chosen[t] = s
 		}
 	}
 	return chosen
+}
+
+// typesOr is types, or all of ActionTypes when it is empty.
+func typesOr(types []string) []string {
+	if len(types) == 0 {
+		return ActionTypes
+	}
+	return types
 }

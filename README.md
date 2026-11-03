@@ -82,7 +82,7 @@ if remember {
 
 The Settings page draws `ui/confirm-settings` from a `kit.ConfirmSettings`: `Action`, the product's `Types` and this app's values in `App`. Each row shows the style in use and whether this app sets it or it is the default (a `this app` or `default` tag), and four choices: Type the name, Ask y/N, Don't ask, and Use the default, which drops this app's own value.
 
-The form posts `confirm.<type>`, a style or `default`. `kit.ConfirmChoices(r.PostForm)` returns the choices: keep each style in this app's config, and drop each type that says `default`.
+The form posts `confirm.<type>`, a style or `default`. `kit.ConfirmChoices(r.PostForm, types)`, with the same `Types` the form was drawn with, returns a choice for exactly those types: keep each style in this app's config, and drop each type that says `default`.
 
 In React: `<ConfirmForm id question label confirmName remember onSubmit>` around a form's fields, `resolveConfirm(app, def)` (this app's value for the type and the change's default, `yes-no` when left out; gives `{style, source}`), `actionTypes` and `<ConfirmSettings action types app onSubmit>`. Without JavaScript the form is sent at once, without asking. A form that posts to a page listing the exact changes needs no dialog: that page is the question. `/admin` in the preview has Restart (asks yes-no) and Delete (a change to the system itself, asks for the name), each asking until you tick "Remember my answer"; the gallery shows the Settings rows.
 
