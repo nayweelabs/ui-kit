@@ -108,7 +108,7 @@ func admin(tpl *template.Template, r *http.Request) (kit.Page, error) {
 	}, err
 }
 
-// machineActions restart m-02 (run) and delete m-04 (delete), each asking its type's default way; Remember my answer stops asking for the pressed button's type.
+// machineActions restart m-02 (run, y/N) and delete m-04 (delete, a change to the system itself: the name); Remember my answer stops asking for the pressed button's type.
 func machineActions(tpl *template.Template, r *http.Request) template.HTML {
 	q := r.URL.Query()
 	app := map[string]string{}
@@ -117,8 +117,8 @@ func machineActions(tpl *template.Template, r *http.Request) template.HTML {
 			app[t] = kit.AskNever
 		}
 	}
-	run, _ := kit.ResolveConfirm(app, nil, "run")
-	del, _ := kit.ResolveConfirm(app, nil, "delete")
+	run, _ := kit.ResolveConfirm(app["run"], kit.AskYesNo)
+	del, _ := kit.ResolveConfirm(app["delete"], kit.AskName)
 	restart := kit.Button{Label: "Restart m-02", Type: "submit", Name: "run", Value: "m-02"}
 	remove := kit.Button{Label: "Delete m-04", Variant: "danger", Type: "submit", Name: "delete", Value: "m-04"}
 	return mustHTML(tpl, "ui/button", restart.Ask(run, "Restart m-02?", "m-02")) + " " +

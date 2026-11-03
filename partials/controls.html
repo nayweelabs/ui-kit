@@ -53,9 +53,9 @@
 {{- end}}
 
 {{define "ui/confirm-settings" -}}
-<form class="ui-confirm-settings" method="post"{{with .Action}} action="{{.}}"{{end}}><input type="hidden" name="confirm.scope" value="{{if eq .Scope "global"}}global{{else}}app{{end}}">
+<form class="ui-confirm-settings" method="post"{{with .Action}} action="{{.}}"{{end}}>
 {{- range .Rows}}
-<fieldset class="ui-choice"><legend>{{.Type}}</legend><span class="ui-choice-now">{{.Now}} {{template "ui/pill" (tag .Source)}}</span><span class="ui-choice-opts"><label><input type="radio" name="confirm.{{.Type}}" value="name"{{if eq .Value "name"}} checked{{end}}>Type the name</label><label><input type="radio" name="confirm.{{.Type}}" value="yes-no"{{if eq .Value "yes-no"}} checked{{end}}>Ask y/N</label><label><input type="radio" name="confirm.{{.Type}}" value="never"{{if eq .Value "never"}} checked{{end}}>Don’t ask</label><label><input type="radio" name="confirm.{{.Type}}" value="inherit"{{if eq .Value "inherit"}} checked{{end}}>{{if eq $.Scope "global"}}Use the default{{else}}Use the global value{{end}}</label></span></fieldset>
+<fieldset class="ui-choice"><legend>{{.Type}}</legend><span class="ui-choice-now">{{.Now}} {{template "ui/pill" (tag .Source)}}</span><span class="ui-choice-opts"><label><input type="radio" name="confirm.{{.Type}}" value="name"{{if eq .Value "name"}} checked{{end}}>Type the name</label><label><input type="radio" name="confirm.{{.Type}}" value="yes-no"{{if eq .Value "yes-no"}} checked{{end}}>Ask y/N</label><label><input type="radio" name="confirm.{{.Type}}" value="never"{{if eq .Value "never"}} checked{{end}}>Don’t ask</label><label><input type="radio" name="confirm.{{.Type}}" value="default"{{if eq .Value "default"}} checked{{end}}>Use the default</label></span></fieldset>
 {{- end}}
 {{- range .Hidden}}<input type="hidden" name="{{.Name}}" value="{{.Value}}"{{if .Back}} data-ui-back{{end}}>{{end}}
 <div class="ui-dialog-acts">{{with .Save}}{{template "ui/button" .}}{{else}}<button class="ui-btn" type="submit" data-variant="primary">Save</button>{{end}}</div>

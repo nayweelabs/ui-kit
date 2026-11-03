@@ -316,53 +316,49 @@ func TestAHiddenBackValueIsMarkedForKitJS(t *testing.T) {
 	}
 }
 
-// A change asks the way this app says, else the global file, else its type's default, and says where that came from.
-func TestAButtonAsksTheWayTheLayersSay(t *testing.T) {
-	app := map[string]string{"move": kit.AskNever, "run": "bogus"}
-	global := map[string]string{"move": kit.AskName, "edit": kit.AskName, "run": kit.AskNever}
+// A change asks the way this app says, else the default it is given, and says where that came from.
+func TestAButtonAsksTheWayThisAppOrTheDefaultSays(t *testing.T) {
 	del := kit.Button{Label: "Delete", Type: "submit"}
 	asked := kit.Button{Label: "Delete", Type: "submit", Confirm: "Delete 7?", Remember: true}
 	named := asked
 	named.ConfirmName = "7"
-	for typ, want := range map[string]struct {
-		source string
-		button kit.Button
+	for name, tt := range map[string]struct {
+		app, def, source string
+		button           kit.Button
 	}{
-		"move":   {kit.FromApp, del},
-		"edit":   {kit.FromGlobal, named},
-		"run":    {kit.FromGlobal, del},
-		"delete": {kit.FromDefault, named},
-		"focus":  {kit.FromDefault, asked},
+		"this app's value":               {kit.AskNever, kit.AskName, kit.FromApp, del},
+		"the default, y/N":               {"", kit.AskYesNo, kit.FromDefault, asked},
+		"a system change's default":      {"", kit.AskName, kit.FromDefault, named},
+		"an unknown value is not set":    {"bogus", kit.AskYesNo, kit.FromDefault, asked},
+		"an unknown default is y/N":      {"", "bogus", kit.FromDefault, asked},
+		"this app's value over a system": {kit.AskYesNo, kit.AskName, kit.FromApp, asked},
 	} {
-		style, source := kit.ResolveConfirm(app, global, typ)
-		if got := del.Ask(style, "Delete 7?", "7"); source != want.source || got != want.button {
-			t.Errorf("%s: got %s %+v, want %s %+v", typ, source, got, want.source, want.button)
+		style, source := kit.ResolveConfirm(tt.app, tt.def)
+		if got := del.Ask(style, "Delete 7?", "7"); source != tt.source || got != tt.button {
+			t.Errorf("%s: got %s %+v, want %s %+v", name, source, got, tt.source, tt.button)
 		}
 	}
 }
 
-// Each scope of the Settings form posts back what it shows, with its scope, and only real types and choices are read.
+// The Settings form posts back what it shows, and only real types and choices are read.
 func TestConfirmSettingsPostsBackWhatItShows(t *testing.T) {
-	app, global := map[string]string{"move": kit.AskNever}, map[string]string{"edit": kit.AskName}
-	for scope, want := range map[string]map[string]string{
-		kit.ScopeApp:    {"move": kit.AskNever, "edit": kit.AskInherit, "delete": kit.AskInherit},
-		kit.ScopeGlobal: {"move": kit.AskInherit, "edit": kit.AskName, "delete": kit.AskInherit},
-	} {
-		var b bytes.Buffer
-		if err := kit.Render(&b, "ui/confirm-settings", kit.ConfirmSettings{Action: "/settings", Scope: scope, App: app, Global: global}); err != nil {
-			t.Fatal(err)
+	var b bytes.Buffer
+	if err := kit.Render(&b, "ui/confirm-settings", kit.ConfirmSettings{Action: "/settings", App: map[string]string{"move": kit.AskNever}}); err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(b.String(), "confirm.scope") {
+		t.Errorf("the form posts a scope:\n%s", b.String())
+	}
+	form := url.Values{}
+	for _, m := range regexp.MustCompile(`name="(confirm\.[a-z]+)" value="([a-z-]+)"( checked)?`).FindAllStringSubmatch(b.String(), -1) {
+		if m[3] != "" {
+			form.Set(m[1], m[2])
 		}
-		form := url.Values{}
-		for _, m := range regexp.MustCompile(`name="(confirm\.[a-z]+)" value="([a-z-]+)"( checked)?`).FindAllStringSubmatch(b.String(), -1) {
-			if m[3] != "" || m[1] == "confirm.scope" {
-				form.Set(m[1], m[2])
-			}
-		}
-		form.Set("confirm.bogus", kit.AskNever)
-		gotScope, got := kit.ConfirmChoices(form)
-		if gotScope != scope || len(got) != len(kit.ActionTypes) || got["move"] != want["move"] || got["edit"] != want["edit"] || got["delete"] != want["delete"] {
-			t.Errorf("%s: scope %s, choices %v", scope, gotScope, got)
-		}
+	}
+	form.Set("confirm.bogus", kit.AskNever)
+	got := kit.ConfirmChoices(form)
+	if len(got) != len(kit.ActionTypes) || got["move"] != kit.AskNever || got["edit"] != kit.AskDefault || got["delete"] != kit.AskDefault {
+		t.Errorf("choices %v", got)
 	}
 }
 
