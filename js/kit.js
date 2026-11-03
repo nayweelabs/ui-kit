@@ -360,6 +360,13 @@
     return e;
   }
 
+  // words is a button's text without its shortcut (<kbd>).
+  function words(b) {
+    var t = b.textContent.trim(), k = b.querySelector("kbd");
+    if (k && k.textContent && t.slice(-k.textContent.length) === k.textContent) t = t.slice(0, -k.textContent.length).trim();
+    return t;
+  }
+
   function confirmDialog() {
     var dlg = document.getElementById("ui-confirm");
     if (dlg) return dlg;
@@ -391,7 +398,7 @@
     var field = dlg.querySelector("[data-ui-name]");
     var typed = field.querySelector("input");
     var name = from.getAttribute("data-ui-confirm-name") || "";
-    var label = from.getAttribute("data-ui-confirm-label") || (submitter && submitter.textContent.trim());
+    var label = from.getAttribute("data-ui-confirm-label") || (submitter && words(submitter));
     dlg.querySelector(".ui-dialog-title").textContent = from.getAttribute("data-ui-confirm");
     yes.textContent = label || "Confirm";
     yes.setAttribute("data-variant", submitter && submitter.getAttribute("data-variant") === "danger" ? "danger" : "primary");

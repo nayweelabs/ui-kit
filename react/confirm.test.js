@@ -79,6 +79,14 @@ test("ConfirmForm with a name: Enter in the field confirms once the name is type
   m.done();
 });
 
+test("ConfirmForm's confirm button repeats the pressed button's words without its shortcut", async () => {
+  const m = await mount(h(kit.ConfirmForm, { id: "ask", question: "Delete card 7?" }, h(kit.Button, { type: "submit", label: "Delete card", kbd: "d" })));
+  const form = m.box.querySelector("form");
+  await press(form, form.querySelector("button"));
+  assert.equal(document.getElementById("ask").querySelector("button[value='confirm']").textContent, "Delete card");
+  m.done();
+});
+
 test("ConfirmSettings radios follow a changed app value", async () => {
   const m = await mount(h(kit.ConfirmSettings, { types: ["move"], app: {} }));
   const checked = () => m.box.querySelector("input[name='confirm.move']:checked").value;

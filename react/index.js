@@ -275,6 +275,12 @@ export function Dialog({ id, title, text, cancel = "Cancel", confirm, open, onCl
       h("div", { className: "ui-dialog-acts" }, h("button", { className: "ui-btn", type: "submit", value: "cancel" }, cancel), h(Button, { type: "submit", value: "confirm", ...confirm }))));
 }
 
+// words is a button's text without its shortcut (<kbd>), as kit.js reads it.
+function words(b) {
+  const t = b.textContent.trim(), k = b.querySelector("kbd");
+  return k && k.textContent && t.endsWith(k.textContent) ? t.slice(0, -k.textContent.length).trim() : t;
+}
+
 // ConfirmForm asks question in the kit's Dialog before it is sent with confirm=yes (or confirm=remember), as data-ui-confirm does; onSubmit, when given, gets the confirmed data.
 export function ConfirmForm({ id, question, label, confirmName, remember, onSubmit, children, ...rest }) {
   const form = useRef(null);
@@ -313,7 +319,7 @@ export function ConfirmForm({ id, question, label, confirmName, remember, onSubm
   };
   const pressed = asking && asking.submitter;
   const named = !confirmName || typed.trim() === confirmName;
-  const confirm = { label: label || (pressed && pressed.textContent.trim()) || "Confirm", variant: pressed && pressed.getAttribute("data-variant") === "danger" ? "danger" : "primary", disabled: !named };
+  const confirm = { label: label || (pressed && words(pressed)) || "Confirm", variant: pressed && pressed.getAttribute("data-variant") === "danger" ? "danger" : "primary", disabled: !named };
   const enter = (e) => {
     if (e.key !== "Enter") return;
     e.preventDefault();

@@ -362,3 +362,14 @@ test("Enter in the name field confirms once the name is typed, spaces around it 
   enter();
   assert.deepEqual(form.sent, [[btn, "confirm=yes"]]);
 });
+
+test("the confirm button repeats the pressed button's words without its shortcut", () => {
+  const btn = new El("button", { type: "submit", "data-ui-confirm": "Delete card 7?" }, [new El("kbd")]);
+  btn.textContent = "Delete card d";
+  btn.children[0].textContent = "d";
+  const form = postForm({}, [btn]);
+  const p = page("http://localhost/", [form]);
+  form.page = p;
+  p.fire("submit", form, { submitter: btn });
+  assert.equal(form.parent.querySelector("dialog button[value='confirm']").textContent, "Delete card");
+});
