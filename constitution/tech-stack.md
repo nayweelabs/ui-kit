@@ -26,4 +26,4 @@ Only what is this project's own. The org rules hold as written, except the overr
 
 ## Overrides
 
-- **H-1** ui-kit is a library with no `ui-kit` command, so it answers no `help`. Its two developer commands, `go run ./cmd/ui-kit-tokens` and `go run ./cmd/ui-kit-preview`, are listed in the README.
+- **H-1** 2026-10-29 · ui-kit is a library with no `ui-kit` command, so it answers no `help`. Its two developer commands, `go run ./cmd/ui-kit-tokens` and `go run ./cmd/ui-kit-preview`, are listed in the README.
