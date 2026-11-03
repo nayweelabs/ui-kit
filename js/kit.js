@@ -364,8 +364,7 @@
     reloadAt(box, page);
   }
 
-  // reloadAt makes page the address and reloads only box, from its src with the page's query; the old
-  // section dims under a bar until the new HTML lands, so a view that changes never changes unannounced.
+  // reloadAt makes page the address and reloads only box from its src, dimming the old section until the new HTML lands.
   function reloadAt(box, page) {
     if (window.history && history.replaceState) {
       history.replaceState(null, "", page);
