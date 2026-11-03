@@ -39,6 +39,8 @@ class El {
   hasAttribute(k) { return k in this.attrs; }
   removeAttribute(k) { delete this.attrs[k]; }
   addEventListener() {}
+  focus() { El.focused = this; }
+  showModal() { this.open = true; }
   remove() { if (this.parent) { this.parent.children.splice(this.parent.children.indexOf(this), 1); this.parent = null; } }
   appendChild(c) {
     if (c.parent) c.parent.children.splice(c.parent.children.indexOf(c), 1);
@@ -79,7 +81,8 @@ function page(href, children, fetched = {}) {
     documentElement: new El("html"), readyState: "complete",
     querySelectorAll: (s) => body.querySelectorAll(s), querySelector: (s) => body.querySelector(s),
     getElementById: (id) => body.all().find((e) => e.attrs.id === id) || null,
-    addEventListener: (type, fn) => { handlers[type] = fn; },
+    body, createElement: (tag) => new El(tag),
+    addEventListener: (type, fn, capture) => { (handlers[type] = handlers[type] || []).push({ fn, capture: !!capture }); },
   };
   const window = {
     location, document, fetch: (url) => {
@@ -90,11 +93,20 @@ function page(href, children, fetched = {}) {
     },
     history: { replaceState: (_s, _t, url) => go(String(url)) },
     URLSearchParams, URL,
+    confirm: (q) => { El.asked = q; return El.reply === true; },
+    prompt: (q) => { El.asked = q; return El.reply; },
   };
   window.window = window;
   vm.runInNewContext(source, { ...window, localStorage: { getItem: () => null, setItem() {} },
     FormData: function (form) { return form.fields; }, matchMedia: () => ({ matches: false }), setTimeout, clearTimeout });
-  const fire = (type, target) => { const e = { target, preventDefault() { e.prevented = true; } }; handlers[type](e); return e; };
+  // fire runs the document's capture listeners, then the app's own (more.app) and the bubbling ones, until one stops it.
+  const fire = (type, target, more = {}) => {
+    const e = { target, ...more, preventDefault() { e.prevented = true; }, stopImmediatePropagation() { e.stopped = true; } };
+    const list = handlers[type] || [];
+    const order = [...list.filter((h) => h.capture), { fn: more.app || (() => {}) }, ...list.filter((h) => !h.capture)];
+    for (const h of order) { if (e.stopped) break; h.fn(e); }
+    return e;
+  };
   return { location, fetches, fire };
 }
 
@@ -180,4 +192,199 @@ test("a section link reloads only its section at the link's address, and carries
   assert.equal(p.fetches.at(-1), "/part/roads/road-graph?road=r6&open=kit%2Fcards");
   assert.ok(box.querySelector("section").hasAttribute("data-ui-reloading"), "the old section dims under a bar until the new one lands");
   assert.equal(refresh.getAttribute("href"), "/roads?road=r6&open=kit%2Fcards&fresh=1");
+});
+
+// A POST form that records what it sends: requestSubmit fires submit again and sends unless it is stopped, as a browser does.
+function postForm(attrs, children) {
+  const form = new El("form", { method: "post", ...attrs }, children);
+  form.method = "post";
+  form.sent = [];
+  form.requestSubmit = (submitter) => {
+    const fields = form.querySelectorAll("input[type=hidden]").map((i) => i.getAttribute("name") + "=" + i.getAttribute("value"));
+    if (!form.page.fire("submit", form, { submitter, app: form.app }).prevented) form.sent.push(submitter ? [submitter, ...fields] : fields);
+  };
+  return form;
+}
+
+// answer closes the kit's confirm dialog the way the viewer did: "confirm", "cancel", or "" for Escape.
+function answer(dlg, value) {
+  dlg.returnValue = value;
+  dlg.open = false;
+  dlg.onclose();
+}
+
+test("a button marked data-ui-confirm asks in the kit's dialog first, and Cancel or Escape sends nothing", () => {
+  const btn = new El("button", { class: "ui-btn", type: "submit", name: "do", value: "disconnect", "data-variant": "danger", "data-ui-confirm": "Disconnect GitHub?" });
+  btn.textContent = "Disconnect";
+  const form = postForm({ action: "/settings" }, [btn]);
+  const p = page("http://localhost/settings", [form]);
+  form.page = p;
+  assert.ok(p.fire("submit", form, { submitter: btn }).prevented, "the form waits for the answer");
+  const dlg = form.parent.querySelector("dialog.ui-dialog");
+  assert.ok(dlg.open);
+  assert.equal(dlg.querySelector(".ui-dialog-title").textContent, "Disconnect GitHub?");
+  const yes = dlg.querySelector("button[value='confirm']");
+  assert.equal(yes.textContent, "Disconnect", "the confirm button repeats the verb");
+  assert.equal(yes.getAttribute("data-variant"), "danger");
+  assert.equal(El.focused, dlg.querySelector("button[value='cancel']"), "Cancel gets first focus");
+  assert.equal(dlg.querySelector(".ui-check").hidden, true, "no Remember my answer unless asked for");
+  answer(dlg, "cancel");
+  p.fire("submit", form, { submitter: btn });
+  answer(dlg, "");
+  assert.deepEqual(form.sent, []);
+});
+
+test("confirm sends the form once, with the button's name and value; a form without the mark is sent at once", () => {
+  const btn = new El("button", { type: "submit", name: "do", value: "disconnect", "data-ui-confirm": "Disconnect GitHub?" });
+  const form = postForm({}, [btn]);
+  const plain = postForm({}, []);
+  const p = page("http://localhost/settings", [form, plain]);
+  form.page = p;
+  p.fire("submit", form, { submitter: btn });
+  const dlg = form.parent.querySelector("dialog");
+  answer(dlg, "confirm");
+  assert.deepEqual(form.sent, [[btn, "confirm=yes"]], "the browser sends the button's name and value with it, and the yes");
+  assert.equal(form.querySelector("input[name=confirm]"), null, "a form sent again later does not carry it");
+  assert.equal(p.fire("submit", form, { submitter: btn }).prevented, true, "the next press asks again");
+  assert.equal(p.fire("submit", plain).prevented, undefined);
+});
+
+test("Remember my answer sends confirm=remember with the form, so the server can remember", () => {
+  const form = postForm({ action: "/focus", "data-ui-confirm": "Focus on kanban?", "data-ui-confirm-label": "Focus", "data-ui-remember": "" }, []);
+  const p = page("http://localhost/", [form]);
+  form.page = p;
+  p.fire("submit", form);
+  const dlg = form.parent.querySelector("dialog");
+  assert.equal(dlg.querySelector("button[value='confirm']").textContent, "Focus");
+  const remember = dlg.querySelector(".ui-check");
+  assert.equal(remember.hidden, false);
+  remember.querySelector("input").checked = true;
+  answer(dlg, "confirm");
+  assert.deepEqual(form.sent, [["confirm=remember"]]);
+  assert.equal(form.querySelector("input[name=confirm]"), null, "a form sent again later does not carry it");
+});
+
+test("a name to type keeps the confirm button off until the text is exactly the name", () => {
+  const btn = new El("button", { type: "submit", "data-variant": "danger", "data-ui-confirm": "Delete card 20261102-e472?", "data-ui-confirm-name": "20261102-e472", "data-ui-remember": "" });
+  btn.textContent = "Delete card";
+  const form = postForm({}, [btn]);
+  const p = page("http://localhost/", [form]);
+  form.page = p;
+  p.fire("submit", form, { submitter: btn });
+  const dlg = form.parent.querySelector("dialog");
+  const field = dlg.querySelector("[data-ui-name]");
+  const typed = field.querySelector("input");
+  const yes = dlg.querySelector("button[value='confirm']");
+  assert.equal(field.hidden, false);
+  assert.equal(field.querySelector("code").textContent, "20261102-e472", "it says Type 20261102-e472 to go ahead");
+  assert.equal(El.focused, typed);
+  assert.equal(dlg.querySelector(".ui-check").hidden, false, "Remember my answer is offered here too");
+  assert.equal(yes.disabled, true);
+  typed.value = "20261102-e47";
+  typed.oninput();
+  assert.equal(yes.disabled, true, "almost the name is not the name");
+  typed.value = "20261102-e472";
+  typed.oninput();
+  assert.equal(yes.disabled, false);
+  answer(dlg, "confirm");
+  assert.deepEqual(form.sent, [[btn, "confirm=yes"]]);
+  p.fire("submit", form, { submitter: btn });
+  assert.equal(typed.value, "", "the next question starts empty");
+  assert.equal(yes.disabled, true);
+});
+
+test("the kit asks before the app's own submit handler sees the form, and the handler sees only the answered one", () => {
+  const btn = new El("button", { type: "submit", "data-ui-confirm": "Delete card 7?" });
+  const form = postForm({}, [btn]);
+  const seen = [];
+  form.app = (e) => { seen.push(form.querySelectorAll("input[name=confirm]").map((i) => i.getAttribute("value"))); e.preventDefault(); };
+  const p = page("http://localhost/", [form]);
+  form.page = p;
+  const first = p.fire("submit", form, { submitter: btn, app: form.app });
+  assert.ok(first.prevented && first.stopped, "the first submit stops in the capture phase");
+  assert.deepEqual(seen, [], "the app's handler never saw the unanswered form");
+  answer(form.parent.querySelector("dialog"), "confirm");
+  assert.deepEqual(seen, [["yes"]], "the answered form reaches the app with confirm=yes");
+});
+
+test("without requestSubmit the form still asks, then sends itself with the button's value and the yes", () => {
+  const btn = new El("button", { type: "submit", "data-ui-confirm": "Restart m-02?" });
+  btn.name = "run";
+  btn.value = "m-02";
+  const form = new El("form", { method: "post" }, [btn]);
+  form.sent = [];
+  form.submit = () => form.sent.push(form.querySelectorAll("input[type=hidden]").map((i) => i.getAttribute("name") + "=" + i.getAttribute("value")));
+  const p = page("http://localhost/", [form]);
+  assert.ok(p.fire("submit", form, { submitter: btn }).prevented, "it waits for the answer");
+  assert.deepEqual(form.sent, []);
+  answer(form.parent.querySelector("dialog"), "confirm");
+  assert.deepEqual(form.sent, [["confirm=yes", "run=m-02"]]);
+  assert.equal(form.querySelectorAll("input[type=hidden]").length, 0, "nothing is left in the form");
+});
+
+test("a browser without <dialog> asks with its own question, and only the exact name says yes", () => {
+  const showModal = El.prototype.showModal;
+  El.prototype.showModal = undefined;
+  try {
+    const btn = new El("button", { type: "submit", "data-ui-confirm": "Delete machine m-04?", "data-ui-confirm-name": "m-04" });
+    const form = postForm({}, [btn]);
+    const p = page("http://localhost/", [form]);
+    form.page = p;
+    El.reply = "m-0";
+    assert.ok(p.fire("submit", form, { submitter: btn }).prevented);
+    assert.equal(El.asked, "Delete machine m-04? Type m-04 to go ahead.");
+    assert.deepEqual(form.sent, [], "almost the name sends nothing");
+    El.reply = " m-04 ";
+    p.fire("submit", form, { submitter: btn });
+    assert.deepEqual(form.sent, [[btn, "confirm=yes"]]);
+  } finally {
+    El.prototype.showModal = showModal;
+    El.reply = El.asked = undefined;
+  }
+});
+
+test("Enter in the name field confirms once the name is typed, spaces around it allowed, and does nothing before", () => {
+  const btn = new El("button", { type: "submit", "data-ui-confirm": "Delete card 20261102-e472?", "data-ui-confirm-name": "20261102-e472" });
+  const form = postForm({}, [btn]);
+  const p = page("http://localhost/", [form]);
+  form.page = p;
+  p.fire("submit", form, { submitter: btn });
+  const dlg = form.parent.querySelector("dialog");
+  const typed = dlg.querySelector("[data-ui-name] input");
+  const yes = dlg.querySelector("button[value='confirm']");
+  yes.click = () => answer(dlg, "confirm");
+  const enter = () => { const k = { key: "Enter", preventDefault() { k.prevented = true; } }; typed.onkeydown(k); return k; };
+  typed.value = "20261102-e47";
+  typed.oninput();
+  assert.ok(enter().prevented, "Enter never sends the page's form by itself");
+  assert.deepEqual(form.sent, []);
+  typed.value = "  20261102-e472 ";
+  typed.oninput();
+  enter();
+  assert.deepEqual(form.sent, [[btn, "confirm=yes"]]);
+});
+
+test("the confirm button repeats the pressed button's words without its shortcut", () => {
+  const btn = new El("button", { type: "submit", "data-ui-confirm": "Delete card 7?" }, [new El("kbd")]);
+  btn.textContent = "Delete card d";
+  btn.children[0].textContent = "d";
+  const form = postForm({}, [btn]);
+  const p = page("http://localhost/", [form]);
+  form.page = p;
+  p.fire("submit", form, { submitter: btn });
+  assert.equal(form.parent.querySelector("dialog button[value='confirm']").textContent, "Delete card");
+});
+
+test("an app's own element with the id ui-confirm is never taken for the kit's dialog", () => {
+  const theirs = new El("dialog", { id: "ui-confirm" }, [new El("h2", { class: "ui-dialog-title" })]);
+  const btn = new El("button", { type: "submit", "data-ui-confirm": "Delete card 7?" });
+  const form = postForm({}, [btn]);
+  const p = page("http://localhost/", [theirs, form]);
+  form.page = p;
+  p.fire("submit", form, { submitter: btn });
+  const ours = form.parent.querySelector("dialog[data-ui-confirm-dialog]");
+  assert.ok(ours && ours !== theirs && ours.open);
+  assert.equal(ours.querySelector(".ui-dialog-title").textContent, "Delete card 7?");
+  assert.equal(theirs.open, undefined, "the app's element is left alone");
+  assert.equal(theirs.querySelector(".ui-dialog-title").textContent, "");
 });

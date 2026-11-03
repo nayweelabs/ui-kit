@@ -92,20 +92,23 @@ type Skeleton struct {
 	Lines int
 }
 
-// Button acts ("ui/button"). With Href it is drawn as a link; with Opens it opens the dialog of that id.
+// Button acts ("ui/button"). With Href it is drawn as a link; with Opens it opens the dialog of that id; with Confirm, a submit button asks first.
 type Button struct {
-	Label    string
-	Variant  string
-	Size     string
-	Type     string
-	Href     string
-	Kbd      string
-	Name     string
-	Value    string
-	Opens    string
-	Disabled bool
-	Busy     bool
-	Carry    string // with Href, the link's own query values; it carries the page's others (see Link)
+	Label       string
+	Variant     string
+	Size        string
+	Type        string
+	Href        string
+	Kbd         string
+	Name        string
+	Value       string
+	Opens       string
+	Disabled    bool
+	Busy        bool
+	Carry       string // with Href, the link's own query values; it carries the page's others (see Link)
+	Confirm     string // the question kit.js asks in the kit's dialog before the form is sent with confirm=yes (see Ask); a server refuses it without (Confirmed)
+	ConfirmName string // with Confirm, the name (a card id) the user types before the confirm button works
+	Remember    bool   // with Confirm, offers "Remember my answer", which also sends confirm=remember; the server then draws the button without Confirm
 }
 
 // Fact is one label and value row of a product card, and one cell of its list row ("ui/fact").
@@ -364,6 +367,19 @@ type Dialog struct {
 	Action  string
 	Open    bool
 	Body    template.HTML // between the text and the buttons, inside the form: fields, steps, hidden values
+}
+
+// Locations says where the app keeps its files, for its Settings page ("ui/locations"): each path shows the home folder as ~ and copies whole.
+type Locations struct {
+	Home  string // the home folder shown as ~; empty is the user's home on the server
+	Items []Location
+}
+
+// Location is one place the app keeps files: what it holds, its full path, and a short note.
+type Location struct {
+	Label string
+	Path  string
+	Note  string
 }
 
 // Drawer shows detail next to the list you came from ("ui/drawer").

@@ -5,9 +5,11 @@ import (
 	"flag"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strings"
 	"testing"
 
@@ -312,5 +314,151 @@ func TestAHiddenBackValueIsMarkedForKitJS(t *testing.T) {
 	got := b.String()
 	if !strings.Contains(got, `<input type="hidden" name="back" value="/?pr_sort=newest" data-ui-back>`) || !strings.Contains(got, `<input type="hidden" name="tab" value="prs">`) {
 		t.Errorf("only a Back value carries data-ui-back:\n%s", got)
+	}
+}
+
+// A change asks the way this app says, else the default it is given, and says where that came from.
+func TestAButtonAsksTheWayThisAppOrTheDefaultSays(t *testing.T) {
+	del := kit.Button{Label: "Delete", Type: "submit"}
+	asked := kit.Button{Label: "Delete", Type: "submit", Confirm: "Delete 7?", Remember: true}
+	named := asked
+	named.ConfirmName = "7"
+	for name, tt := range map[string]struct {
+		app, def, source string
+		button           kit.Button
+	}{
+		"this app's value":               {kit.AskNever, kit.AskName, kit.FromApp, del},
+		"the default, y/N":               {"", kit.AskYesNo, kit.FromDefault, asked},
+		"a system change's default":      {"", kit.AskName, kit.FromDefault, named},
+		"an unknown value is not set":    {"bogus", kit.AskYesNo, kit.FromDefault, asked},
+		"an unknown default is y/N":      {"", "bogus", kit.FromDefault, asked},
+		"this app's value over a system": {kit.AskYesNo, kit.AskName, kit.FromApp, asked},
+	} {
+		style, source := kit.ResolveConfirm(tt.app, tt.def)
+		if got := del.Ask(style, "Delete 7?", "7"); source != tt.source || got != tt.button {
+			t.Errorf("%s: got %s %+v, want %s %+v", name, source, got, tt.source, tt.button)
+		}
+	}
+}
+
+// The Settings form posts back what it shows, and only real types and choices are read.
+func TestConfirmSettingsPostsBackWhatItShows(t *testing.T) {
+	var b bytes.Buffer
+	if err := kit.Render(&b, "ui/confirm-settings", kit.ConfirmSettings{Action: "/settings", App: map[string]string{"move": kit.AskNever}}); err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(b.String(), "confirm.scope") {
+		t.Errorf("the form posts a scope:\n%s", b.String())
+	}
+	form := url.Values{}
+	for _, m := range regexp.MustCompile(`name="(confirm\.[a-z]+)" value="([a-z-]+)"( checked)?`).FindAllStringSubmatch(b.String(), -1) {
+		if m[3] != "" {
+			form.Set(m[1], m[2])
+		}
+	}
+	form.Set("confirm.bogus", kit.AskNever)
+	got := kit.ConfirmChoices(form, nil)
+	if len(got) != len(kit.ActionTypes) || got["move"] != kit.AskNever || got["edit"] != kit.AskDefault || got["delete"] != kit.AskDefault {
+		t.Errorf("choices %v", got)
+	}
+}
+
+// A form drawn with its own types gives back a choice for each of them, none dropped and none more.
+func TestConfirmChoicesReadExactlyTheTypesTheFormDrew(t *testing.T) {
+	types := []string{"move", "deploy"}
+	var b bytes.Buffer
+	if err := kit.Render(&b, "ui/confirm-settings", kit.ConfirmSettings{Types: types, App: map[string]string{"deploy": kit.AskName}}); err != nil {
+		t.Fatal(err)
+	}
+	form := url.Values{}
+	for _, m := range regexp.MustCompile(`name="(confirm\.[a-z]+)" value="([a-z-]+)" checked`).FindAllStringSubmatch(b.String(), -1) {
+		form.Set(m[1], m[2])
+	}
+	form.Set("confirm.delete", kit.AskNever)
+	if got := kit.ConfirmChoices(form, types); len(got) != 2 || got["move"] != kit.AskDefault || got["deploy"] != kit.AskName {
+		t.Errorf("choices %v, want move: default and deploy: name only", got)
+	}
+}
+
+// A path in the home folder shows ~ and copies whole; a path outside it, or in a folder that only starts like it, shows whole.
+func TestLocationsShowTheHomeFolderAsTilde(t *testing.T) {
+	var b bytes.Buffer
+	err := kit.Render(&b, "ui/locations", kit.Locations{Home: "/home/ada/", Items: []kit.Location{
+		{Label: "Data", Path: "/home/ada/.local/share/elderlygate/kanban/"},
+		{Label: "Other", Path: "/home/adam/x"},
+		{Label: "Board", Path: "/srv/b"},
+	}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{
+		`data-ui-copy="/home/ada/.local/share/elderlygate/kanban/" title="Copy /home/ada/.local/share/elderlygate/kanban/">~/.local/share/elderlygate/kanban/</button>`,
+		`>/home/adam/x</button>`, `>/srv/b</button>`,
+	} {
+		if !strings.Contains(b.String(), want) {
+			t.Errorf("locations lack %q:\n%s", want, b.String())
+		}
+	}
+}
+
+// A change that asks goes ahead only with the yes kit.js sends; a form sent without it, such as one without JavaScript, is refused.
+func TestConfirmedReadsTheYesTheFormCarries(t *testing.T) {
+	for body, want := range map[string][2]bool{"confirm=yes": {true, false}, "confirm=remember": {true, true}, "": {false, false}, "confirm=no": {false, false}} {
+		r := httptest.NewRequest(http.MethodPost, "/delete", strings.NewReader(body))
+		r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		if ok, remember := kit.Confirmed(r); ok != want[0] || remember != want[1] {
+			t.Errorf("%q: Confirmed = %v, %v; want %v", body, ok, remember, want)
+		}
+	}
+	w := httptest.NewRecorder()
+	kit.RefuseUnconfirmed(w)
+	if w.Code != http.StatusPreconditionRequired || !strings.Contains(w.Body.String(), "Nothing was changed") {
+		t.Errorf("refusal %d %q", w.Code, w.Body.String())
+	}
+}
+
+// A type with a change to the system itself says its real default, and says it beside never too, since never does not silence that change.
+func TestConfirmSettingsSayTheDefaultOfASystemType(t *testing.T) {
+	rows := kit.ConfirmSettings{Types: []string{"delete", "move", "run"}, System: []string{"delete", "run"},
+		App: map[string]string{"run": kit.AskNever}}.Rows()
+	want := []string{"Ask y/N · name for changes to the system", "Ask y/N", "Don’t ask · name for changes to the system"}
+	for i, r := range rows {
+		if r.Now != want[i] {
+			t.Errorf("%s: Now = %q, want %q", r.Type, r.Now, want[i])
+		}
+	}
+	set := kit.ConfirmSettings{Types: []string{"delete"}, System: []string{"delete"}, App: map[string]string{"delete": kit.AskYesNo}}.Rows()
+	if set[0].Now != "Ask y/N" {
+		t.Errorf("a yes-no this app sets holds for the system change too: Now = %q", set[0].Now)
+	}
+}
+
+// Go, React and mankit (the CLI kit, copied into testdata) name the same action types in the same order.
+func TestActionTypesAreTheSameInGoReactAndMankit(t *testing.T) {
+	js, err := os.ReadFile("react/index.js")
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := regexp.MustCompile(`export const actionTypes = \[([^\]]*)\]`).FindSubmatch(js)
+	if m == nil {
+		t.Fatal("react/index.js has no actionTypes")
+	}
+	react := regexp.MustCompile(`"([a-z]+)"`).FindAllStringSubmatch(string(m[1]), -1)
+	b, err := os.ReadFile("testdata/mankit-action-types.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var mankit []string
+	for _, line := range strings.Split(strings.TrimSpace(string(b)), "\n") {
+		if !strings.HasPrefix(line, "#") {
+			mankit = append(mankit, line)
+		}
+	}
+	got := make([]string, len(react))
+	for i, r := range react {
+		got[i] = r[1]
+	}
+	if !slices.Equal(got, kit.ActionTypes) || !slices.Equal(mankit, kit.ActionTypes) {
+		t.Errorf("Go %v\nReact %v\nmankit %v", kit.ActionTypes, got, mankit)
 	}
 }

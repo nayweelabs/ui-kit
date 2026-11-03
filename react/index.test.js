@@ -96,3 +96,44 @@ test("count with an icon is a badge whose label is its tooltip, and with href a 
   const link = render(h(kit.Count, { n: 2, icon: "eye", label: "2 to review", href: "#review" }));
   assert.match(link, /^<a class="ui-count" data-icon="" data-tip="2 to review" href="#review">/);
 });
+
+test("confirm form draws the form and, beside it, the kit's dialog with the question and Remember my answer", () => {
+  const f = render(h(kit.ConfirmForm, { id: "ask-save", question: "Save the settings?", label: "Save", remember: true, method: "post", action: "/settings" }, h("button", { type: "submit" }, "Save")));
+  assert.match(f, /^<form action="\/settings" method="post"><button type="submit">Save<\/button><\/form><dialog class="ui-dialog" id="ask-save"/);
+  assert.match(f, /<h2 class="ui-dialog-title" id="ask-save-title">Save the settings\?<\/h2><label class="ui-check"><input type="checkbox"\/><span>Remember my answer<\/span><\/label><div class="ui-dialog-acts"><button class="ui-btn" type="submit" value="cancel">Cancel<\/button><button class="ui-btn" data-variant="primary" value="confirm" type="submit">Save<\/button>/);
+  assert.doesNotMatch(render(h(kit.ConfirmForm, { id: "a", question: "Disconnect?" })), /ui-check/);
+});
+
+test("confirm form with a name to type draws Type <name> to go ahead, and the confirm button starts off", () => {
+  const f = render(h(kit.ConfirmForm, { id: "ask-del", question: "Delete card 7?", confirmName: "7", label: "Delete" }));
+  assert.match(f, /<div class="ui-field"><label for="ask-del-name">Type <code>7<\/code> to go ahead<\/label><div class="ui-input"><input id="ask-del-name" autoComplete="off" spellCheck="false" autoCapitalize="off" value=""\/><\/div><\/div>/);
+  assert.match(f, /<button class="ui-btn" data-variant="primary" value="confirm" type="submit" disabled="">Delete<\/button>/);
+});
+
+test("confirm settings says the style in use and whether this app sets it or it is the default", () => {
+  assert.deepEqual(kit.resolveConfirm("never", "name"), { style: "never", source: "this app" });
+  assert.deepEqual(kit.resolveConfirm(undefined), { style: "yes-no", source: "default" });
+  assert.deepEqual(kit.resolveConfirm("bogus", "name"), { style: "name", source: "default" });
+  assert.deepEqual(kit.resolveConfirm(undefined, "bogus"), { style: "yes-no", source: "default" });
+  const f = render(h(kit.ConfirmSettings, { action: "/settings", types: ["edit", "move"], app: { move: "never" } }));
+  assert.match(f, /^<form class="ui-confirm-settings" action="\/settings" method="post"><fieldset/);
+  assert.doesNotMatch(f, /confirm.scope/);
+  assert.match(f, /<legend>edit<\/legend><span class="ui-choice-now">Ask y\/N <span class="ui-pill" data-variant="tag">default<\/span><\/span>/);
+  assert.match(f, /name="confirm.edit" checked="" value="default"\/>Use the default/);
+  assert.match(f, /<legend>move<\/legend><span class="ui-choice-now">Don’t ask <span class="ui-pill" data-variant="tag">this app<\/span>/);
+  assert.match(f, /name="confirm.move" checked="" value="never"\/>Don’t ask/);
+  assert.match(f, /<div class="ui-dialog-acts"><button class="ui-btn" data-variant="primary" type="submit">Save<\/button><\/div><\/form>$/);
+});
+
+test("locations draw the same markup as the Go partial: home as ~, the full path copied", () => {
+  const l = render(h(kit.Locations, { home: "/home/ada/", items: [{ label: "This app’s data", path: "/home/ada/.local/share/elderlygate/kanban/", note: "cards and archive" }, { label: "Other", path: "/home/adam/x" }] }));
+  assert.match(l, /^<div class="ui-locations"><h3 class="ui-locations-title">Where things are kept<\/h3><dl>/);
+  assert.match(l, /<div><dt>This app’s data<\/dt><dd><button class="ui-id" type="button" data-ui-copy="\/home\/ada\/.local\/share\/elderlygate\/kanban\/" title="Copy \/home\/ada\/.local\/share\/elderlygate\/kanban\/">~\/.local\/share\/elderlygate\/kanban\/<\/button><span class="ui-hint">cards and archive<\/span><\/dd><\/div>/);
+  assert.match(l, />\/home\/adam\/x<\/button>/);
+});
+
+test("confirm settings say the real default of a type with a change to the system itself", () => {
+  const html = render(h(kit.ConfirmSettings, { types: ["delete", "move"], system: ["delete"] }));
+  assert.match(html, /<legend>delete<\/legend><span class="ui-choice-now">Ask y\/N · name for changes to the system /);
+  assert.match(html, /<legend>move<\/legend><span class="ui-choice-now">Ask y\/N <span/);
+});

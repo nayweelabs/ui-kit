@@ -101,3 +101,19 @@ func TestTheLazyPageLoadsEachSectionOnItsOwn(t *testing.T) {
 		t.Errorf("the whole page: %s", full)
 	}
 }
+
+// The admin page's actions ask their type's default way, until the form came back with Remember my answer for that type.
+func TestMachineActionsAskUntilTheServerRemembers(t *testing.T) {
+	srv := httptest.NewServer(preview.Handler())
+	defer srv.Close()
+	body := get(t, srv, "/admin")
+	for _, want := range []string{`value="m-02" data-ui-confirm="Restart m-02?" aria-haspopup="dialog" data-ui-remember`, `data-ui-confirm="Delete machine m-04?" data-ui-confirm-name="m-04"`} {
+		if !strings.Contains(body, want) {
+			t.Errorf("/admin lacks %q", want)
+		}
+	}
+	body = get(t, srv, "/admin?run=m-02&confirm=remember")
+	if strings.Contains(body, `data-ui-confirm="Restart m-02?"`) || !strings.Contains(body, `data-ui-confirm-name="m-04"`) {
+		t.Error("Remember my answer for run did not stop only Restart from asking")
+	}
+}

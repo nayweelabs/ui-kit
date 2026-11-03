@@ -51,7 +51,7 @@
 {{if .Href -}}
 <a class="ui-btn" href="{{.Href}}"{{ext .Href}}{{with .Carry}} data-ui-carry="{{.}}"{{end}}{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Size}} data-size="{{.}}"{{end}}{{if or .Disabled .Busy}} aria-disabled="true"{{end}}{{if .Busy}} aria-busy="true"{{end}}>{{.Label}}{{with .Kbd}} <kbd>{{.}}</kbd>{{end}}</a>
 {{- else -}}
-<button class="ui-btn" type="{{orDefault "button" .Type}}"{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Size}} data-size="{{.}}"{{end}}{{with .Name}} name="{{.}}"{{end}}{{with .Value}} value="{{.}}"{{end}}{{with .Opens}} data-ui-open="{{.}}" aria-haspopup="dialog"{{end}}{{if .Disabled}} disabled{{end}}{{if .Busy}} disabled aria-busy="true"{{end}}{{with .Kbd}} aria-keyshortcuts="{{.}}"{{end}}>{{.Label}}{{with .Kbd}} <kbd>{{.}}</kbd>{{end}}</button>
+<button class="ui-btn" type="{{orDefault "button" .Type}}"{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Size}} data-size="{{.}}"{{end}}{{with .Name}} name="{{.}}"{{end}}{{with .Value}} value="{{.}}"{{end}}{{with .Opens}} data-ui-open="{{.}}"{{end}}{{with .Confirm}} data-ui-confirm="{{.}}"{{end}}{{with .ConfirmName}} data-ui-confirm-name="{{.}}"{{end}}{{if or .Opens .Confirm}} aria-haspopup="dialog"{{end}}{{if .Remember}} data-ui-remember{{end}}{{if .Disabled}} disabled{{end}}{{if .Busy}} disabled aria-busy="true"{{end}}{{with .Kbd}} aria-keyshortcuts="{{.}}"{{end}}>{{.Label}}{{with .Kbd}} <kbd>{{.}}</kbd>{{end}}</button>
 {{- end}}
 {{- end}}
 

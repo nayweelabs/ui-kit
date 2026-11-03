@@ -1,4 +1,4 @@
-/* ui-kit/js/kit.js: theme switch, cards/list toggle, fold, tabs, lazy sections, carried links, status lights, and the small helpers of the field, id and dialog parts.
+/* ui-kit/js/kit.js: theme switch, cards/list toggle, fold, tabs, lazy sections, carried links, status lights, asking before a form is sent, and the small helpers of the field, id and dialog parts.
    No app logic and no data. Every part works without it; this only saves a reload. Load it in <head> without defer. */
 (function () {
   "use strict";
@@ -352,6 +352,109 @@
     document.querySelectorAll(".ui-lazy[data-ui-src]").forEach(function (box) { load(box); });
   }
 
+  // Asking first: data-ui-confirm asks in the kit's dialog, data-ui-confirm-name wants that name typed (spaces around it allowed), data-ui-remember adds "Remember my answer".
+  function el(tag, attrs, text) {
+    var e = document.createElement(tag);
+    Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+    if (text) e.textContent = text;
+    return e;
+  }
+
+  // words is a button's text without its shortcut (<kbd>).
+  function words(b) {
+    var t = b.textContent.trim(), k = b.querySelector("kbd");
+    if (k && k.textContent && t.slice(-k.textContent.length) === k.textContent) t = t.slice(0, -k.textContent.length).trim();
+    return t;
+  }
+
+  function confirmDialog() {
+    var dlg = document.querySelector("dialog[data-ui-confirm-dialog]"); // the kit's own, never an app's element that took the id
+    if (dlg) return dlg;
+    dlg = el("dialog", { class: "ui-dialog", id: "ui-confirm", "aria-labelledby": "ui-confirm-title", "data-ui-confirm-dialog": "" });
+    var form = dlg.appendChild(el("form", { method: "dialog" }));
+    form.appendChild(el("h2", { class: "ui-dialog-title", id: "ui-confirm-title" }));
+    var field = form.appendChild(el("div", { class: "ui-field", "data-ui-name": "" }));
+    var label = field.appendChild(el("label", { for: "ui-confirm-name" }, ""));
+    label.appendChild(el("span", {}, "Type "));
+    label.appendChild(el("code", {}));
+    label.appendChild(el("span", {}, " to go ahead"));
+    field.appendChild(el("div", { class: "ui-input" })).appendChild(el("input", { id: "ui-confirm-name", autocomplete: "off", spellcheck: "false", autocapitalize: "off" }));
+    var remember = form.appendChild(el("label", { class: "ui-check" }));
+    remember.appendChild(el("input", { type: "checkbox" }));
+    remember.appendChild(el("span", {}, "Remember my answer"));
+    var acts = form.appendChild(el("div", { class: "ui-dialog-acts" }));
+    acts.appendChild(el("button", { class: "ui-btn", type: "submit", value: "cancel", autofocus: "" }, "Cancel"));
+    acts.appendChild(el("button", { class: "ui-btn", type: "submit", value: "confirm" }));
+    document.body.appendChild(dlg);
+    return dlg;
+  }
+
+  function ask(form, submitter, from) {
+    var dlg = confirmDialog();
+    if (!dlg.showModal) return askNatively(form, submitter, from);
+    var yes = dlg.querySelector("button[value='confirm']");
+    var remember = dlg.querySelector(".ui-check");
+    var box = remember.querySelector("input");
+    var field = dlg.querySelector("[data-ui-name]");
+    var typed = field.querySelector("input");
+    var name = from.getAttribute("data-ui-confirm-name") || "";
+    var label = from.getAttribute("data-ui-confirm-label") || (submitter && words(submitter));
+    dlg.querySelector(".ui-dialog-title").textContent = from.getAttribute("data-ui-confirm");
+    yes.textContent = label || "Confirm";
+    yes.setAttribute("data-variant", submitter && submitter.getAttribute("data-variant") === "danger" ? "danger" : "primary");
+    remember.hidden = !from.hasAttribute("data-ui-remember");
+    box.checked = false;
+    field.hidden = !name;
+    field.querySelector("code").textContent = name;
+    typed.value = "";
+    yes.disabled = !!name;
+    typed.oninput = function () { yes.disabled = typed.value.trim() !== name; };
+    typed.onkeydown = function (k) {
+      if (k.key !== "Enter") return;
+      k.preventDefault();
+      if (!yes.disabled) yes.click();
+    };
+    dlg.returnValue = "";
+    dlg.onclose = function () {
+      if (dlg.returnValue !== "confirm" || typed.value.trim() !== name && name) return;
+      send(form, submitter, !remember.hidden && box.checked);
+    };
+    dlg.showModal();
+    (name ? typed : dlg.querySelector("button[value='cancel']")).focus();
+  }
+
+  // askNatively asks with the browser's own question where there is no <dialog>, so a marked form is never sent unasked.
+  function askNatively(form, submitter, from) {
+    var question = from.getAttribute("data-ui-confirm"), name = from.getAttribute("data-ui-confirm-name") || "";
+    var yes = name ? (window.prompt(question + " Type " + name + " to go ahead.") || "").trim() === name : window.confirm(question);
+    if (yes) send(form, submitter, false);
+  }
+
+  // send sends form after a yes, with confirm=yes (or confirm=remember) so the server knows it was asked; without requestSubmit it sends the pressed button's value itself.
+  function send(form, submitter, remember) {
+    var marks = [form.appendChild(el("input", { type: "hidden", name: "confirm", value: remember ? "remember" : "yes" }))];
+    form.uiAsked = true;
+    try {
+      if (form.requestSubmit) return submitter ? form.requestSubmit(submitter) : form.requestSubmit();
+      if (submitter && submitter.name) marks.push(form.appendChild(el("input", { type: "hidden", name: submitter.name, value: submitter.value || "" })));
+      form.submit();
+    } finally {
+      form.uiAsked = false;
+      marks.forEach(function (m) { m.remove(); });
+    }
+  }
+
+  // asks stops a marked form before any other handler sees it (capture phase) and asks first; the form sent after the answer goes on.
+  function asks(e) {
+    var form = e.target, submitter = e.submitter || null;
+    if (form.uiAsked) return;
+    var from = submitter && submitter.hasAttribute("data-ui-confirm") ? submitter : form.hasAttribute && form.hasAttribute("data-ui-confirm") ? form : null;
+    if (!from) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    ask(form, submitter, from);
+  }
+
   // A GET form inside a lazy section reloads only that section; the address keeps the form's values.
   function onSubmit(e) {
     var form = e.target;
@@ -392,6 +495,7 @@
     document.addEventListener("keydown", onKey);
     document.addEventListener("focusin", onFocus);
     document.addEventListener("change", onChange);
+    document.addEventListener("submit", asks, true);
     document.addEventListener("submit", onSubmit);
   }
 

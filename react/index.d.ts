@@ -1,5 +1,5 @@
 // Types for the kit's React wrappers. The shapes match the Go types in types.go, in camelCase.
-import type { ReactElement, ReactNode, ChangeEventHandler, MouseEventHandler } from "react";
+import type { ReactElement, ReactNode, ChangeEventHandler, MouseEventHandler, FormHTMLAttributes } from "react";
 
 export type Tone = "good" | "warn" | "bad" | "info" | "accent" | "none" | "";
 
@@ -59,7 +59,18 @@ export interface FieldProps {
 }
 export interface Tab { label: string; href?: string; panel?: string; count?: CountProps; selected?: boolean }
 export interface TabsProps { label: string; items?: Tab[]; onSelect?: (tab: Tab) => void }
-export interface DialogProps { id: string; title: string; text?: string; cancel?: string; confirm: ButtonProps; open?: boolean; onClose?: () => void; onConfirm?: () => void }
+export interface DialogProps { id: string; title: string; text?: string; cancel?: string; confirm: ButtonProps; open?: boolean; onClose?: () => void; onConfirm?: () => void; children?: ReactNode }
+export interface ConfirmFormProps extends Omit<FormHTMLAttributes<HTMLFormElement>, "id" | "onSubmit"> {
+  id: string; question: string; label?: string; confirmName?: string; remember?: boolean; onSubmit?: (data: FormData) => void; children?: ReactNode;
+}
+export type ActionType = "create" | "edit" | "move" | "focus" | "archive" | "close" | "delete" | "settings" | "connect" | "run";
+export type ConfirmStyle = "name" | "yes-no" | "never";
+export type ConfirmSource = "this app" | "default";
+export interface ConfirmSettingsProps {
+  action?: string; types?: string[]; app?: Record<string, string>; system?: string[]; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
+}
+export interface Location { label: string; path: string; note?: string }
+export interface LocationsProps { home?: string; items?: Location[] }
 export interface DrawerProps { id: string; title: string; open?: boolean; onClose?: () => void; children?: ReactNode }
 export interface LightDetail { label: string; value: string }
 export interface LightConfirm { text: string; label: string; action?: string; hidden?: { name: string; value: string }[]; onConfirm?: () => void }
@@ -98,6 +109,11 @@ export function Toolbar(props: ToolbarProps): ReactElement;
 export function Tabs(props: TabsProps): ReactElement;
 export function Crumb(props: { items?: Link[] }): ReactElement;
 export function Dialog(props: DialogProps): ReactElement;
+export function ConfirmForm(props: ConfirmFormProps): ReactElement;
+export const actionTypes: ActionType[];
+export function resolveConfirm(app: string | undefined, def?: ConfirmStyle): { style: ConfirmStyle; source: ConfirmSource };
+export function ConfirmSettings(props: ConfirmSettingsProps): ReactElement;
+export function Locations(props: LocationsProps): ReactElement;
 export function Drawer(props: DrawerProps): ReactElement;
 export function ThemeToggle(): ReactElement;
 export function Light(props: LightProps): ReactElement;

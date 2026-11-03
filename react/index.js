@@ -268,11 +268,108 @@ function useModal(open, onClose) {
   };
 }
 
-export function Dialog({ id, title, text, cancel = "Cancel", confirm, open, onClose, onConfirm }) {
+export function Dialog({ id, title, text, cancel = "Cancel", confirm, open, onClose, onConfirm, children }) {
   return h("dialog", { className: "ui-dialog", id, "aria-labelledby": id + "-title", ref: useModal(open, onClose) },
     h("form", { method: "dialog", onSubmit: (e) => { if (e.nativeEvent.submitter && e.nativeEvent.submitter.value === "confirm" && onConfirm) onConfirm(); } },
-      h("h2", { className: "ui-dialog-title", id: id + "-title" }, title), text ? h("p", { className: "ui-dialog-text" }, text) : null,
+      h("h2", { className: "ui-dialog-title", id: id + "-title" }, title), text ? h("p", { className: "ui-dialog-text" }, text) : null, children,
       h("div", { className: "ui-dialog-acts" }, h("button", { className: "ui-btn", type: "submit", value: "cancel" }, cancel), h(Button, { type: "submit", value: "confirm", ...confirm }))));
+}
+
+// words is a button's text without its shortcut (<kbd>), as kit.js reads it.
+function words(b) {
+  const t = b.textContent.trim(), k = b.querySelector("kbd");
+  return k && k.textContent && t.endsWith(k.textContent) ? t.slice(0, -k.textContent.length).trim() : t;
+}
+
+// ConfirmForm asks question in the kit's Dialog before it is sent with confirm=yes (or confirm=remember), as data-ui-confirm does; onSubmit, when given, gets the confirmed data.
+export function ConfirmForm({ id, question, label, confirmName, remember, onSubmit, children, ...rest }) {
+  const form = useRef(null);
+  const confirmed = useRef(false);
+  const [asking, setAsking] = useState(null);
+  const [sending, setSending] = useState(null);
+  const [remembered, setRemembered] = useState(false);
+  const [typed, setTyped] = useState("");
+  useEffect(() => {
+    const first = asking && document.getElementById(id).querySelector(confirmName ? "input:not([type])" : "button[value='cancel']");
+    if (first) first.focus();
+  }, [asking, id, confirmName]);
+  useEffect(() => {
+    if (!sending) return;
+    confirmed.current = true;
+    try {
+      if (sending.submitter) form.current.requestSubmit(sending.submitter);
+      else form.current.requestSubmit();
+    } finally {
+      confirmed.current = false;
+      setSending(null);
+    }
+  }, [sending]);
+  const submit = (e) => {
+    const submitter = e.nativeEvent.submitter || null;
+    if (!confirmed.current) {
+      e.preventDefault();
+      setRemembered(false);
+      setTyped("");
+      setAsking({ submitter });
+      return;
+    }
+    if (!onSubmit) return;
+    e.preventDefault();
+    onSubmit(new FormData(e.currentTarget, submitter));
+  };
+  const pressed = asking && asking.submitter;
+  const named = !confirmName || typed.trim() === confirmName;
+  const confirm = { label: label || (pressed && words(pressed)) || "Confirm", variant: pressed && pressed.getAttribute("data-variant") === "danger" ? "danger" : "primary", disabled: !named };
+  const enter = (e) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    if (named) e.currentTarget.form.querySelector("button[value='confirm']").click();
+  };
+  return h(Fragment, null,
+    h("form", { ...rest, ref: form, onSubmit: submit }, children, sending ? h("input", { type: "hidden", name: "confirm", value: sending.remember ? "remember" : "yes" }) : null),
+    h(Dialog, { id, title: question, confirm, open: !!asking, onClose: () => setAsking(null), onConfirm: () => named && setSending({ submitter: pressed, remember: remember && remembered }) },
+      confirmName ? h("div", { className: "ui-field" }, h("label", { htmlFor: id + "-name" }, "Type ", h("code", null, confirmName), " to go ahead"),
+        h("div", { className: "ui-input" }, h("input", { id: id + "-name", value: typed, onChange: (e) => setTyped(e.target.value), onKeyDown: enter, autoComplete: "off", spellCheck: false, autoCapitalize: "off" }))) : null,
+      remember ? h("label", { className: "ui-check" }, h("input", { type: "checkbox", checked: remembered, onChange: (e) => setRemembered(e.target.checked) }), h("span", null, "Remember my answer")) : null));
+}
+
+// The action types every change belongs to; resolveConfirm says how a change asks: app, this app's value for its type, else def ("yes-no", or "name" for a change to the system itself).
+export const actionTypes = ["create", "edit", "move", "focus", "archive", "close", "delete", "settings", "connect", "run"];
+const isStyle = (s) => s === "name" || s === "yes-no" || s === "never";
+export function resolveConfirm(app, def = "yes-no") {
+  if (isStyle(app)) return { style: app, source: "this app" };
+  return { style: isStyle(def) ? def : "yes-no", source: "default" };
+}
+
+const styleWords = { name: "Type the name", "yes-no": "Ask y/N", never: "Don’t ask" };
+// systemNote follows the words of a system type whose changes to the system still ask the name, as kit.SystemNote.
+const systemNote = " · name for changes to the system";
+
+// ConfirmSettings is the form for how each action type asks in this app (system: the types with a change to the system itself); it posts confirm.<type>, a style or default, or gives onSubmit the FormData.
+export function ConfirmSettings({ action, types = actionTypes, app = {}, system = [], hidden = [], save, onSubmit }) {
+  const submit = onSubmit ? (e) => { e.preventDefault(); onSubmit(new FormData(e.currentTarget)); } : undefined;
+  const choices = [...Object.entries(styleWords), ["default", "Use the default"]];
+  return h("form", { className: "ui-confirm-settings", method: "post", action, onSubmit: submit },
+    types.map((t) => {
+      const now = resolveConfirm(app[t]);
+      const checked = isStyle(app[t]) ? app[t] : "default";
+      return h("fieldset", { key: t + ":" + checked, className: "ui-choice" }, h("legend", null, t), // a new app value draws its radios again
+        h("span", { className: "ui-choice-now" }, styleWords[now.style], system.includes(t) && (now.source === "default" || now.style === "never") ? systemNote : "", " ", h(Pill, { variant: "tag", label: now.source })),
+        h("span", { className: "ui-choice-opts" }, choices.map(([value, text]) =>
+          h("label", { key: value }, h("input", { type: "radio", name: "confirm." + t, value, defaultChecked: checked === value }), text))));
+    }),
+    hidden.map((x) => h("input", { key: x.name, type: "hidden", name: x.name, value: x.value })),
+    h("div", { className: "ui-dialog-acts" }, h(Button, { label: "Save", variant: "primary", type: "submit", ...save })));
+}
+
+// Locations says where the app keeps its files: each path shows home as ~ and copies whole on click.
+export function Locations({ home, items = [] }) {
+  const root = home ? home.replace(/\/$/, "") : "";
+  const short = (p) => (root && (p === root || p.startsWith(root + "/")) ? "~" + p.slice(root.length) : p);
+  return h("div", { className: "ui-locations" }, h("h3", { className: "ui-locations-title" }, "Where things are kept"),
+    h("dl", null, items.map((l) => h("div", { key: l.label }, h("dt", null, l.label),
+      h("dd", null, h("button", { className: "ui-id", type: "button", "data-ui-copy": l.path, title: "Copy " + l.path, onClick: () => navigator.clipboard && navigator.clipboard.writeText(l.path) }, short(l.path)),
+        l.note ? h("span", { className: "ui-hint" }, l.note) : null)))));
 }
 
 export function Drawer({ id, title, open, onClose, children }) {

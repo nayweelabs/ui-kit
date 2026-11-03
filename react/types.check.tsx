@@ -1,5 +1,5 @@
 // Compiles only if the types in index.d.ts fit the way an app uses the wrappers.
-import { Shell, Section, PrList, Products, Pill, Count, Field, Dialog, Light, type PR, type Product } from "./index";
+import { Shell, Section, PrList, Products, Pill, Count, Field, Dialog, ConfirmForm, ConfirmSettings, resolveConfirm, Locations, Light, type PR, type Product } from "./index";
 
 const prs: PR[] = [{ repo: "checkman", number: "5", title: "chore: close the accepted review cards", review: { tone: "accent", label: "your review" }, ci: { tone: "good", label: "CI passing" } }];
 const products: Product[] = [{ name: "hubman", href: "/p/hubman", focus: true, facts: [{ label: "Installed", tone: "good", num: { text: "v0.7.0" }, text: "current" }] }];
@@ -14,6 +14,10 @@ export const page = (
     <Count n={128} tone="accent" />
     <Field id="token" label="GitHub token" secret />
     <Dialog id="d" title="Archive 4 cards?" confirm={{ label: "Archive 4 cards", variant: "danger" }} />
+    <ConfirmForm id="ask-save" question="Save the settings?" remember method="post" action="/settings" onSubmit={(data) => data.get("confirm")}><button type="submit">Save</button></ConfirmForm>
+    <ConfirmForm id="ask-delete" question="Delete card 7?" confirmName="7" remember={resolveConfirm(undefined, "name").style !== "never"}><button type="submit">Delete</button></ConfirmForm>
+    <Locations home="/home/ada" items={[{ label: "This app’s config", path: "/home/ada/.config/elderlygate/kanban/config.yaml" }]} />
+    <ConfirmSettings action="/settings" types={["move", "delete"]} app={{ move: "never" }} />
     <Light id="gh" tone="good" icon="github" label="GitHub" details={[{ label: "Account", value: "bot" }]} actions={[{ label: "Enter a new token…", opens: "d" }, { label: "Disconnect", variant: "danger", confirm: { text: "Removes it.", label: "Disconnect now", onConfirm: () => {} } }]} />
   </Shell>
 );

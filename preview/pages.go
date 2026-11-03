@@ -87,6 +87,7 @@ func admin(tpl *template.Template, r *http.Request) (kit.Page, error) {
 			{Label: "Settings", Panel: "pane-settings"},
 		}}),
 		"Machines": mustHTML(tpl, "ui/table", machines),
+		"Actions":  machineActions(tpl, r),
 		"Logs":     mustHTML(tpl, "ui/empty", kit.Empty{Title: "No logs in the last hour.", Text: "Machines write logs when a deploy runs.", Command: "fleet logs --since 1h"}),
 		"Settings": mustHTML(tpl, "ui/field", kit.Field{ID: "provider-token", Label: "Provider token", Secret: true, Hint: "Kept in the Keychain. Never shown back after saving."}),
 	}
@@ -105,6 +106,23 @@ func admin(tpl *template.Template, r *http.Request) (kit.Page, error) {
 		},
 		Body: body + must(liveDialogs(tpl)),
 	}, err
+}
+
+// machineActions restart m-02 (run, y/N) and delete m-04 (delete, a change to the system itself: the name); Remember my answer stops asking for the pressed button's type.
+func machineActions(tpl *template.Template, r *http.Request) template.HTML {
+	q := r.URL.Query()
+	app := map[string]string{}
+	for _, t := range []string{"run", "delete"} {
+		if q.Get("confirm") == "remember" && q.Has(t) {
+			app[t] = kit.AskNever
+		}
+	}
+	run, _ := kit.ResolveConfirm(app["run"], kit.AskYesNo)
+	del, _ := kit.ResolveConfirm(app["delete"], kit.AskName)
+	restart := kit.Button{Label: "Restart m-02", Type: "submit", Name: "run", Value: "m-02"}
+	remove := kit.Button{Label: "Delete m-04", Variant: "danger", Type: "submit", Name: "delete", Value: "m-04"}
+	return mustHTML(tpl, "ui/button", restart.Ask(run, "Restart m-02?", "m-02")) + " " +
+		mustHTML(tpl, "ui/button", remove.Ask(del, "Delete machine m-04?", "m-04"))
 }
 
 // lazySections are the sections of the lazy page: one quick with a toolbar, one slow, one that fails.
