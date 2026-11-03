@@ -384,6 +384,7 @@
 
   function ask(form, submitter, from) {
     var dlg = confirmDialog();
+    if (!dlg.showModal) return askNatively(form, submitter, from);
     var yes = dlg.querySelector("button[value='confirm']");
     var remember = dlg.querySelector(".ui-check");
     var box = remember.querySelector("input");
@@ -409,35 +410,47 @@
     dlg.returnValue = "";
     dlg.onclose = function () {
       if (dlg.returnValue !== "confirm" || typed.value !== name && name) return;
-      var mark = !remember.hidden && box.checked && form.appendChild(el("input", { type: "hidden", name: "confirm", value: "remember" }));
-      form.uiAsked = true;
-      try {
-        if (submitter) form.requestSubmit(submitter);
-        else form.requestSubmit();
-      } finally {
-        form.uiAsked = false;
-        if (mark) mark.remove();
-      }
+      send(form, submitter, !remember.hidden && box.checked);
     };
     dlg.showModal();
     (name ? typed : dlg.querySelector("button[value='cancel']")).focus();
   }
 
-  // asks stops a marked form and asks first; the form sent after the answer goes on.
+  // askNatively asks with the browser's own question where there is no <dialog>, so a marked form is never sent unasked.
+  function askNatively(form, submitter, from) {
+    var question = from.getAttribute("data-ui-confirm"), name = from.getAttribute("data-ui-confirm-name") || "";
+    var yes = name ? (window.prompt(question + " Type " + name + " to go ahead.") || "").trim() === name : window.confirm(question);
+    if (yes) send(form, submitter, false);
+  }
+
+  // send sends form after a yes, with confirm=yes (or confirm=remember) so the server knows it was asked; without requestSubmit it sends the pressed button's value itself.
+  function send(form, submitter, remember) {
+    var marks = [form.appendChild(el("input", { type: "hidden", name: "confirm", value: remember ? "remember" : "yes" }))];
+    form.uiAsked = true;
+    try {
+      if (form.requestSubmit) return submitter ? form.requestSubmit(submitter) : form.requestSubmit();
+      if (submitter && submitter.name) marks.push(form.appendChild(el("input", { type: "hidden", name: submitter.name, value: submitter.value || "" })));
+      form.submit();
+    } finally {
+      form.uiAsked = false;
+      marks.forEach(function (m) { m.remove(); });
+    }
+  }
+
+  // asks stops a marked form before any other handler sees it (capture phase) and asks first; the form sent after the answer goes on.
   function asks(e) {
     var form = e.target, submitter = e.submitter || null;
-    if (form.uiAsked || e.defaultPrevented) return false;
-    var from = submitter && submitter.hasAttribute("data-ui-confirm") ? submitter : form.hasAttribute("data-ui-confirm") ? form : null;
-    if (!from || !form.requestSubmit) return false;
+    if (form.uiAsked) return;
+    var from = submitter && submitter.hasAttribute("data-ui-confirm") ? submitter : form.hasAttribute && form.hasAttribute("data-ui-confirm") ? form : null;
+    if (!from) return;
     e.preventDefault();
+    e.stopImmediatePropagation();
     ask(form, submitter, from);
-    return true;
   }
 
   // A GET form inside a lazy section reloads only that section; the address keeps the form's values.
   function onSubmit(e) {
     var form = e.target;
-    if (asks(e)) return;
     var box = form.closest && form.closest(".ui-lazy[data-ui-src]");
     if (!box || !window.fetch || !window.URLSearchParams || (form.method || "get").toLowerCase() !== "get") return;
     e.preventDefault();
@@ -473,6 +486,7 @@
     document.addEventListener("keydown", onKey);
     document.addEventListener("focusin", onFocus);
     document.addEventListener("change", onChange);
+    document.addEventListener("submit", asks, true);
     document.addEventListener("submit", onSubmit);
   }
 
