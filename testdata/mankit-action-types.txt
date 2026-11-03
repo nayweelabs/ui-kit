@@ -1,0 +1,11 @@
+# The action types of mankit's ask package (ask/words.go, types), in its order; copied, since ui-kit does not import mankit. Change both together.
+create
+edit
+move
+focus
+archive
+close
+delete
+settings
+connect
+run

@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strings"
 	"testing"
 
@@ -429,5 +430,35 @@ func TestConfirmSettingsSayTheDefaultOfASystemType(t *testing.T) {
 	set := kit.ConfirmSettings{Types: []string{"delete"}, System: []string{"delete"}, App: map[string]string{"delete": kit.AskYesNo}}.Rows()
 	if set[0].Now != "Ask y/N" {
 		t.Errorf("a yes-no this app sets holds for the system change too: Now = %q", set[0].Now)
+	}
+}
+
+// Go, React and mankit (the CLI kit, copied into testdata) name the same action types in the same order.
+func TestActionTypesAreTheSameInGoReactAndMankit(t *testing.T) {
+	js, err := os.ReadFile("react/index.js")
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := regexp.MustCompile(`export const actionTypes = \[([^\]]*)\]`).FindSubmatch(js)
+	if m == nil {
+		t.Fatal("react/index.js has no actionTypes")
+	}
+	react := regexp.MustCompile(`"([a-z]+)"`).FindAllStringSubmatch(string(m[1]), -1)
+	b, err := os.ReadFile("testdata/mankit-action-types.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var mankit []string
+	for _, line := range strings.Split(strings.TrimSpace(string(b)), "\n") {
+		if !strings.HasPrefix(line, "#") {
+			mankit = append(mankit, line)
+		}
+	}
+	got := make([]string, len(react))
+	for i, r := range react {
+		got[i] = r[1]
+	}
+	if !slices.Equal(got, kit.ActionTypes) || !slices.Equal(mankit, kit.ActionTypes) {
+		t.Errorf("Go %v\nReact %v\nmankit %v", kit.ActionTypes, got, mankit)
 	}
 }
