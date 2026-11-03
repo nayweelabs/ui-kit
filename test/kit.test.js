@@ -373,3 +373,17 @@ test("the confirm button repeats the pressed button's words without its shortcut
   p.fire("submit", form, { submitter: btn });
   assert.equal(form.parent.querySelector("dialog button[value='confirm']").textContent, "Delete card");
 });
+
+test("an app's own element with the id ui-confirm is never taken for the kit's dialog", () => {
+  const theirs = new El("dialog", { id: "ui-confirm" }, [new El("h2", { class: "ui-dialog-title" })]);
+  const btn = new El("button", { type: "submit", "data-ui-confirm": "Delete card 7?" });
+  const form = postForm({}, [btn]);
+  const p = page("http://localhost/", [theirs, form]);
+  form.page = p;
+  p.fire("submit", form, { submitter: btn });
+  const ours = form.parent.querySelector("dialog[data-ui-confirm-dialog]");
+  assert.ok(ours && ours !== theirs && ours.open);
+  assert.equal(ours.querySelector(".ui-dialog-title").textContent, "Delete card 7?");
+  assert.equal(theirs.open, undefined, "the app's element is left alone");
+  assert.equal(theirs.querySelector(".ui-dialog-title").textContent, "");
+});

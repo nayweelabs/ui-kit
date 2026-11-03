@@ -368,9 +368,9 @@
   }
 
   function confirmDialog() {
-    var dlg = document.getElementById("ui-confirm");
+    var dlg = document.querySelector("dialog[data-ui-confirm-dialog]"); // the kit's own, never an app's element that took the id
     if (dlg) return dlg;
-    dlg = el("dialog", { class: "ui-dialog", id: "ui-confirm", "aria-labelledby": "ui-confirm-title" });
+    dlg = el("dialog", { class: "ui-dialog", id: "ui-confirm", "aria-labelledby": "ui-confirm-title", "data-ui-confirm-dialog": "" });
     var form = dlg.appendChild(el("form", { method: "dialog" }));
     form.appendChild(el("h2", { class: "ui-dialog-title", id: "ui-confirm-title" }));
     var field = form.appendChild(el("div", { class: "ui-field", "data-ui-name": "" }));
