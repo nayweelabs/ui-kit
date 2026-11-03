@@ -57,3 +57,12 @@ test("ConfirmForm with Remember my answer ticked sends confirm=remember", async 
   assert.deepEqual(sent, [[["do", "delete"], ["confirm", "remember"]]]);
   m.done();
 });
+
+test("ConfirmSettings radios follow a changed app value", async () => {
+  const m = await mount(h(kit.ConfirmSettings, { types: ["move"], app: {} }));
+  const checked = () => m.box.querySelector("input[name='confirm.move']:checked").value;
+  assert.equal(checked(), "default");
+  await m.rerender(h(kit.ConfirmSettings, { types: ["move"], app: { move: "never" } }));
+  assert.equal(checked(), "never");
+  m.done();
+});

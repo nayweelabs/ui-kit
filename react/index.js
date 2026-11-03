@@ -345,7 +345,7 @@ export function ConfirmSettings({ action, types = actionTypes, app = {}, hidden 
     types.map((t) => {
       const now = resolveConfirm(app[t]);
       const checked = isStyle(app[t]) ? app[t] : "default";
-      return h("fieldset", { key: t, className: "ui-choice" }, h("legend", null, t),
+      return h("fieldset", { key: t + ":" + checked, className: "ui-choice" }, h("legend", null, t), // a new app value draws its radios again
         h("span", { className: "ui-choice-now" }, styleWords[now.style], " ", h(Pill, { variant: "tag", label: now.source })),
         h("span", { className: "ui-choice-opts" }, choices.map(([value, text]) =>
           h("label", { key: value }, h("input", { type: "radio", name: "confirm." + t, value, defaultChecked: checked === value }), text))));
