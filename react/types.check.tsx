@@ -15,9 +15,9 @@ export const page = (
     <Field id="token" label="GitHub token" secret />
     <Dialog id="d" title="Archive 4 cards?" confirm={{ label: "Archive 4 cards", variant: "danger" }} />
     <ConfirmForm id="ask-save" question="Save the settings?" remember method="post" action="/settings" onSubmit={(data) => data.get("confirm")}><button type="submit">Save</button></ConfirmForm>
-    <ConfirmForm id="ask-delete" question="Delete card 7?" confirmName="7" remember={resolveConfirm({ delete: "name" }, {}, "delete").style !== "never"}><button type="submit">Delete</button></ConfirmForm>
-    <Locations home="/home/ada" items={[{ label: "Shared config", path: "/home/ada/.config/elderlygate/global-config.yaml", note: "every app reads it" }]} />
-    <ConfirmSettings action="/settings" scope="global" types={["move", "delete"]} app={{ move: "never" }} global={{ delete: "yes-no" }} />
+    <ConfirmForm id="ask-delete" question="Delete card 7?" confirmName="7" remember={resolveConfirm(undefined, "name").style !== "never"}><button type="submit">Delete</button></ConfirmForm>
+    <Locations home="/home/ada" items={[{ label: "This app’s config", path: "/home/ada/.config/elderlygate/kanban/config.yaml" }]} />
+    <ConfirmSettings action="/settings" types={["move", "delete"]} app={{ move: "never" }} />
     <Light id="gh" tone="good" icon="github" label="GitHub" details={[{ label: "Account", value: "bot" }]} actions={[{ label: "Enter a new token…", opens: "d" }, { label: "Disconnect", variant: "danger", confirm: { text: "Removes it.", label: "Disconnect now", onConfirm: () => {} } }]} />
   </Shell>
 );

@@ -65,9 +65,9 @@ export interface ConfirmFormProps extends Omit<FormHTMLAttributes<HTMLFormElemen
 }
 export type ActionType = "create" | "edit" | "move" | "focus" | "archive" | "close" | "delete" | "settings" | "connect" | "run";
 export type ConfirmStyle = "name" | "yes-no" | "never";
-export type ConfirmSource = "this app" | "global" | "default";
+export type ConfirmSource = "this app" | "default";
 export interface ConfirmSettingsProps {
-  action?: string; scope?: "app" | "global"; types?: string[]; app?: Record<string, string>; global?: Record<string, string>; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
+  action?: string; types?: string[]; app?: Record<string, string>; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
 }
 export interface Location { label: string; path: string; note?: string }
 export interface LocationsProps { home?: string; items?: Location[] }
@@ -111,7 +111,7 @@ export function Crumb(props: { items?: Link[] }): ReactElement;
 export function Dialog(props: DialogProps): ReactElement;
 export function ConfirmForm(props: ConfirmFormProps): ReactElement;
 export const actionTypes: ActionType[];
-export function resolveConfirm(app: Record<string, string> | undefined, global: Record<string, string> | undefined, type: string): { style: ConfirmStyle; source: ConfirmSource };
+export function resolveConfirm(app: string | undefined, def?: ConfirmStyle): { style: ConfirmStyle; source: ConfirmSource };
 export function ConfirmSettings(props: ConfirmSettingsProps): ReactElement;
 export function Locations(props: LocationsProps): ReactElement;
 export function Drawer(props: DrawerProps): ReactElement;

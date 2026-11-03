@@ -327,27 +327,24 @@ export function ConfirmForm({ id, question, label, confirmName, remember, onSubm
       remember ? h("label", { className: "ui-check" }, h("input", { type: "checkbox", checked: remembered, onChange: (e) => setRemembered(e.target.checked) }), h("span", null, "Remember my answer")) : null));
 }
 
-// The action types every change belongs to; resolveConfirm says how a type asks: this app's value, else the global one, else the default (delete the name, the rest yes-no).
+// The action types every change belongs to; resolveConfirm says how a change asks: app, this app's value for its type, else def ("yes-no", or "name" for a change to the system itself).
 export const actionTypes = ["create", "edit", "move", "focus", "archive", "close", "delete", "settings", "connect", "run"];
 const isStyle = (s) => s === "name" || s === "yes-no" || s === "never";
-export function resolveConfirm(app = {}, global = {}, type) {
-  if (isStyle(app[type])) return { style: app[type], source: "this app" };
-  if (isStyle(global[type])) return { style: global[type], source: "global" };
-  return { style: type === "delete" ? "name" : "yes-no", source: "default" };
+export function resolveConfirm(app, def = "yes-no") {
+  if (isStyle(app)) return { style: app, source: "this app" };
+  return { style: isStyle(def) ? def : "yes-no", source: "default" };
 }
 
 const styleWords = { name: "Type the name", "yes-no": "Ask y/N", never: "Don’t ask" };
 
-// ConfirmSettings is the form for how each action type asks, in one scope ("app" or "global"); it posts confirm.scope and confirm.<type>, or gives onSubmit the FormData.
-export function ConfirmSettings({ action, scope = "app", types = actionTypes, app = {}, global = {}, hidden = [], save, onSubmit }) {
+// ConfirmSettings is the form for how each action type asks in this app; it posts confirm.<type>, a style or default, or gives onSubmit the FormData.
+export function ConfirmSettings({ action, types = actionTypes, app = {}, hidden = [], save, onSubmit }) {
   const submit = onSubmit ? (e) => { e.preventDefault(); onSubmit(new FormData(e.currentTarget)); } : undefined;
-  const own = scope === "global" ? global : app;
-  const choices = [...Object.entries(styleWords), ["inherit", scope === "global" ? "Use the default" : "Use the global value"]];
+  const choices = [...Object.entries(styleWords), ["default", "Use the default"]];
   return h("form", { className: "ui-confirm-settings", method: "post", action, onSubmit: submit },
-    h("input", { type: "hidden", name: "confirm.scope", value: scope === "global" ? "global" : "app" }),
     types.map((t) => {
-      const now = resolveConfirm(scope === "global" ? {} : app, global, t);
-      const checked = isStyle(own[t]) ? own[t] : "inherit";
+      const now = resolveConfirm(app[t]);
+      const checked = isStyle(app[t]) ? app[t] : "default";
       return h("fieldset", { key: t, className: "ui-choice" }, h("legend", null, t),
         h("span", { className: "ui-choice-now" }, styleWords[now.style], " ", h(Pill, { variant: "tag", label: now.source })),
         h("span", { className: "ui-choice-opts" }, choices.map(([value, text]) =>
