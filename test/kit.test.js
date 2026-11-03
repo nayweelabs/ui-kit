@@ -341,3 +341,24 @@ test("a browser without <dialog> asks with its own question, and only the exact 
     El.reply = El.asked = undefined;
   }
 });
+
+test("Enter in the name field confirms once the name is typed, spaces around it allowed, and does nothing before", () => {
+  const btn = new El("button", { type: "submit", "data-ui-confirm": "Delete card 20261102-e472?", "data-ui-confirm-name": "20261102-e472" });
+  const form = postForm({}, [btn]);
+  const p = page("http://localhost/", [form]);
+  form.page = p;
+  p.fire("submit", form, { submitter: btn });
+  const dlg = form.parent.querySelector("dialog");
+  const typed = dlg.querySelector("[data-ui-name] input");
+  const yes = dlg.querySelector("button[value='confirm']");
+  yes.click = () => answer(dlg, "confirm");
+  const enter = () => { const k = { key: "Enter", preventDefault() { k.prevented = true; } }; typed.onkeydown(k); return k; };
+  typed.value = "20261102-e47";
+  typed.oninput();
+  assert.ok(enter().prevented, "Enter never sends the page's form by itself");
+  assert.deepEqual(form.sent, []);
+  typed.value = "  20261102-e472 ";
+  typed.oninput();
+  enter();
+  assert.deepEqual(form.sent, [[btn, "confirm=yes"]]);
+});

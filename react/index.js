@@ -312,7 +312,7 @@ export function ConfirmForm({ id, question, label, confirmName, remember, onSubm
     onSubmit(new FormData(e.currentTarget, submitter));
   };
   const pressed = asking && asking.submitter;
-  const named = !confirmName || typed === confirmName;
+  const named = !confirmName || typed.trim() === confirmName;
   const confirm = { label: label || (pressed && pressed.textContent.trim()) || "Confirm", variant: pressed && pressed.getAttribute("data-variant") === "danger" ? "danger" : "primary", disabled: !named };
   const enter = (e) => {
     if (e.key !== "Enter") return;

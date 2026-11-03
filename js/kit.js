@@ -352,7 +352,7 @@
     document.querySelectorAll(".ui-lazy[data-ui-src]").forEach(function (box) { load(box); });
   }
 
-  // Asking first: data-ui-confirm asks in the kit's dialog, data-ui-confirm-name wants that name typed, data-ui-remember adds "Remember my answer".
+  // Asking first: data-ui-confirm asks in the kit's dialog, data-ui-confirm-name wants that name typed (spaces around it allowed), data-ui-remember adds "Remember my answer".
   function el(tag, attrs, text) {
     var e = document.createElement(tag);
     Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
@@ -401,7 +401,7 @@
     field.querySelector("code").textContent = name;
     typed.value = "";
     yes.disabled = !!name;
-    typed.oninput = function () { yes.disabled = typed.value !== name; };
+    typed.oninput = function () { yes.disabled = typed.value.trim() !== name; };
     typed.onkeydown = function (k) {
       if (k.key !== "Enter") return;
       k.preventDefault();
@@ -409,7 +409,7 @@
     };
     dlg.returnValue = "";
     dlg.onclose = function () {
-      if (dlg.returnValue !== "confirm" || typed.value !== name && name) return;
+      if (dlg.returnValue !== "confirm" || typed.value.trim() !== name && name) return;
       send(form, submitter, !remember.hidden && box.checked);
     };
     dlg.showModal();

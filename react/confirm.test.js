@@ -58,6 +58,27 @@ test("ConfirmForm with Remember my answer ticked sends confirm=remember", async 
   m.done();
 });
 
+test("ConfirmForm with a name: Enter in the field confirms once the name is typed, spaces around it allowed", async () => {
+  const { sent, el } = confirmForm({ confirmName: "20261102-e472" });
+  const m = await mount(el);
+  const form = m.box.querySelector("form");
+  await press(form, form.querySelector("button[name=do]"));
+  const dlg = document.getElementById("ask");
+  const typed = dlg.querySelector("#ask-name");
+  const type = (v) => act(async () => {
+    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set.call(typed, v);
+    typed.dispatchEvent(new window.Event("input", { bubbles: true }));
+  });
+  const enter = () => act(async () => typed.dispatchEvent(new window.KeyboardEvent("keydown", { key: "Enter", bubbles: true })));
+  await type("20261102-e47");
+  await enter();
+  assert.deepEqual(sent, [], "almost the name sends nothing");
+  await type(" 20261102-e472 ");
+  await enter();
+  assert.deepEqual(sent, [[["do", "delete"], ["confirm", "yes"]]]);
+  m.done();
+});
+
 test("ConfirmSettings radios follow a changed app value", async () => {
   const m = await mount(h(kit.ConfirmSettings, { types: ["move"], app: {} }));
   const checked = () => m.box.querySelector("input[name='confirm.move']:checked").value;
