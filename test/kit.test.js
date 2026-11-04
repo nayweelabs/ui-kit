@@ -41,6 +41,8 @@ class El {
   addEventListener() {}
   focus() { El.focused = this; }
   showModal() { this.open = true; }
+  close(v) { this.returnValue = v; this.open = false; }
+  click() { if (this.onclick) this.onclick({ preventDefault() {} }); }
   remove() { if (this.parent) { this.parent.children.splice(this.parent.children.indexOf(this), 1); this.parent = null; } }
   appendChild(c) {
     if (c.parent) c.parent.children.splice(c.parent.children.indexOf(c), 1);
@@ -206,11 +208,10 @@ function postForm(attrs, children) {
   return form;
 }
 
-// answer closes the kit's confirm dialog the way the viewer did: "confirm", "cancel", or "" for Escape.
+// answer closes the kit's confirm dialog the way the viewer did: "confirm" clicks the yes button, "cancel" or "" (Escape) closes it.
 function answer(dlg, value) {
-  dlg.returnValue = value;
-  dlg.open = false;
-  dlg.onclose();
+  if (value === "confirm") return dlg.querySelector("button[value='confirm']").click();
+  dlg.close(value);
 }
 
 test("a button marked data-ui-confirm asks in the kit's dialog first, and Cancel or Escape sends nothing", () => {
@@ -247,6 +248,18 @@ test("confirm sends the form once, with the button's name and value; a form with
   assert.equal(form.querySelector("input[name=confirm]"), null, "a form sent again later does not carry it");
   assert.equal(p.fire("submit", form, { submitter: btn }).prevented, true, "the next press asks again");
   assert.equal(p.fire("submit", plain).prevented, undefined);
+});
+
+test("yes sends the form inside its own click, so a form with target=_blank opens its tab", () => {
+  const form = postForm({ action: "/product/kanban/open/design", target: "_blank", "data-ui-confirm": "Open kanban's e-designer board?" }, []);
+  const p = page("http://localhost/product/kanban", [form]);
+  form.page = p;
+  p.fire("submit", form);
+  const dlg = form.parent.querySelector("dialog");
+  dlg.querySelector("button[value='confirm']").click();
+  assert.deepEqual(form.sent, [["confirm=yes"]], "sent before the click returns, not later from the close");
+  assert.equal(dlg.open, false);
+  assert.equal(dlg.returnValue, "confirm");
 });
 
 test("Remember my answer sends confirm=remember with the form, so the server can remember", () => {
@@ -351,8 +364,6 @@ test("Enter in the name field confirms once the name is typed, spaces around it 
   p.fire("submit", form, { submitter: btn });
   const dlg = form.parent.querySelector("dialog");
   const typed = dlg.querySelector("[data-ui-name] input");
-  const yes = dlg.querySelector("button[value='confirm']");
-  yes.click = () => answer(dlg, "confirm");
   const enter = () => { const k = { key: "Enter", preventDefault() { k.prevented = true; } }; typed.onkeydown(k); return k; };
   typed.value = "20261102-e47";
   typed.oninput();

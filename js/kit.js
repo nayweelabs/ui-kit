@@ -415,8 +415,11 @@
       if (!yes.disabled) yes.click();
     };
     dlg.returnValue = "";
-    dlg.onclose = function () {
-      if (dlg.returnValue !== "confirm" || typed.value.trim() !== name && name) return;
+    // Yes sends inside its own click: a form with target="_blank" opens its tab only while the click lasts, and a browser drops one opened later, from the dialog's close.
+    yes.onclick = function (k) {
+      k.preventDefault();
+      if (yes.disabled || typed.value.trim() !== name && name) return;
+      dlg.close("confirm");
       send(form, submitter, !remember.hidden && box.checked);
     };
     dlg.showModal();
