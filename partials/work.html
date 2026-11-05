@@ -58,7 +58,9 @@
 
 {{define "ui/section-frame" -}}
 <section class="ui-section"{{with .ID}} id="{{.}}" aria-labelledby="{{.}}-title"{{end}}{{if .Loading}} aria-busy="true"{{end}}>
-<div class="ui-section-head"><h2 class="ui-section-title"{{with .ID}} id="{{.}}-title"{{end}}>{{.Title}}{{with .Count}} {{template "ui/count" .}}{{end}}</h2>{{with .Why}}<span class="ui-why">{{.}}</span>{{end}}{{if or .Again .Read}}<span class="ui-section-tools" data-ui-tools>{{template "ui/read-at" .Read}}<span class="ui-again-done" role="status" aria-live="polite"></span>{{with .Again}}<a class="ui-iconbtn" href="{{.}}" data-ui-again data-ui-carry="fresh" aria-label="Read {{$.Title}} again" title="Read {{$.Title}} again">{{template "ui/icon" "refresh"}}</a>{{end}}</span>{{end}}</div>
+<div class="ui-section-head">{{if and .Fold .ID}}<button class="ui-fold-btn" type="button" data-ui-fold aria-expanded="true" aria-controls="{{.ID}}-body" title="Fold or open {{.Title}}">{{template "ui/icon" "chevron"}}<span class="ui-sr">Fold or open {{.Title}}</span></button>{{end}}<h2 class="ui-section-title"{{with .ID}} id="{{.}}-title"{{end}}>{{.Title}}{{with .Count}} {{template "ui/count" .}}{{end}}</h2>{{with .Why}}<span class="ui-why">{{.}}</span>{{end}}{{if or .Again .Read}}<span class="ui-section-tools" data-ui-tools>{{template "ui/read-at" .Read}}<span class="ui-again-done" role="status" aria-live="polite"></span>{{with .Again}}<a class="ui-iconbtn" href="{{.}}" data-ui-again data-ui-carry="fresh" aria-label="Read {{$.Title}} again" title="Read {{$.Title}} again">{{template "ui/icon" "refresh"}}</a>{{end}}</span>{{end}}</div>
+{{- if and .Fold .ID}}
+<div class="ui-section-body" id="{{.ID}}-body">{{end}}
 {{- if .Loading}}
 {{template "ui/skeleton" (skeleton "rows" 3)}}
 {{- with .Full}}
@@ -74,6 +76,8 @@
 {{- with .More}}
 <a class="ui-section-more" href="{{.Href}}"{{ext .Href}}>{{.Label}}</a>{{end}}
 {{- end}}
+{{- if and .Fold .ID}}
+</div>{{end}}
 </section>
 {{- end}}
 

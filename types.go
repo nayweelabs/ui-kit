@@ -224,6 +224,7 @@ type Section struct {
 	Full    string
 	Again   string // the page with this section's sources read again (fresh=1): a Read again button in the head
 	Read    *ReadAt
+	Fold    bool // with an ID: a button in the head folds the section to its head; kit.js keeps each section's choice
 }
 
 // ReadAt is when a section's or a page's sources were last read ("ui/read-at"): Text is shown ("read 10:42"),

@@ -399,3 +399,18 @@ test("an app's own element with the id ui-confirm is never taken for the kit's d
   assert.equal(theirs.open, undefined, "the app's element is left alone");
   assert.equal(theirs.querySelector(".ui-dialog-title").textContent, "");
 });
+
+test("the fold button folds its section to the head and opens it again, and says which in aria-expanded", () => {
+  const btn = new El("button", { type: "button", "data-ui-fold": "", "aria-expanded": "true", "aria-controls": "sec-body" });
+  const icon = new El("svg");
+  btn.appendChild(icon);
+  const head = new El("div", { class: "ui-section-head" }, [btn]);
+  const sec = new El("section", { class: "ui-section", id: "sec" }, [head, new El("div", { class: "ui-section-body", id: "sec-body" })]);
+  const p = page("http://localhost/usages", [sec]);
+  p.fire("click", icon);
+  assert.ok(sec.hasAttribute("data-ui-folded"), "a click on the chevron folds it");
+  assert.equal(btn.getAttribute("aria-expanded"), "false");
+  p.fire("click", btn);
+  assert.equal(sec.hasAttribute("data-ui-folded"), false, "a second click opens it");
+  assert.equal(btn.getAttribute("aria-expanded"), "true");
+});
