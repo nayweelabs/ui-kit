@@ -3,37 +3,73 @@ name: ci
 
 on:
   pull_request:
-  workflow_call:
 
 permissions:
   contents: read
 
+# A newer push cancels the older run of the same pull request.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   go:
-    runs-on: ubuntu-latest
+    name: local · linux · go
+    runs-on: [self-hosted, eg-linux]
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+      # A PR that changes only cards, designs or Markdown skips the tests; the check still reports.
+      - id: scope
+        run: |
+          files=$(git diff --name-only HEAD^1 HEAD) || files=all
+          if printf '%s\n' "$files" | grep -qvE '^(\.kanban/|\.designer/)|\.md$'; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Only cards, designs or Markdown changed: no tests."
+          fi
       - uses: actions/setup-go@v6
+        if: steps.scope.outputs.code == 'true'
         with:
           go-version-file: go.mod
       - name: vet
+        if: steps.scope.outputs.code == 'true'
         run: go vet ./...
       - name: gofmt
+        if: steps.scope.outputs.code == 'true'
         run: test -z "$(gofmt -l .)"
       - name: test
+        if: steps.scope.outputs.code == 'true'
         run: go test -race -count=1 ./...
       - name: tokens.css is generated from tokens.json
+        if: steps.scope.outputs.code == 'true'
         run: |
           go run ./cmd/ui-kit-tokens
           git diff --exit-code -- css/tokens.css || { echo "css/tokens.css is stale: run go run ./cmd/ui-kit-tokens and commit it"; exit 1; }
 
   react:
-    runs-on: ubuntu-latest
+    name: local · linux · react
+    runs-on: [self-hosted, eg-linux]
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+      # A PR that changes only cards, designs or Markdown skips the tests; the check still reports.
+      - id: scope
+        run: |
+          files=$(git diff --name-only HEAD^1 HEAD) || files=all
+          if printf '%s\n' "$files" | grep -qvE '^(\.kanban/|\.designer/)|\.md$'; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Only cards, designs or Markdown changed: no tests."
+          fi
       - uses: actions/setup-node@v5
+        if: steps.scope.outputs.code == 'true'
         with:
           node-version: lts/*
           cache: npm
       - run: npm ci
+        if: steps.scope.outputs.code == 'true'
       - run: npm test
+        if: steps.scope.outputs.code == 'true'
