@@ -92,6 +92,20 @@
     });
   }
 
+  // Section fold: [data-ui-fold] in a section's head folds the section to its head; each section's choice is kept by its id.
+  function foldSection(sec, folded) {
+    var btn = sec.querySelector("[data-ui-fold]");
+    if (folded) sec.setAttribute("data-ui-folded", ""); else sec.removeAttribute("data-ui-folded");
+    if (btn) btn.setAttribute("aria-expanded", String(!folded));
+  }
+
+  function initSectionFolds(within) {
+    (within || document).querySelectorAll("[data-ui-fold]").forEach(function (b) {
+      var sec = b.closest(".ui-section");
+      if (sec && sec.id && store("fold.section." + sec.id) === "closed") foldSection(sec, true);
+    });
+  }
+
   // Tabs: arrow keys move between tabs; a tab without an address switches its panel.
   function selectTab(tab) {
     var list = tab.closest('[role="tablist"]');
@@ -195,6 +209,15 @@
     if (!t.closest("dialog")) closePops(t, false);
     if (lightClick(t, e)) return;
     if (t.closest("[data-ui-theme-toggle]")) return toggleTheme();
+    var fold = t.closest("[data-ui-fold]");
+    if (fold) {
+      var sec = fold.closest(".ui-section");
+      if (!sec) return;
+      var folded = !sec.hasAttribute("data-ui-folded");
+      foldSection(sec, folded);
+      if (sec.id) store("fold.section." + sec.id, folded ? "closed" : "open");
+      return;
+    }
 
     var again = t.closest(".ui-lazy [data-ui-again]");
     if (again && window.fetch) {
@@ -337,6 +360,7 @@
         readAt(box, res.headers && res.headers.get("UI-Read-At"));
         if (fresh) said(box, "Updated");
         initFolds(box);
+        initSectionFolds(box);
         carry(box);
       });
     }, function (err) {
@@ -492,6 +516,7 @@
   function init() {
     initViews();
     initFolds();
+    initSectionFolds();
     initLazy();
     document.addEventListener("click", onClick);
     document.addEventListener("keydown", tabKey);

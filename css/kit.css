@@ -193,6 +193,12 @@ a.ui-count:hover{box-shadow:0 0 0 2px var(--ui-focus-soft)}
 .ui-section-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--ui-space-2) var(--ui-space-3)}
 .ui-section-title{font-size:var(--ui-text-lg);font-weight:650;display:flex;align-items:center;gap:8px}
 .ui-why{font-size:var(--ui-text-sm);color:var(--ui-muted);margin-left:auto}
+.ui-fold-btn{display:inline-grid;place-items:center;width:24px;height:24px;padding:0;margin-right:calc(-1 * var(--ui-space-1));border:0;border-radius:var(--ui-radius-md);background:none;color:var(--ui-muted);cursor:pointer;align-self:center}
+.ui-fold-btn:hover{color:var(--ui-ink);background:var(--ui-surface)}
+.ui-fold-btn svg{width:16px;height:16px;transition:transform .15s}
+.ui-section[data-ui-folded] .ui-fold-btn svg{transform:rotate(-90deg)}
+.ui-section[data-ui-folded]>.ui-section-body{display:none}
+@media (prefers-reduced-motion:reduce){.ui-fold-btn svg{transition:none}}
 .ui-section-tools{display:inline-flex;align-items:center;gap:var(--ui-space-2);margin-left:auto;align-self:center}
 .ui-why+.ui-section-tools{margin-left:0}
 .ui-section-tools [data-ui-again]{width:28px;height:28px}
