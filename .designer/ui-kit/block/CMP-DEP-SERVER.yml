@@ -1,0 +1,13 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEP-SERVER
+  title: The app's HTTP server
+spec:
+  place:
+    views:
+      - deployment
+    group: GRP-DEP-GOBIN
+  caption: |
+    pages drawn with `ui/…`; `/ui-kit/…`
+    from `kit.Assets()`, `Cache-Control: no-cache`

@@ -1,0 +1,13 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-GOAPP--api--CMP-UIKIT
+spec:
+  from: CMP-GOAPP
+  to: CMP-UIKIT
+  label: api
+  sides: l-r
+  badge:
+    text: "3"
+    description: |
+      A Go app imports package `kit` at a release tag (go.mod, pinned by go.sum). It mounts `kit.Assets()` at `/ui-kit/`, parses its views into `kit.Templates()`, fills the types of `types.go`, and checks every change with `kit.Confirmed`.

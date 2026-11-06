@@ -1,0 +1,17 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-TYPES
+  title: Part data
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-KIT
+  code:
+    implements: types.go
+  caption: |
+    the Go type each partial takes:
+    `kit.Page`, `kit.Section`, `kit.PR`, …
+  description: |
+    The server fills every value, tone and label; the partial only draws it.

@@ -1,0 +1,23 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-TEMPLATES
+  title: Templates
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-KIT
+  code:
+    implements: kit.go
+  contract:
+    operations:
+      - Templates
+      - Funcs
+      - Render
+      - HTML
+  caption: |
+    `kit.Templates()`: every `ui/…` partial
+    and `kit.Funcs()`; `kit.HTML`, `kit.Render`
+  description: |
+    Parses partials/*.html once with the kit's functions (`ext`, `pill`, `lazySection`, `failedSection`, …) and hands each app a clone to parse its own views into.

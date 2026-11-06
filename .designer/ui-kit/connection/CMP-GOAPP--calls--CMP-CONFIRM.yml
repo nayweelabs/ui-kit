@@ -1,0 +1,13 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-GOAPP--calls--CMP-CONFIRM
+spec:
+  from: CMP-GOAPP
+  to: CMP-CONFIRM
+  label: calls
+  sides: r-l
+  badge:
+    text: "3"
+    description: |
+      Before a change: `kit.Confirmed(r)`; without the yes, `kit.RefuseUnconfirmed(w)` answers 428 and nothing is changed.

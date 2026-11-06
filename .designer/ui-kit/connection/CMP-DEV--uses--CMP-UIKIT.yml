@@ -1,0 +1,13 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEV--uses--CMP-UIKIT
+spec:
+  from: CMP-DEV
+  to: CMP-UIKIT
+  label: uses
+  sides: r-l
+  badge:
+    text: "1"
+    description: |
+      The developer reads the README, changes `tokens/tokens.json` or a partial with its class and wrapper, runs `go run ./cmd/ui-kit-tokens` and `go test -run Golden -update`.

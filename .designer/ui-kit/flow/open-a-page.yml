@@ -1,0 +1,49 @@
+apiVersion: core/design/v2
+kind: Flow
+metadata:
+  id: open-a-page
+  title: A viewer opens a page of a Go app
+spec:
+  entry:
+    method: GET
+    path: /
+  steps:
+    - id: ask
+      at: CMP-BROWSER
+      phase: caller
+      label: The viewer opens a page of the app
+    - id: build
+      at: CMP-GOAPP
+      phase: pre
+      label: The app's handler fills a kit.Page
+      note: The server works out every value, tone, label, filter and order; the kit decides none of it.
+    - id: execute
+      at: CMP-TEMPLATES
+      phase: execute
+      label: ExecuteTemplate "ui/shell" on the set from kit.Templates()
+    - id: draw
+      at: CMP-PARTIALS
+      phase: execute
+      label: ui/shell draws the bar, header, sections and parts
+      note: ui/assets in the head links /ui-kit/css/kit.css and /ui-kit/js/kit.js, without defer.
+    - id: page
+      at: CMP-BROWSER
+      phase: return
+      label: The whole page arrives, readable without JavaScript
+    - id: files
+      at: CMP-GOAPP
+      phase: pre
+      label: GET /ui-kit/css/kit.css and /ui-kit/js/kit.js
+    - id: serve
+      at: CMP-ASSETS
+      phase: execute
+      label: kit.Assets() serves the file from the embedded file system
+      note: Only files under css/, fonts/ and js/ are served, with Cache-Control no-cache; anything else is 404.
+    - id: css
+      at: CMP-KITCSS
+      phase: execute
+      label: kit.css pulls in tokens.css and the fonts
+    - id: script
+      at: CMP-KITJS
+      phase: return
+      label: kit.js sets the theme before the first paint and wires the parts

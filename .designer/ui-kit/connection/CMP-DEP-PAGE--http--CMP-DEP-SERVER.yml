@@ -1,0 +1,13 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-PAGE--http--CMP-DEP-SERVER
+spec:
+  from: CMP-DEP-PAGE
+  to: CMP-DEP-SERVER
+  label: http
+  sides: l-r
+  badge:
+    text: "5"
+    description: |
+      kit.js fetches lazy sections and lights from the same origin (`credentials: same-origin`) and sends a confirmed form with `confirm=yes`; the server still checks it with `kit.Confirmed`.

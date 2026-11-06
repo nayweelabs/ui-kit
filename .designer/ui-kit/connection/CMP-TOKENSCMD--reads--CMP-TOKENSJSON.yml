@@ -1,0 +1,8 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-TOKENSCMD--reads--CMP-TOKENSJSON
+spec:
+  from: CMP-TOKENSCMD
+  to: CMP-TOKENSJSON
+  label: reads

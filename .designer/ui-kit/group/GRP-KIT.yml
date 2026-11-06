@@ -1,0 +1,9 @@
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-KIT
+  title: package kit, the Go API
+spec:
+  order: 1
+  ui-design:
+    look: accent

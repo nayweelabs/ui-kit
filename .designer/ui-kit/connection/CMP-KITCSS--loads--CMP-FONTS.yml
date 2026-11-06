@@ -1,0 +1,8 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-KITCSS--loads--CMP-FONTS
+spec:
+  from: CMP-KITCSS
+  to: CMP-FONTS
+  label: loads

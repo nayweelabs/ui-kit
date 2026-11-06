@@ -1,0 +1,9 @@
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-DEP-VITE
+  title: A Vite app's bundle
+spec:
+  order: 8
+  ui-design:
+    look: soft

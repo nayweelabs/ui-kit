@@ -1,0 +1,9 @@
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-REACT
+  title: React wrappers
+spec:
+  order: 4
+  ui-design:
+    look: soft

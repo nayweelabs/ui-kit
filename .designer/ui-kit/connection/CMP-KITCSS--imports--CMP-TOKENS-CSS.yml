@@ -1,9 +1,0 @@
-apiVersion: "core/design/v2"
-kind: "Connection"
-metadata:
-  id: "CMP-KITCSS--imports--CMP-TOKENS-CSS"
-spec:
-  from: "CMP-KITCSS"
-  to: "CMP-TOKENS-CSS"
-  label: "imports"
-

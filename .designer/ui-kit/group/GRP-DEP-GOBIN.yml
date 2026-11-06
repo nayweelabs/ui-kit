@@ -1,0 +1,9 @@
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-DEP-GOBIN
+  title: A Go app's binary, e.g. e-control-room
+spec:
+  order: 7
+  ui-design:
+    look: accent

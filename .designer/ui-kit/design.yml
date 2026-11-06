@@ -2,6 +2,73 @@ apiVersion: core/design/v2
 kind: Design
 metadata:
   id: ui-kit
-  title: ui-kit
+  title: ui-kit, the org's shared UI kit, as main has it today
 spec:
-  description: "The org's shared UI kit: tokens, shell and parts every web app takes from one place."
+  purpose: product
+  description: |
+    ui-kit is a library: tokens, the page shell and the parts every web app of the org draws from one place. Go apps import package `kit` (partials and embedded files); Vite apps install the npm package from a release tag. Both load the same `kit.css` and `kit.js`.
+
+    Four views of the current version on main, drawn from the code (`kit.go`, `types.go`, `confirm.go`, `partials/`, `css/`, `js/kit.js`, `react/`, `tokens/`, `preview/`, `cmd/`), the README, CLAUDE.md, `constitution/` and `.github/workflows/`:
+    - **Context**: the kit as one box, who uses it and what it exchanges (technical context).
+    - **Building blocks**: the parts of the module and what calls, embeds or loads what.
+    - **Runtime**: four flows: opening a page, a lazy section, a change that asks first, regenerating the tokens.
+    - **Deployment**: where the kit ends up: compiled into each Go app's binary and served by it, bundled by a Vite app, run in the viewer's browser.
+
+    How products connect to each other is the org's design (constitution, view product-family), not this one.
+  board:
+    links:
+      uses:
+        color: muted
+        width: 1.4
+        label: uses
+        meaning: a person works with it
+      api:
+        color: accent
+        width: 1.6
+        label: api
+        meaning: code takes the kit as a dependency at a release tag
+      data:
+        color: teal
+        width: 1.4
+        label: data
+        meaning: files or lists travel between them
+      calls:
+        color: ink
+        width: 1.4
+        label: calls
+        meaning: Go code calls or imports another part
+      embeds:
+        color: violet
+        width: 1.2
+        label: embeds
+        meaning: a Go part carries files inside the binary with go:embed
+      loads:
+        color: blue
+        width: 1.2
+        label: loads
+        meaning: a page or stylesheet pulls a file in (link, script, @import, url())
+      reads:
+        color: muted
+        width: 1.2
+        label: reads
+        meaning: a command reads a file from disk
+      writes:
+        color: warn
+        width: 1.2
+        label: writes
+        meaning: a command writes a file
+      http:
+        color: sec
+        width: 1.6
+        label: http
+        meaning: an HTTP request and its answer
+      module:
+        color: accent
+        width: 1.4
+        label: module
+        meaning: a build fetches the kit at a release tag
+      release:
+        color: muted
+        width: 1.2
+        label: release
+        meaning: a workflow makes a release tag

@@ -1,0 +1,25 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-CONFIRM
+  title: Asking first
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-KIT
+  code:
+    implements: confirm.go
+  contract:
+    operations:
+      - ResolveConfirm
+      - Button.Ask
+      - Confirmed
+      - RefuseUnconfirmed
+      - ConfirmChoices
+      - ActionTypes
+  caption: |
+    `ResolveConfirm`, `Button.Ask`,
+    `Confirmed`, `RefuseUnconfirmed` (428)
+  description: |
+    How a change asks before it is made: the action types, the three styles (name, yes-no, never), the server's check of the yes, and the Settings rows.

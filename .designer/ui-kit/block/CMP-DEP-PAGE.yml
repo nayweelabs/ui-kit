@@ -1,0 +1,13 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEP-PAGE
+  title: The page, kit.css and kit.js
+spec:
+  place:
+    views:
+      - deployment
+    group: GRP-DEP-BROWSER
+  caption: |
+    `localStorage` keeps theme, view and folds;
+    works without JavaScript

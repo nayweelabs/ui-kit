@@ -1,0 +1,9 @@
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-DEP-GITHUB
+  title: GitHub, ElderlyGate/ui-kit
+spec:
+  order: 6
+  ui-design:
+    look: soft

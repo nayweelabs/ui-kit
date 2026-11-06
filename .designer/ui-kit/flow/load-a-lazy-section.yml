@@ -1,0 +1,33 @@
+apiVersion: core/design/v2
+kind: Flow
+metadata:
+  id: load-a-lazy-section
+  title: A slow section loads on its own
+spec:
+  entry:
+    method: GET
+    path: /{section-src}
+  steps:
+    - id: skeleton
+      at: CMP-BROWSER
+      phase: caller
+      label: The shell arrived at once, with the section's skeleton
+      note: The app gave kit.Section a Src, the address of the section's own HTML.
+    - id: fetch
+      at: CMP-KITJS
+      phase: pre
+      label: kit.js fetches every lazy section's data-ui-src, in parallel
+    - id: read
+      at: CMP-GOAPP
+      phase: execute
+      label: The app reads the section's sources
+      note: It answers with the UI-Read-At header (RFC 3339), the time its sources were really read.
+    - id: draw
+      at: CMP-TEMPLATES
+      phase: execute
+      label: kit.HTML draws ui/section
+    - id: place
+      at: CMP-KITJS
+      phase: return
+      label: kit.js puts the section in its place and fills ui/read-at
+      note: A fetch that fails shows the section's own error box with Retry; the rest of the page stays.

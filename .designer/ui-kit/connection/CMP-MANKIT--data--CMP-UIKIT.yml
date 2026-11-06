@@ -1,0 +1,13 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-MANKIT--data--CMP-UIKIT
+spec:
+  from: CMP-MANKIT
+  to: CMP-UIKIT
+  label: data
+  sides: l-r
+  badge:
+    text: "7"
+    description: |
+      mankit's action types are copied by hand into `testdata/mankit-action-types.txt`; a test checks Go, React and that copy name the same types in the same order. ui-kit does not import mankit.

@@ -1,0 +1,14 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-TOKENSJSON
+  title: tokens.json
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-TOKENS
+  code:
+    implements: tokens/tokens.json
+  caption: |
+    every token, written once

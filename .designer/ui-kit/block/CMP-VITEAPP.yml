@@ -1,0 +1,18 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-VITEAPP
+  title: A Vite web app
+spec:
+  place:
+    views:
+      - context
+      - structure
+    role: actor
+  ui-design:
+    look: soft
+  caption: |
+    installs `@elderlygate/ui-kit` from a tag
+    imports `css/kit.css` and `react`
+  description: |
+    How a Vite app takes the kit, as the README says. No Vite app in the org's checkouts depends on the package today.

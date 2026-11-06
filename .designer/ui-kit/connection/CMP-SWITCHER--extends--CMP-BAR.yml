@@ -1,9 +1,0 @@
-apiVersion: "core/design/v2"
-kind: "Connection"
-metadata:
-  id: "CMP-SWITCHER--extends--CMP-BAR"
-spec:
-  from: "CMP-SWITCHER"
-  to: "CMP-BAR"
-  label: "extends"
-

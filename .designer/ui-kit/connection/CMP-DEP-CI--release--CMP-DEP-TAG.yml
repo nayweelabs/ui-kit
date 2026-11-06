@@ -1,0 +1,13 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-CI--release--CMP-DEP-TAG
+spec:
+  from: CMP-DEP-CI
+  to: CMP-DEP-TAG
+  label: release
+  sides: b-t
+  badge:
+    text: "1"
+    description: |
+      On a merge to main, release.yml (the org's shared release workflow, `build: none`) runs after the checks and makes the next tag from the commit types; a red check means no release.

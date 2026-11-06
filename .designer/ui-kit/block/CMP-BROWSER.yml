@@ -1,0 +1,16 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-BROWSER
+  title: The viewer's browser
+spec:
+  place:
+    views:
+      - context
+      - structure
+    role: actor
+  ui-design:
+    look: soft
+  caption: |
+    draws the page with `kit.css`,
+    runs `kit.js`; works without it too

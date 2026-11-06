@@ -1,0 +1,14 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-TOKENSPKG
+  title: package tokens
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-TOKENS
+  code:
+    implements: tokens/tokens.go
+  caption: |
+    `Parse`, `Default`, `Set.CSS()`

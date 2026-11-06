@@ -1,0 +1,14 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-PREVIEWCMD
+  title: ui-kit-preview
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-PREVIEW
+  code:
+    implements: cmd/ui-kit-preview/main.go
+  caption: |
+    `127.0.0.1:7790`, localhost only

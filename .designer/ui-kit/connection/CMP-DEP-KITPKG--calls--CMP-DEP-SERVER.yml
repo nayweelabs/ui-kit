@@ -1,0 +1,8 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-KITPKG--calls--CMP-DEP-SERVER
+spec:
+  from: CMP-DEP-KITPKG
+  to: CMP-DEP-SERVER
+  label: calls

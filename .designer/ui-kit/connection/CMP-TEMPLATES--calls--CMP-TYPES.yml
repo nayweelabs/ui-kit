@@ -1,0 +1,8 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-TEMPLATES--calls--CMP-TYPES
+spec:
+  from: CMP-TEMPLATES
+  to: CMP-TYPES
+  label: calls

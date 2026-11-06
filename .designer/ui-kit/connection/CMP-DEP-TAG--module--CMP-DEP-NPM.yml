@@ -1,0 +1,13 @@
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-TAG--module--CMP-DEP-NPM
+spec:
+  from: CMP-DEP-TAG
+  to: CMP-DEP-NPM
+  label: module
+  sides: r-l
+  badge:
+    text: "3"
+    description: |
+      npm installs the package from `github:ElderlyGate/ui-kit#<tag>`, a git tag, no registry.

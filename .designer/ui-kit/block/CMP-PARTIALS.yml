@@ -1,0 +1,17 @@
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-PARTIALS
+  title: Partials
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-FILES
+  code:
+    implements: partials/shell.html
+  caption: |
+    `ui/shell` and every part, html/template;
+    `ui/assets` links kit.css and kit.js
+  description: |
+    Every partial is in partials/*.html (basics, controls, light, product, shell, work). The binding names shell.html, which holds ui/shell and ui/assets, since the code check reads files, not folders.

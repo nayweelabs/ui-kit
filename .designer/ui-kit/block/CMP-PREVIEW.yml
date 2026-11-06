@@ -1,16 +1,17 @@
-apiVersion: "core/design/v2"
-kind: "Block"
+apiVersion: core/design/v2
+kind: Block
 metadata:
-  id: "CMP-PREVIEW"
-  title: "Preview gallery"
+  id: CMP-PREVIEW
+  title: Gallery
 spec:
   place:
-    group: "GRP-DELIVERY"
-    release: "v0.1.0"
-  caption:
-    - "`go run ./cmd/ui-kit-preview`"
-    - "every part, every state, both themes"
-  description: "What the owner looks at before a release. The same cases feed the golden tests. Example pages: Focus, Products, Left rail."
+    views:
+      - structure
+    group: GRP-PREVIEW
   code:
-    implements: "preview/preview.go"
-
+    implements: preview/preview.go
+  caption: |
+    every case in both themes;
+    `/focus`, `/products`, `/admin`, `/lazy`
+  description: |
+    preview/cases.go lists every part in every state; the golden tests in testdata/golden/ check the same cases.
