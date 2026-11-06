@@ -1,9 +1,0 @@
-apiVersion: core/design/v2
-kind: Connection
-metadata:
-  id: CMP-DEV--uses--CMP-TOKENSCMD
-spec:
-  from: CMP-DEV
-  to: CMP-TOKENSCMD
-  label: uses
-  sides: b-t

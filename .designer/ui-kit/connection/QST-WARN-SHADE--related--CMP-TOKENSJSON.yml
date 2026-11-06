@@ -1,8 +1,0 @@
-apiVersion: core/design/v2
-kind: Connection
-metadata:
-  id: QST-WARN-SHADE--related--CMP-TOKENSJSON
-spec:
-  from: QST-WARN-SHADE
-  to: CMP-TOKENSJSON
-  label: related

@@ -1,9 +1,0 @@
-apiVersion: core/design/v2
-kind: Group
-metadata:
-  id: GRP-DEP-DEV
-  title: A developer's machine, Linux or macOS
-spec:
-  order: 10
-  ui-design:
-    look: soft

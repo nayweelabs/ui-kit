@@ -1,9 +1,0 @@
-apiVersion: core/design/v2
-kind: Group
-metadata:
-  id: GRP-PREVIEW
-  title: Preview gallery
-spec:
-  order: 5
-  ui-design:
-    look: soft

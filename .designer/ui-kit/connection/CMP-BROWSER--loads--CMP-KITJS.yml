@@ -1,9 +1,0 @@
-apiVersion: core/design/v2
-kind: Connection
-metadata:
-  id: CMP-BROWSER--loads--CMP-KITJS
-spec:
-  from: CMP-BROWSER
-  to: CMP-KITJS
-  label: loads
-  sides: r-t

@@ -1,9 +1,0 @@
-apiVersion: core/design/v2
-kind: Connection
-metadata:
-  id: CMP-DEP-NPM--loads--CMP-DEP-PAGE
-spec:
-  from: CMP-DEP-NPM
-  to: CMP-DEP-PAGE
-  label: loads
-  sides: r-b

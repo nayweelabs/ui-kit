@@ -1,8 +1,0 @@
-apiVersion: core/design/v2
-kind: Connection
-metadata:
-  id: CMP-ASSETS--embeds--CMP-KITJS
-spec:
-  from: CMP-ASSETS
-  to: CMP-KITJS
-  label: embeds

@@ -1,9 +1,0 @@
-apiVersion: core/design/v2
-kind: Connection
-metadata:
-  id: CMP-PREVIEWCMD--calls--CMP-PREVIEW
-spec:
-  from: CMP-PREVIEWCMD
-  to: CMP-PREVIEW
-  label: calls
-  sides: l-r

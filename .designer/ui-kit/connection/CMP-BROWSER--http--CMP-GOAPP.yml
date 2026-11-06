@@ -1,9 +1,0 @@
-apiVersion: core/design/v2
-kind: Connection
-metadata:
-  id: CMP-BROWSER--http--CMP-GOAPP
-spec:
-  from: CMP-BROWSER
-  to: CMP-GOAPP
-  label: http
-  sides: b-t
