@@ -1,9 +1,0 @@
-apiVersion: "core/design/v2"
-kind: "Connection"
-metadata:
-  id: "CMP-REACT--draws with--CMP-KITCSS"
-spec:
-  from: "CMP-REACT"
-  to: "CMP-KITCSS"
-  label: "draws with"
-

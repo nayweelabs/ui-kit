@@ -1,0 +1,149 @@
+version: 2
+views:
+  structure:
+    boxes:
+      CMP-ASSETS:
+        x: 124
+        y: 304
+      CMP-BROWSER:
+        x: 1372
+        y: 0
+      CMP-CONFIRM:
+        x: 416
+        y: 304
+      CMP-DEV:
+        x: 1664
+        y: 0
+      CMP-FONTS:
+        x: 124
+        y: 1221
+      CMP-GOAPP:
+        x: 1956
+        y: 0
+      CMP-KITCSS:
+        x: 416
+        y: 1221
+      CMP-KITJS:
+        x: 708
+        y: 1221
+      CMP-PARTIALS:
+        x: 270
+        y: 1393
+      CMP-PREVIEW:
+        x: 124
+        y: 3776
+      CMP-PREVIEWCMD:
+        x: 416
+        y: 3776
+      CMP-REACT:
+        x: 124
+        y: 3039
+      CMP-TEMPLATES:
+        x: 124
+        y: 480
+      CMP-TOKENSCMD:
+        x: 124
+        y: 2130
+      CMP-TOKENSCSS:
+        x: 562
+        y: 1393
+      CMP-TOKENSJSON:
+        x: 416
+        y: 2130
+      CMP-TOKENSPKG:
+        x: 270
+        y: 2302
+      CMP-TYPES:
+        x: 416
+        y: 480
+      CMP-VITEAPP:
+        x: 2248
+        y: 0
+      GRP-FILES:
+        x: 0
+        y: 917
+      GRP-KIT:
+        x: 0
+        y: 0
+      GRP-PREVIEW:
+        x: 0
+        y: 3472
+      GRP-REACT:
+        x: 0
+        y: 2735
+      GRP-TOKENS:
+        x: 0
+        y: 1826
+      QST-WARN-SHADE:
+        x: 2695
+        y: 0
+  context:
+    boxes:
+      CMP-BROWSER:
+        x: 0
+        y: 0
+      CMP-DEV:
+        x: 292
+        y: 0
+      CMP-GITHUB:
+        x: 584
+        y: 0
+      CMP-GOAPP:
+        x: 876
+        y: 0
+      CMP-MANKIT:
+        x: 1168
+        y: 0
+      CMP-OWNER:
+        x: 1460
+        y: 0
+      CMP-UIKIT:
+        x: 0
+        y: 172
+      CMP-VITEAPP:
+        x: 292
+        y: 172
+      QST-PRODUCT-RECORD:
+        x: 1845
+        y: 0
+  deployment:
+    boxes:
+      CMP-DEP-CI:
+        x: 124
+        y: 304
+      CMP-DEP-KITPKG:
+        x: 124
+        y: 1045
+      CMP-DEP-NPM:
+        x: 124
+        y: 1803
+      CMP-DEP-PAGE:
+        x: 124
+        y: 2540
+      CMP-DEP-PREVIEW:
+        x: 124
+        y: 3285
+      CMP-DEP-SERVER:
+        x: 416
+        y: 1045
+      CMP-DEP-TAG:
+        x: 416
+        y: 304
+      CMP-DEP-TOKENS:
+        x: 416
+        y: 3285
+      GRP-DEP-BROWSER:
+        x: 0
+        y: 2236
+      GRP-DEP-DEV:
+        x: 0
+        y: 2981
+      GRP-DEP-GITHUB:
+        x: 0
+        y: 0
+      GRP-DEP-GOBIN:
+        x: 0
+        y: 741
+      GRP-DEP-VITE:
+        x: 0
+        y: 1499

@@ -1,9 +1,0 @@
-apiVersion: "core/design/v2"
-kind: "Connection"
-metadata:
-  id: "CMP-SECTION--uses--CMP-ERROR"
-spec:
-  from: "CMP-SECTION"
-  to: "CMP-ERROR"
-  label: "uses"
-

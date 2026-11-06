@@ -1,7 +1,0 @@
-apiVersion: core/design/v2
-kind: Design
-metadata:
-  id: ui-kit
-  title: ui-kit
-spec:
-  description: "The org's shared UI kit: tokens, shell and parts every web app takes from one place."

@@ -1,9 +1,0 @@
-apiVersion: "core/design/v2"
-kind: "Connection"
-metadata:
-  id: "CMP-SHELL--uses--CMP-HEAD"
-spec:
-  from: "CMP-SHELL"
-  to: "CMP-HEAD"
-  label: "uses"
-

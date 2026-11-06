@@ -1,0 +1,1437 @@
+--- # design.yml
+apiVersion: core/design/v2
+kind: Design
+metadata:
+  id: ui-kit
+  title: ui-kit, the org's shared UI kit, as main has it today
+spec:
+  purpose: product
+  description: |
+    ui-kit is a library: tokens, the page shell and the parts every web app of the org draws from one place. Go apps import package `kit` (partials and embedded files); Vite apps install the npm package from a release tag. Both load the same `kit.css` and `kit.js`.
+
+    Four views of the current version on main, drawn from the code (`kit.go`, `types.go`, `confirm.go`, `partials/`, `css/`, `js/kit.js`, `react/`, `tokens/`, `preview/`, `cmd/`), the README, CLAUDE.md, `constitution/` and `.github/workflows/`:
+    - **Context**: the kit as one box, who uses it and what it exchanges (technical context).
+    - **Building blocks**: the parts of the module and what calls, embeds or loads what.
+    - **Runtime**: four flows: opening a page, a lazy section, a change that asks first, regenerating the tokens.
+    - **Deployment**: where the kit ends up: compiled into each Go app's binary and served by it, bundled by a Vite app, run in the viewer's browser.
+
+    How products connect to each other is the org's design (constitution, view product-family), not this one.
+  board:
+    display:
+      spacing:
+        members: 4
+        groups: 3
+        components: 3
+        tidy: 2
+    links:
+      uses:
+        color: muted
+        width: 1.4
+        label: uses
+        meaning: a person works with it
+      api:
+        color: accent
+        width: 1.6
+        label: api
+        meaning: code takes the kit as a dependency at a release tag
+      data:
+        color: teal
+        width: 1.4
+        label: data
+        meaning: files or lists travel between them
+      calls:
+        color: ink
+        width: 1.4
+        label: calls
+        meaning: Go code calls or imports another part
+      embeds:
+        color: violet
+        width: 1.2
+        label: embeds
+        meaning: a Go part carries files inside the binary with go:embed
+      loads:
+        color: blue
+        width: 1.2
+        label: loads
+        meaning: a page or stylesheet pulls a file in (link, script, @import, url())
+      reads:
+        color: muted
+        width: 1.2
+        label: reads
+        meaning: a command reads a file from disk
+      writes:
+        color: warn
+        width: 1.2
+        label: writes
+        meaning: a command writes a file
+      http:
+        color: sec
+        width: 1.6
+        label: http
+        meaning: an HTTP request and its answer
+      module:
+        color: accent
+        width: 1.4
+        label: module
+        meaning: a build fetches the kit at a release tag
+      release:
+        color: muted
+        width: 1.2
+        label: release
+        meaning: a workflow makes a release tag
+--- # definitions.yml
+apiVersion: core/system/v1
+kind: Definitions
+metadata:
+  id: definitions
+spec:
+  vocabulary:
+    connection-label:
+      - uses
+      - api
+      - data
+      - calls
+      - embeds
+      - loads
+      - reads
+      - writes
+      - http
+      - module
+      - release
+      - related
+  features:
+    edges:
+      label: edges
+      requires:
+        - Connection
+      type: check
+      whenUndefined: invisible
+      selectors:
+        traverses:
+          by: connection-label
+          values:
+            - uses
+            - api
+            - data
+            - calls
+            - embeds
+            - loads
+            - reads
+            - writes
+            - http
+            - module
+            - release
+        annotates:
+          by: connection-label
+          values:
+            - related
+--- # block/CMP-ASSETS.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-ASSETS
+  title: Assets
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-KIT
+  code:
+    implements: kit.go
+  contract:
+    operations:
+      - Assets
+      - FS
+      - Prefix
+  caption: |
+    `kit.Assets()` serves css/, fonts/, js/
+    under `kit.Prefix` `/ui-kit/`, no-cache
+  description: |
+    Serves only files under css/, fonts/ and js/ from the embedded file system; anything else is 404. `kit.FS()` gives the same files as an fs.FS.
+--- # block/CMP-BROWSER.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-BROWSER
+  title: The viewer's browser
+spec:
+  place:
+    views:
+      - context
+      - structure
+    role: actor
+  ui-design:
+    look: soft
+  caption: |
+    draws the page with `kit.css`,
+    runs `kit.js`; works without it too
+--- # block/CMP-CONFIRM.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-CONFIRM
+  title: Asking first
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-KIT
+  code:
+    implements: confirm.go
+  contract:
+    operations:
+      - ResolveConfirm
+      - Button.Ask
+      - Confirmed
+      - RefuseUnconfirmed
+      - ConfirmChoices
+      - ActionTypes
+  caption: |
+    `ResolveConfirm`, `Button.Ask`,
+    `Confirmed`, `RefuseUnconfirmed` (428)
+  description: |
+    How a change asks before it is made: the action types, the three styles (name, yes-no, never), the server's check of the yes, and the Settings rows.
+--- # block/CMP-DEP-CI.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEP-CI
+  title: Checks
+spec:
+  place:
+    views:
+      - deployment
+    group: GRP-DEP-GITHUB
+  caption: |
+    self-hosted `eg-linux` runner: vet, gofmt,
+    race tests, stale tokens.css, `npm test`
+--- # block/CMP-DEP-KITPKG.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEP-KITPKG
+  title: package kit, compiled in
+spec:
+  place:
+    views:
+      - deployment
+    group: GRP-DEP-GOBIN
+  caption: |
+    partials, css, fonts and kit.js
+    carried in the binary with `go:embed`
+--- # block/CMP-DEP-NPM.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEP-NPM
+  title: "@elderlygate/ui-kit"
+spec:
+  place:
+    views:
+      - deployment
+    group: GRP-DEP-VITE
+  caption: |
+    kit.css, tokens.css, fonts, kit.js, React wrappers;
+    nothing to build; no Vite app uses it yet
+--- # block/CMP-DEP-PAGE.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEP-PAGE
+  title: The page, kit.css and kit.js
+spec:
+  place:
+    views:
+      - deployment
+    group: GRP-DEP-BROWSER
+  caption: |
+    `localStorage` keeps theme, view and folds;
+    works without JavaScript
+--- # block/CMP-DEP-PREVIEW.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEP-PREVIEW
+  title: ui-kit-preview
+spec:
+  place:
+    views:
+      - deployment
+    group: GRP-DEP-DEV
+  caption: |
+    `go run ./cmd/ui-kit-preview`
+    `127.0.0.1:7790`, localhost only
+--- # block/CMP-DEP-SERVER.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEP-SERVER
+  title: The app's HTTP server
+spec:
+  place:
+    views:
+      - deployment
+    group: GRP-DEP-GOBIN
+  caption: |
+    pages drawn with `ui/…`; `/ui-kit/…`
+    from `kit.Assets()`, `Cache-Control: no-cache`
+--- # block/CMP-DEP-TAG.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEP-TAG
+  title: Release tag vX.Y.Z
+spec:
+  place:
+    views:
+      - deployment
+    group: GRP-DEP-GITHUB
+  ui-design:
+    look: emphasis
+  caption: |
+    made on a merge to main from commit types;
+    a tag and notes, no binaries
+--- # block/CMP-DEP-TOKENS.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEP-TOKENS
+  title: ui-kit-tokens
+spec:
+  place:
+    views:
+      - deployment
+    group: GRP-DEP-DEV
+  caption: |
+    `go run ./cmd/ui-kit-tokens`
+    writes css/tokens.css, committed with tokens.json
+--- # block/CMP-DEV.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-DEV
+  title: Developer
+spec:
+  place:
+    views:
+      - context
+      - structure
+    role: actor
+  caption: |
+    builds a web app with the kit,
+    changes a token or a part
+--- # block/CMP-FONTS.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-FONTS
+  title: Fonts
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-FILES
+  caption: |
+    Hanken Grotesk, IBM Plex Mono
+    woff2, SIL OFL 1.1
+--- # block/CMP-GITHUB.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-GITHUB
+  title: GitHub
+spec:
+  place:
+    views:
+      - context
+  ui-design:
+    look: soft
+  caption: |
+    the repository, its checks,
+    and the release tags apps take
+--- # block/CMP-GOAPP.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-GOAPP
+  title: A Go web app
+spec:
+  place:
+    views:
+      - context
+      - structure
+    role: actor
+  ui-design:
+    look: soft
+  caption: |
+    imports `github.com/ElderlyGate/ui-kit`
+    control-room today, at `v0.4.0`
+  description: |
+    Any Go web app of the org. In the org's checkouts, control-room is the one that imports the kit today (its go.mod requires `github.com/ElderlyGate/ui-kit v0.4.0`; it calls `kit.Assets`, `kit.Templates`, `kit.Funcs`, `kit.HTML`, `kit.Confirmed` and `kit.RefuseUnconfirmed`).
+--- # block/CMP-KITCSS.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-KITCSS
+  title: kit.css
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-FILES
+  code:
+    implements: css/kit.css
+  caption: |
+    the shell and every part,
+    `ui-` classes, `--ui-*` values only
+--- # block/CMP-KITJS.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-KITJS
+  title: kit.js
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-FILES
+  code:
+    implements: js/kit.js
+  caption: |
+    theme, view, folds, tabs, lights,
+    lazy sections, asking first; no app logic
+  description: |
+    One plain script, no build. It only saves a reload: every part also works without it.
+--- # block/CMP-MANKIT.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-MANKIT
+  title: mankit
+spec:
+  place:
+    views:
+      - context
+  ui-design:
+    look: soft
+  caption: |
+    the CLI kit; its list of action types
+    is copied, never imported
+--- # block/CMP-OWNER.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-OWNER
+  title: Owner
+spec:
+  place:
+    views:
+      - context
+    role: actor
+  caption: |
+    looks at the preview before a release,
+    reviews golden HTML like code
+--- # block/CMP-PARTIALS.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-PARTIALS
+  title: Partials
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-FILES
+  code:
+    implements: partials/shell.html
+  caption: |
+    `ui/shell` and every part, html/template;
+    `ui/assets` links kit.css and kit.js
+  description: |
+    Every partial is in partials/*.html (basics, controls, light, product, shell, work). The binding names shell.html, which holds ui/shell and ui/assets, since the code check reads files, not folders.
+--- # block/CMP-PREVIEW.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-PREVIEW
+  title: Gallery
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-PREVIEW
+  code:
+    implements: preview/preview.go
+  caption: |
+    every case in both themes;
+    `/focus`, `/products`, `/admin`, `/lazy`
+  description: |
+    preview/cases.go lists every part in every state; the golden tests in testdata/golden/ check the same cases.
+--- # block/CMP-PREVIEWCMD.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-PREVIEWCMD
+  title: ui-kit-preview
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-PREVIEW
+  code:
+    implements: cmd/ui-kit-preview/main.go
+  caption: |
+    `127.0.0.1:7790`, localhost only
+--- # block/CMP-REACT.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-REACT
+  title: React wrappers
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-REACT
+  code:
+    implements: react/index.js
+  caption: |
+    same markup as the partials;
+    `Shell`, `Section`, `ConfirmForm`, …
+  description: |
+    Plain ES modules with createElement, types in react/index.d.ts. They draw the kit's classes; kit.css does the rest. A `Section` catches an error in its children and shows its own error box.
+--- # block/CMP-TEMPLATES.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-TEMPLATES
+  title: Templates
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-KIT
+  code:
+    implements: kit.go
+  contract:
+    operations:
+      - Templates
+      - Funcs
+      - Render
+      - HTML
+  caption: |
+    `kit.Templates()`: every `ui/…` partial
+    and `kit.Funcs()`; `kit.HTML`, `kit.Render`
+  description: |
+    Parses partials/*.html once with the kit's functions (`ext`, `pill`, `lazySection`, `failedSection`, …) and hands each app a clone to parse its own views into.
+--- # block/CMP-TOKENSCMD.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-TOKENSCMD
+  title: ui-kit-tokens
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-TOKENS
+  code:
+    implements: cmd/ui-kit-tokens/main.go
+  caption: |
+    writes css/tokens.css
+    from tokens.json, whole
+--- # block/CMP-TOKENSCSS.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-TOKENSCSS
+  title: tokens.css
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-FILES
+  code:
+    implements: css/tokens.css
+  caption: |
+    the `--ui-*` properties,
+    generated from tokens.json
+--- # block/CMP-TOKENSJSON.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-TOKENSJSON
+  title: tokens.json
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-TOKENS
+  code:
+    implements: tokens/tokens.json
+  caption: |
+    every token, written once
+--- # block/CMP-TOKENSPKG.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-TOKENSPKG
+  title: package tokens
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-TOKENS
+  code:
+    implements: tokens/tokens.go
+  caption: |
+    `Parse`, `Default`, `Set.CSS()`
+--- # block/CMP-TYPES.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-TYPES
+  title: Part data
+spec:
+  place:
+    views:
+      - structure
+    group: GRP-KIT
+  code:
+    implements: types.go
+  caption: |
+    the Go type each partial takes:
+    `kit.Page`, `kit.Section`, `kit.PR`, …
+  description: |
+    The server fills every value, tone and label; the partial only draws it.
+--- # block/CMP-UIKIT.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-UIKIT
+  title: ui-kit
+spec:
+  place:
+    views:
+      - context
+  ui-design:
+    look: accent
+  caption: |
+    Tokens, the shell and the parts
+    Go partials, React wrappers, one CSS, one script
+  description: |
+    The org's shared UI kit, a library with no command of its own (constitution/tech-stack.md, override H-1). It draws what an app's server sends and decides nothing (mission principle 2).
+--- # block/CMP-VITEAPP.yml
+apiVersion: core/design/v2
+kind: Block
+metadata:
+  id: CMP-VITEAPP
+  title: A Vite web app
+spec:
+  place:
+    views:
+      - context
+      - structure
+    role: actor
+  ui-design:
+    look: soft
+  caption: |
+    installs `@elderlygate/ui-kit` from a tag
+    imports `css/kit.css` and `react`
+  description: |
+    How a Vite app takes the kit, as the README says. No Vite app in the org's checkouts depends on the package today.
+--- # connection/CMP-ASSETS--embeds--CMP-FONTS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-ASSETS--embeds--CMP-FONTS
+spec:
+  from: CMP-ASSETS
+  to: CMP-FONTS
+  label: embeds
+--- # connection/CMP-ASSETS--embeds--CMP-KITCSS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-ASSETS--embeds--CMP-KITCSS
+spec:
+  from: CMP-ASSETS
+  to: CMP-KITCSS
+  label: embeds
+--- # connection/CMP-ASSETS--embeds--CMP-KITJS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-ASSETS--embeds--CMP-KITJS
+spec:
+  from: CMP-ASSETS
+  to: CMP-KITJS
+  label: embeds
+--- # connection/CMP-ASSETS--embeds--CMP-TOKENSCSS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-ASSETS--embeds--CMP-TOKENSCSS
+spec:
+  from: CMP-ASSETS
+  to: CMP-TOKENSCSS
+  label: embeds
+--- # connection/CMP-BROWSER--http--CMP-GOAPP.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-BROWSER--http--CMP-GOAPP
+spec:
+  from: CMP-BROWSER
+  to: CMP-GOAPP
+  label: http
+  sides: b-t
+--- # connection/CMP-BROWSER--loads--CMP-KITJS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-BROWSER--loads--CMP-KITJS
+spec:
+  from: CMP-BROWSER
+  to: CMP-KITJS
+  label: loads
+  sides: r-t
+--- # connection/CMP-CONFIRM--calls--CMP-TYPES.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-CONFIRM--calls--CMP-TYPES
+spec:
+  from: CMP-CONFIRM
+  to: CMP-TYPES
+  label: calls
+--- # connection/CMP-DEP-CI--release--CMP-DEP-TAG.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-CI--release--CMP-DEP-TAG
+spec:
+  from: CMP-DEP-CI
+  to: CMP-DEP-TAG
+  label: release
+  sides: b-t
+  badge:
+    text: "1"
+    description: |
+      On a merge to main, release.yml (the org's shared release workflow, `build: none`) runs after the checks and makes the next tag from the commit types; a red check means no release.
+--- # connection/CMP-DEP-KITPKG--calls--CMP-DEP-SERVER.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-KITPKG--calls--CMP-DEP-SERVER
+spec:
+  from: CMP-DEP-KITPKG
+  to: CMP-DEP-SERVER
+  label: calls
+--- # connection/CMP-DEP-NPM--loads--CMP-DEP-PAGE.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-NPM--loads--CMP-DEP-PAGE
+spec:
+  from: CMP-DEP-NPM
+  to: CMP-DEP-PAGE
+  label: loads
+  sides: r-b
+--- # connection/CMP-DEP-PAGE--http--CMP-DEP-SERVER.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-PAGE--http--CMP-DEP-SERVER
+spec:
+  from: CMP-DEP-PAGE
+  to: CMP-DEP-SERVER
+  label: http
+  sides: l-r
+  badge:
+    text: "5"
+    description: |
+      kit.js fetches lazy sections and lights from the same origin (`credentials: same-origin`) and sends a confirmed form with `confirm=yes`; the server still checks it with `kit.Confirmed`.
+--- # connection/CMP-DEP-SERVER--http--CMP-DEP-PAGE.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-SERVER--http--CMP-DEP-PAGE
+spec:
+  from: CMP-DEP-SERVER
+  to: CMP-DEP-PAGE
+  label: http
+  sides: r-l
+  badge:
+    text: "4"
+    description: |
+      The app sends pages and the kit's files `/ui-kit/css`, `/ui-kit/fonts`, `/ui-kit/js` on its own address. The kit adds no token or login; whatever the app checks applies.
+--- # connection/CMP-DEP-TAG--module--CMP-DEP-KITPKG.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-TAG--module--CMP-DEP-KITPKG
+spec:
+  from: CMP-DEP-TAG
+  to: CMP-DEP-KITPKG
+  label: module
+  sides: r-l
+  badge:
+    text: "2"
+    description: |
+      `go build` fetches `github.com/ElderlyGate/ui-kit` at the tag the app's go.mod names; go.sum pins the module's hash, so a changed tag fails the build.
+--- # connection/CMP-DEP-TAG--module--CMP-DEP-NPM.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEP-TAG--module--CMP-DEP-NPM
+spec:
+  from: CMP-DEP-TAG
+  to: CMP-DEP-NPM
+  label: module
+  sides: r-l
+  badge:
+    text: "3"
+    description: |
+      npm installs the package from `github:ElderlyGate/ui-kit#<tag>`, a git tag, no registry.
+--- # connection/CMP-DEV--uses--CMP-TOKENSCMD.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEV--uses--CMP-TOKENSCMD
+spec:
+  from: CMP-DEV
+  to: CMP-TOKENSCMD
+  label: uses
+  sides: b-t
+--- # connection/CMP-DEV--uses--CMP-UIKIT.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-DEV--uses--CMP-UIKIT
+spec:
+  from: CMP-DEV
+  to: CMP-UIKIT
+  label: uses
+  sides: r-l
+  badge:
+    text: "1"
+    description: |
+      The developer reads the README, changes `tokens/tokens.json` or a partial with its class and wrapper, runs `go run ./cmd/ui-kit-tokens` and `go test -run Golden -update`.
+--- # connection/CMP-GOAPP--api--CMP-UIKIT.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-GOAPP--api--CMP-UIKIT
+spec:
+  from: CMP-GOAPP
+  to: CMP-UIKIT
+  label: api
+  sides: l-r
+  badge:
+    text: "3"
+    description: |
+      A Go app imports package `kit` at a release tag (go.mod, pinned by go.sum). It mounts `kit.Assets()` at `/ui-kit/`, parses its views into `kit.Templates()`, fills the types of `types.go`, and checks every change with `kit.Confirmed`.
+--- # connection/CMP-GOAPP--calls--CMP-ASSETS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-GOAPP--calls--CMP-ASSETS
+spec:
+  from: CMP-GOAPP
+  to: CMP-ASSETS
+  label: calls
+  sides: r-l
+  badge:
+    text: "1"
+    description: |
+      `mux.Handle(kit.Prefix, kit.Assets())`: the app serves the kit's files under `/ui-kit/` from its own binary.
+--- # connection/CMP-GOAPP--calls--CMP-CONFIRM.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-GOAPP--calls--CMP-CONFIRM
+spec:
+  from: CMP-GOAPP
+  to: CMP-CONFIRM
+  label: calls
+  sides: r-l
+  badge:
+    text: "3"
+    description: |
+      Before a change: `kit.Confirmed(r)`; without the yes, `kit.RefuseUnconfirmed(w)` answers 428 and nothing is changed.
+--- # connection/CMP-GOAPP--calls--CMP-TEMPLATES.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-GOAPP--calls--CMP-TEMPLATES
+spec:
+  from: CMP-GOAPP
+  to: CMP-TEMPLATES
+  label: calls
+  sides: r-l
+  badge:
+    text: "2"
+    description: |
+      `kit.Templates().ParseFS(views, …)`: the app's views and the kit's partials in one template set; `kit.HTML` draws a part into a section's body.
+--- # connection/CMP-GOAPP--calls--CMP-TYPES.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-GOAPP--calls--CMP-TYPES
+spec:
+  from: CMP-GOAPP
+  to: CMP-TYPES
+  label: calls
+  sides: r-l
+--- # connection/CMP-KITCSS--loads--CMP-FONTS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-KITCSS--loads--CMP-FONTS
+spec:
+  from: CMP-KITCSS
+  to: CMP-FONTS
+  label: loads
+--- # connection/CMP-KITCSS--loads--CMP-TOKENSCSS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-KITCSS--loads--CMP-TOKENSCSS
+spec:
+  from: CMP-KITCSS
+  to: CMP-TOKENSCSS
+  label: loads
+--- # connection/CMP-KITJS--http--CMP-GOAPP.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-KITJS--http--CMP-GOAPP
+spec:
+  from: CMP-KITJS
+  to: CMP-GOAPP
+  label: http
+  sides: t-l
+  badge:
+    text: "5"
+    description: |
+      kit.js fetches each lazy section's and lazy light's `data-ui-src` (same-origin credentials, `Accept: text/html`) and sends a confirmed form with `confirm=yes` or `confirm=remember`.
+--- # connection/CMP-MANKIT--data--CMP-UIKIT.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-MANKIT--data--CMP-UIKIT
+spec:
+  from: CMP-MANKIT
+  to: CMP-UIKIT
+  label: data
+  sides: l-r
+  badge:
+    text: "7"
+    description: |
+      mankit's action types are copied by hand into `testdata/mankit-action-types.txt`; a test checks Go, React and that copy name the same types in the same order. ui-kit does not import mankit.
+--- # connection/CMP-OWNER--uses--CMP-UIKIT.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-OWNER--uses--CMP-UIKIT
+spec:
+  from: CMP-OWNER
+  to: CMP-UIKIT
+  label: uses
+  sides: r-l
+  badge:
+    text: "2"
+    description: |
+      The owner opens the preview gallery, `go run ./cmd/ui-kit-preview` on `http://127.0.0.1:7790` (localhost only), and reviews the golden HTML in `testdata/golden/` before a release.
+--- # connection/CMP-PARTIALS--loads--CMP-KITCSS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-PARTIALS--loads--CMP-KITCSS
+spec:
+  from: CMP-PARTIALS
+  to: CMP-KITCSS
+  label: loads
+--- # connection/CMP-PARTIALS--loads--CMP-KITJS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-PARTIALS--loads--CMP-KITJS
+spec:
+  from: CMP-PARTIALS
+  to: CMP-KITJS
+  label: loads
+--- # connection/CMP-PREVIEW--calls--CMP-ASSETS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-PREVIEW--calls--CMP-ASSETS
+spec:
+  from: CMP-PREVIEW
+  to: CMP-ASSETS
+  label: calls
+  sides: b-t
+--- # connection/CMP-PREVIEW--calls--CMP-CONFIRM.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-PREVIEW--calls--CMP-CONFIRM
+spec:
+  from: CMP-PREVIEW
+  to: CMP-CONFIRM
+  label: calls
+  sides: l-l
+--- # connection/CMP-PREVIEW--calls--CMP-TEMPLATES.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-PREVIEW--calls--CMP-TEMPLATES
+spec:
+  from: CMP-PREVIEW
+  to: CMP-TEMPLATES
+  label: calls
+  sides: l-l
+--- # connection/CMP-PREVIEW--calls--CMP-TYPES.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-PREVIEW--calls--CMP-TYPES
+spec:
+  from: CMP-PREVIEW
+  to: CMP-TYPES
+  label: calls
+  sides: l-l
+--- # connection/CMP-PREVIEWCMD--calls--CMP-PREVIEW.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-PREVIEWCMD--calls--CMP-PREVIEW
+spec:
+  from: CMP-PREVIEWCMD
+  to: CMP-PREVIEW
+  label: calls
+  sides: l-r
+--- # connection/CMP-TEMPLATES--calls--CMP-TYPES.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-TEMPLATES--calls--CMP-TYPES
+spec:
+  from: CMP-TEMPLATES
+  to: CMP-TYPES
+  label: calls
+--- # connection/CMP-TEMPLATES--embeds--CMP-PARTIALS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-TEMPLATES--embeds--CMP-PARTIALS
+spec:
+  from: CMP-TEMPLATES
+  to: CMP-PARTIALS
+  label: embeds
+--- # connection/CMP-TOKENSCMD--calls--CMP-TOKENSPKG.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-TOKENSCMD--calls--CMP-TOKENSPKG
+spec:
+  from: CMP-TOKENSCMD
+  to: CMP-TOKENSPKG
+  label: calls
+--- # connection/CMP-TOKENSCMD--reads--CMP-TOKENSJSON.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-TOKENSCMD--reads--CMP-TOKENSJSON
+spec:
+  from: CMP-TOKENSCMD
+  to: CMP-TOKENSJSON
+  label: reads
+--- # connection/CMP-TOKENSCMD--writes--CMP-TOKENSCSS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-TOKENSCMD--writes--CMP-TOKENSCSS
+spec:
+  from: CMP-TOKENSCMD
+  to: CMP-TOKENSCSS
+  label: writes
+  sides: l-r
+  badge:
+    text: "4"
+    description: |
+      `go run ./cmd/ui-kit-tokens` writes a temporary file beside css/tokens.css and renames it into place; CI fails a pull request whose tokens.css is stale.
+--- # connection/CMP-TOKENSPKG--embeds--CMP-TOKENSJSON.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-TOKENSPKG--embeds--CMP-TOKENSJSON
+spec:
+  from: CMP-TOKENSPKG
+  to: CMP-TOKENSJSON
+  label: embeds
+--- # connection/CMP-UIKIT--data--CMP-BROWSER.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-UIKIT--data--CMP-BROWSER
+spec:
+  from: CMP-UIKIT
+  to: CMP-BROWSER
+  label: data
+  sides: b-t
+  badge:
+    text: "5"
+    description: |
+      `kit.css`, `tokens.css`, the fonts and `kit.js` reach the viewer's browser through the app that serves them (`/ui-kit/…` from a Go app, or the Vite app's bundle). The kit adds no token or login of its own; the app decides who may see a page.
+--- # connection/CMP-UIKIT--release--CMP-GITHUB.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-UIKIT--release--CMP-GITHUB
+spec:
+  from: CMP-UIKIT
+  to: CMP-GITHUB
+  label: release
+  sides: r-l
+  badge:
+    text: "6"
+    description: |
+      A merge to main makes a release tag from the commit types (`release.yml`, a tag and notes, no binaries); CI checks every pull request on a self-hosted Linux runner. The tag is the only version.
+--- # connection/CMP-VITEAPP--api--CMP-UIKIT.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-VITEAPP--api--CMP-UIKIT
+spec:
+  from: CMP-VITEAPP
+  to: CMP-UIKIT
+  label: api
+  sides: l-r
+  badge:
+    text: "4"
+    description: |
+      A Vite app installs `@elderlygate/ui-kit` from `github:ElderlyGate/ui-kit#<tag>` and imports `css/kit.css` and the React wrappers; nothing is built.
+--- # connection/CMP-VITEAPP--calls--CMP-REACT.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-VITEAPP--calls--CMP-REACT
+spec:
+  from: CMP-VITEAPP
+  to: CMP-REACT
+  label: calls
+--- # connection/CMP-VITEAPP--loads--CMP-KITCSS.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: CMP-VITEAPP--loads--CMP-KITCSS
+spec:
+  from: CMP-VITEAPP
+  to: CMP-KITCSS
+  label: loads
+  sides: b-r
+--- # connection/QST-PRODUCT-RECORD--related--CMP-UIKIT.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: QST-PRODUCT-RECORD--related--CMP-UIKIT
+spec:
+  from: QST-PRODUCT-RECORD
+  to: CMP-UIKIT
+  label: related
+--- # connection/QST-WARN-SHADE--related--CMP-TOKENSJSON.yml
+apiVersion: core/design/v2
+kind: Connection
+metadata:
+  id: QST-WARN-SHADE--related--CMP-TOKENSJSON
+spec:
+  from: QST-WARN-SHADE
+  to: CMP-TOKENSJSON
+  label: related
+--- # flow/ask-before-a-change.yml
+apiVersion: core/design/v2
+kind: Flow
+metadata:
+  id: ask-before-a-change
+  title: A change asks before it is made
+spec:
+  entry:
+    method: POST
+    path: /{form-action}
+  steps:
+    - id: press
+      at: CMP-BROWSER
+      phase: caller
+      label: The viewer presses a button drawn with Button.Ask
+      note: The server resolved the action type's style with kit.ResolveConfirm (name, yes-no or never) before drawing it.
+    - id: ask
+      at: CMP-KITJS
+      phase: pre
+      label: kit.js stops the form in the capture phase and asks in the kit's dialog
+      note: For a name, the confirm button works only once the name is typed exactly; Cancel or Escape sends nothing.
+    - id: send
+      at: CMP-GOAPP
+      phase: pre
+      label: The form arrives with confirm=yes or confirm=remember
+    - id: check
+      at: CMP-CONFIRM
+      phase: execute
+      label: kit.Confirmed(r) says whether the change was answered yes
+      note: Without the yes, kit.RefuseUnconfirmed answers 428 "Nothing was changed", the web twin of a refusal without --yes.
+    - id: change
+      at: CMP-GOAPP
+      phase: return
+      label: The app makes the change; with remember it sets that type to never
+--- # flow/load-a-lazy-section.yml
+apiVersion: core/design/v2
+kind: Flow
+metadata:
+  id: load-a-lazy-section
+  title: A slow section loads on its own
+spec:
+  entry:
+    method: GET
+    path: /{section-src}
+  steps:
+    - id: skeleton
+      at: CMP-BROWSER
+      phase: caller
+      label: The shell arrived at once, with the section's skeleton
+      note: The app gave kit.Section a Src, the address of the section's own HTML.
+    - id: fetch
+      at: CMP-KITJS
+      phase: pre
+      label: kit.js fetches every lazy section's data-ui-src, in parallel
+    - id: read
+      at: CMP-GOAPP
+      phase: execute
+      label: The app reads the section's sources
+      note: It answers with the UI-Read-At header (RFC 3339), the time its sources were really read.
+    - id: draw
+      at: CMP-TEMPLATES
+      phase: execute
+      label: kit.HTML draws ui/section
+    - id: place
+      at: CMP-KITJS
+      phase: return
+      label: kit.js puts the section in its place and fills ui/read-at
+      note: A fetch that fails shows the section's own error box with Retry; the rest of the page stays.
+--- # flow/open-a-page.yml
+apiVersion: core/design/v2
+kind: Flow
+metadata:
+  id: open-a-page
+  title: A viewer opens a page of a Go app
+spec:
+  entry:
+    method: GET
+    path: /
+  steps:
+    - id: ask
+      at: CMP-BROWSER
+      phase: caller
+      label: The viewer opens a page of the app
+    - id: build
+      at: CMP-GOAPP
+      phase: pre
+      label: The app's handler fills a kit.Page
+      note: The server works out every value, tone, label, filter and order; the kit decides none of it.
+    - id: execute
+      at: CMP-TEMPLATES
+      phase: execute
+      label: ExecuteTemplate "ui/shell" on the set from kit.Templates()
+    - id: draw
+      at: CMP-PARTIALS
+      phase: execute
+      label: ui/shell draws the bar, header, sections and parts
+      note: ui/assets in the head links /ui-kit/css/kit.css and /ui-kit/js/kit.js, without defer.
+    - id: page
+      at: CMP-BROWSER
+      phase: return
+      label: The whole page arrives, readable without JavaScript
+    - id: files
+      at: CMP-GOAPP
+      phase: pre
+      label: GET /ui-kit/css/kit.css and /ui-kit/js/kit.js
+    - id: serve
+      at: CMP-ASSETS
+      phase: execute
+      label: kit.Assets() serves the file from the embedded file system
+      note: Only files under css/, fonts/ and js/ are served, with Cache-Control no-cache; anything else is 404.
+    - id: css
+      at: CMP-KITCSS
+      phase: execute
+      label: kit.css pulls in tokens.css and the fonts
+    - id: script
+      at: CMP-KITJS
+      phase: return
+      label: kit.js sets the theme before the first paint and wires the parts
+--- # flow/regenerate-tokens.yml
+apiVersion: core/design/v2
+kind: Flow
+metadata:
+  id: regenerate-tokens
+  title: A token changes and tokens.css is written again
+spec:
+  entry:
+    method: RUN
+    path: /ui-kit-tokens
+  steps:
+    - id: edit
+      at: CMP-DEV
+      phase: caller
+      label: The developer edits tokens/tokens.json and runs go run ./cmd/ui-kit-tokens
+    - id: run
+      at: CMP-TOKENSCMD
+      phase: pre
+      label: The command starts from the repository root
+    - id: read
+      at: CMP-TOKENSJSON
+      phase: pre
+      label: It reads tokens/tokens.json
+    - id: parse
+      at: CMP-TOKENSPKG
+      phase: execute
+      label: tokens.Parse checks every name is set and unique; Set.CSS() writes the properties
+      note: Parse rejects unknown fields and empty values.
+    - id: back
+      at: CMP-TOKENSCMD
+      phase: return
+      label: The CSS comes back to the command
+    - id: write
+      at: CMP-TOKENSCSS
+      phase: post
+      label: css/tokens.css is replaced whole, through a temporary file and a rename
+      note: CI runs the same command and fails a pull request whose tokens.css differs.
+--- # group/GRP-DEP-BROWSER.yml
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-DEP-BROWSER
+  title: The viewer's browser
+spec:
+  order: 9
+  ui-design:
+    look: soft
+--- # group/GRP-DEP-DEV.yml
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-DEP-DEV
+  title: A developer's machine, Linux or macOS
+spec:
+  order: 10
+  ui-design:
+    look: soft
+--- # group/GRP-DEP-GITHUB.yml
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-DEP-GITHUB
+  title: GitHub, ElderlyGate/ui-kit
+spec:
+  order: 6
+  ui-design:
+    look: soft
+--- # group/GRP-DEP-GOBIN.yml
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-DEP-GOBIN
+  title: A Go app's binary, e.g. e-control-room
+spec:
+  order: 7
+  ui-design:
+    look: accent
+--- # group/GRP-DEP-VITE.yml
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-DEP-VITE
+  title: A Vite app's bundle
+spec:
+  order: 8
+  ui-design:
+    look: soft
+--- # group/GRP-FILES.yml
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-FILES
+  title: Embedded files
+spec:
+  order: 2
+  ui-design:
+    look: soft
+--- # group/GRP-KIT.yml
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-KIT
+  title: package kit, the Go API
+spec:
+  order: 1
+  ui-design:
+    look: accent
+--- # group/GRP-PREVIEW.yml
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-PREVIEW
+  title: Preview gallery
+spec:
+  order: 5
+  ui-design:
+    look: soft
+--- # group/GRP-REACT.yml
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-REACT
+  title: React wrappers
+spec:
+  order: 4
+  ui-design:
+    look: soft
+--- # group/GRP-TOKENS.yml
+apiVersion: core/design/v2
+kind: Group
+metadata:
+  id: GRP-TOKENS
+  title: Tokens
+spec:
+  order: 3
+  ui-design:
+    look: soft
+--- # question/QST-PRODUCT-RECORD.yml
+apiVersion: core/design/v2
+kind: Question
+metadata:
+  id: QST-PRODUCT-RECORD
+  title: Where the kit's Product record goes
+spec:
+  place:
+    views:
+      - context
+  state:
+    status: open
+    severity: medium
+  description: |
+    The design should hold a `Product` record for ID `ui-kit` (G-PLAN-12, G-PLAN-13), but the e-designer build used here has no Product kind (its kinds: Adr, Block, Connection, Contradiction, Design, Flow, Group, Open, Question, Request, Risk, Suggestion, Suite). Add it when the kind ships; until then the ID lives in the product-family design and hubman's catalog.
+--- # question/QST-WARN-SHADE.yml
+apiVersion: core/design/v2
+kind: Question
+metadata:
+  id: QST-WARN-SHADE
+  title: Approve three light colours changed for contrast
+spec:
+  place:
+    views:
+      - structure
+  state:
+    status: open
+    severity: medium
+  description: |
+    The article's light warn #A8670F, good-soft #E1F1E9 and bad-soft #F8E4DD left pill text under 4.5:1. The kit uses warn #975D0E, good-soft #EDF7F2 and bad-soft #F9E9E4 (tokens/tokens.json today), which pass; the dark theme is unchanged.
