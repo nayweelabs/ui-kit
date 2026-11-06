@@ -17,6 +17,12 @@ spec:
 
     How products connect to each other is the org's design (constitution, view product-family), not this one.
   board:
+    display:
+      spacing:
+        members: 4
+        groups: 3
+        components: 3
+        tidy: 2
     links:
       uses:
         color: muted
