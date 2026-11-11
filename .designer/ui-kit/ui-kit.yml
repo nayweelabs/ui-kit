@@ -86,7 +86,7 @@ metadata:
   id: definitions
 spec:
   vocabulary:
-    connection-label:
+    link-label:
       - uses
       - api
       - data
@@ -103,12 +103,12 @@ spec:
     edges:
       label: edges
       requires:
-        - Connection
+        - Link
       type: check
       whenUndefined: invisible
       selectors:
         traverses:
-          by: connection-label
+          by: link-label
           values:
             - uses
             - api
@@ -122,7 +122,7 @@ spec:
             - module
             - release
         annotates:
-          by: connection-label
+          by: link-label
           values:
             - related
 --- # block/CMP-ASSETS.yml
@@ -640,45 +640,45 @@ spec:
     imports `css/kit.css` and `react`
   description: |
     How a Vite app takes the kit, as the README says. No Vite app in the org's checkouts depends on the package today.
---- # connection/CMP-ASSETS--embeds--CMP-FONTS.yml
+--- # link/CMP-ASSETS--embeds--CMP-FONTS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-ASSETS--embeds--CMP-FONTS
 spec:
   from: CMP-ASSETS
   to: CMP-FONTS
   label: embeds
---- # connection/CMP-ASSETS--embeds--CMP-KITCSS.yml
+--- # link/CMP-ASSETS--embeds--CMP-KITCSS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-ASSETS--embeds--CMP-KITCSS
 spec:
   from: CMP-ASSETS
   to: CMP-KITCSS
   label: embeds
---- # connection/CMP-ASSETS--embeds--CMP-KITJS.yml
+--- # link/CMP-ASSETS--embeds--CMP-KITJS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-ASSETS--embeds--CMP-KITJS
 spec:
   from: CMP-ASSETS
   to: CMP-KITJS
   label: embeds
---- # connection/CMP-ASSETS--embeds--CMP-TOKENSCSS.yml
+--- # link/CMP-ASSETS--embeds--CMP-TOKENSCSS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-ASSETS--embeds--CMP-TOKENSCSS
 spec:
   from: CMP-ASSETS
   to: CMP-TOKENSCSS
   label: embeds
---- # connection/CMP-BROWSER--http--CMP-GOAPP.yml
+--- # link/CMP-BROWSER--http--CMP-GOAPP.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-BROWSER--http--CMP-GOAPP
 spec:
@@ -686,9 +686,9 @@ spec:
   to: CMP-GOAPP
   label: http
   sides: b-t
---- # connection/CMP-BROWSER--loads--CMP-KITJS.yml
+--- # link/CMP-BROWSER--loads--CMP-KITJS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-BROWSER--loads--CMP-KITJS
 spec:
@@ -696,18 +696,18 @@ spec:
   to: CMP-KITJS
   label: loads
   sides: r-t
---- # connection/CMP-CONFIRM--calls--CMP-TYPES.yml
+--- # link/CMP-CONFIRM--calls--CMP-TYPES.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-CONFIRM--calls--CMP-TYPES
 spec:
   from: CMP-CONFIRM
   to: CMP-TYPES
   label: calls
---- # connection/CMP-DEP-CI--release--CMP-DEP-TAG.yml
+--- # link/CMP-DEP-CI--release--CMP-DEP-TAG.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-DEP-CI--release--CMP-DEP-TAG
 spec:
@@ -719,18 +719,18 @@ spec:
     text: "1"
     description: |
       On a merge to main, release.yml (the org's shared release workflow, `build: none`) runs after the checks and makes the next tag from the commit types; a red check means no release.
---- # connection/CMP-DEP-KITPKG--calls--CMP-DEP-SERVER.yml
+--- # link/CMP-DEP-KITPKG--calls--CMP-DEP-SERVER.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-DEP-KITPKG--calls--CMP-DEP-SERVER
 spec:
   from: CMP-DEP-KITPKG
   to: CMP-DEP-SERVER
   label: calls
---- # connection/CMP-DEP-NPM--loads--CMP-DEP-PAGE.yml
+--- # link/CMP-DEP-NPM--loads--CMP-DEP-PAGE.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-DEP-NPM--loads--CMP-DEP-PAGE
 spec:
@@ -738,9 +738,9 @@ spec:
   to: CMP-DEP-PAGE
   label: loads
   sides: r-b
---- # connection/CMP-DEP-PAGE--http--CMP-DEP-SERVER.yml
+--- # link/CMP-DEP-PAGE--http--CMP-DEP-SERVER.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-DEP-PAGE--http--CMP-DEP-SERVER
 spec:
@@ -752,9 +752,9 @@ spec:
     text: "5"
     description: |
       kit.js fetches lazy sections and lights from the same origin (`credentials: same-origin`) and sends a confirmed form with `confirm=yes`; the server still checks it with `kit.Confirmed`.
---- # connection/CMP-DEP-SERVER--http--CMP-DEP-PAGE.yml
+--- # link/CMP-DEP-SERVER--http--CMP-DEP-PAGE.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-DEP-SERVER--http--CMP-DEP-PAGE
 spec:
@@ -766,9 +766,9 @@ spec:
     text: "4"
     description: |
       The app sends pages and the kit's files `/ui-kit/css`, `/ui-kit/fonts`, `/ui-kit/js` on its own address. The kit adds no token or login; whatever the app checks applies.
---- # connection/CMP-DEP-TAG--module--CMP-DEP-KITPKG.yml
+--- # link/CMP-DEP-TAG--module--CMP-DEP-KITPKG.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-DEP-TAG--module--CMP-DEP-KITPKG
 spec:
@@ -780,9 +780,9 @@ spec:
     text: "2"
     description: |
       `go build` fetches `github.com/ElderlyGate/ui-kit` at the tag the app's go.mod names; go.sum pins the module's hash, so a changed tag fails the build.
---- # connection/CMP-DEP-TAG--module--CMP-DEP-NPM.yml
+--- # link/CMP-DEP-TAG--module--CMP-DEP-NPM.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-DEP-TAG--module--CMP-DEP-NPM
 spec:
@@ -794,9 +794,9 @@ spec:
     text: "3"
     description: |
       npm installs the package from `github:ElderlyGate/ui-kit#<tag>`, a git tag, no registry.
---- # connection/CMP-DEV--uses--CMP-TOKENSCMD.yml
+--- # link/CMP-DEV--uses--CMP-TOKENSCMD.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-DEV--uses--CMP-TOKENSCMD
 spec:
@@ -804,9 +804,9 @@ spec:
   to: CMP-TOKENSCMD
   label: uses
   sides: b-t
---- # connection/CMP-DEV--uses--CMP-UIKIT.yml
+--- # link/CMP-DEV--uses--CMP-UIKIT.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-DEV--uses--CMP-UIKIT
 spec:
@@ -818,9 +818,9 @@ spec:
     text: "1"
     description: |
       The developer reads the README, changes `tokens/tokens.json` or a partial with its class and wrapper, runs `go run ./cmd/ui-kit-tokens` and `go test -run Golden -update`.
---- # connection/CMP-GOAPP--api--CMP-UIKIT.yml
+--- # link/CMP-GOAPP--api--CMP-UIKIT.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-GOAPP--api--CMP-UIKIT
 spec:
@@ -832,9 +832,9 @@ spec:
     text: "3"
     description: |
       A Go app imports package `kit` at a release tag (go.mod, pinned by go.sum). It mounts `kit.Assets()` at `/ui-kit/`, parses its views into `kit.Templates()`, fills the types of `types.go`, and checks every change with `kit.Confirmed`.
---- # connection/CMP-GOAPP--calls--CMP-ASSETS.yml
+--- # link/CMP-GOAPP--calls--CMP-ASSETS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-GOAPP--calls--CMP-ASSETS
 spec:
@@ -846,9 +846,9 @@ spec:
     text: "1"
     description: |
       `mux.Handle(kit.Prefix, kit.Assets())`: the app serves the kit's files under `/ui-kit/` from its own binary.
---- # connection/CMP-GOAPP--calls--CMP-CONFIRM.yml
+--- # link/CMP-GOAPP--calls--CMP-CONFIRM.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-GOAPP--calls--CMP-CONFIRM
 spec:
@@ -860,9 +860,9 @@ spec:
     text: "3"
     description: |
       Before a change: `kit.Confirmed(r)`; without the yes, `kit.RefuseUnconfirmed(w)` answers 428 and nothing is changed.
---- # connection/CMP-GOAPP--calls--CMP-TEMPLATES.yml
+--- # link/CMP-GOAPP--calls--CMP-TEMPLATES.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-GOAPP--calls--CMP-TEMPLATES
 spec:
@@ -874,9 +874,9 @@ spec:
     text: "2"
     description: |
       `kit.Templates().ParseFS(views, …)`: the app's views and the kit's partials in one template set; `kit.HTML` draws a part into a section's body.
---- # connection/CMP-GOAPP--calls--CMP-TYPES.yml
+--- # link/CMP-GOAPP--calls--CMP-TYPES.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-GOAPP--calls--CMP-TYPES
 spec:
@@ -884,27 +884,27 @@ spec:
   to: CMP-TYPES
   label: calls
   sides: r-l
---- # connection/CMP-KITCSS--loads--CMP-FONTS.yml
+--- # link/CMP-KITCSS--loads--CMP-FONTS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-KITCSS--loads--CMP-FONTS
 spec:
   from: CMP-KITCSS
   to: CMP-FONTS
   label: loads
---- # connection/CMP-KITCSS--loads--CMP-TOKENSCSS.yml
+--- # link/CMP-KITCSS--loads--CMP-TOKENSCSS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-KITCSS--loads--CMP-TOKENSCSS
 spec:
   from: CMP-KITCSS
   to: CMP-TOKENSCSS
   label: loads
---- # connection/CMP-KITJS--http--CMP-GOAPP.yml
+--- # link/CMP-KITJS--http--CMP-GOAPP.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-KITJS--http--CMP-GOAPP
 spec:
@@ -916,9 +916,9 @@ spec:
     text: "5"
     description: |
       kit.js fetches each lazy section's and lazy light's `data-ui-src` (same-origin credentials, `Accept: text/html`) and sends a confirmed form with `confirm=yes` or `confirm=remember`.
---- # connection/CMP-MANKIT--data--CMP-UIKIT.yml
+--- # link/CMP-MANKIT--data--CMP-UIKIT.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-MANKIT--data--CMP-UIKIT
 spec:
@@ -930,9 +930,9 @@ spec:
     text: "7"
     description: |
       mankit's action types are copied by hand into `testdata/mankit-action-types.txt`; a test checks Go, React and that copy name the same types in the same order. ui-kit does not import mankit.
---- # connection/CMP-OWNER--uses--CMP-UIKIT.yml
+--- # link/CMP-OWNER--uses--CMP-UIKIT.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-OWNER--uses--CMP-UIKIT
 spec:
@@ -944,27 +944,27 @@ spec:
     text: "2"
     description: |
       The owner opens the preview gallery, `go run ./cmd/ui-kit-preview` on `http://127.0.0.1:7790` (localhost only), and reviews the golden HTML in `testdata/golden/` before a release.
---- # connection/CMP-PARTIALS--loads--CMP-KITCSS.yml
+--- # link/CMP-PARTIALS--loads--CMP-KITCSS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-PARTIALS--loads--CMP-KITCSS
 spec:
   from: CMP-PARTIALS
   to: CMP-KITCSS
   label: loads
---- # connection/CMP-PARTIALS--loads--CMP-KITJS.yml
+--- # link/CMP-PARTIALS--loads--CMP-KITJS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-PARTIALS--loads--CMP-KITJS
 spec:
   from: CMP-PARTIALS
   to: CMP-KITJS
   label: loads
---- # connection/CMP-PREVIEW--calls--CMP-ASSETS.yml
+--- # link/CMP-PREVIEW--calls--CMP-ASSETS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-PREVIEW--calls--CMP-ASSETS
 spec:
@@ -972,9 +972,9 @@ spec:
   to: CMP-ASSETS
   label: calls
   sides: b-t
---- # connection/CMP-PREVIEW--calls--CMP-CONFIRM.yml
+--- # link/CMP-PREVIEW--calls--CMP-CONFIRM.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-PREVIEW--calls--CMP-CONFIRM
 spec:
@@ -982,9 +982,9 @@ spec:
   to: CMP-CONFIRM
   label: calls
   sides: l-l
---- # connection/CMP-PREVIEW--calls--CMP-TEMPLATES.yml
+--- # link/CMP-PREVIEW--calls--CMP-TEMPLATES.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-PREVIEW--calls--CMP-TEMPLATES
 spec:
@@ -992,9 +992,9 @@ spec:
   to: CMP-TEMPLATES
   label: calls
   sides: l-l
---- # connection/CMP-PREVIEW--calls--CMP-TYPES.yml
+--- # link/CMP-PREVIEW--calls--CMP-TYPES.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-PREVIEW--calls--CMP-TYPES
 spec:
@@ -1002,9 +1002,9 @@ spec:
   to: CMP-TYPES
   label: calls
   sides: l-l
---- # connection/CMP-PREVIEWCMD--calls--CMP-PREVIEW.yml
+--- # link/CMP-PREVIEWCMD--calls--CMP-PREVIEW.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-PREVIEWCMD--calls--CMP-PREVIEW
 spec:
@@ -1012,45 +1012,45 @@ spec:
   to: CMP-PREVIEW
   label: calls
   sides: l-r
---- # connection/CMP-TEMPLATES--calls--CMP-TYPES.yml
+--- # link/CMP-TEMPLATES--calls--CMP-TYPES.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-TEMPLATES--calls--CMP-TYPES
 spec:
   from: CMP-TEMPLATES
   to: CMP-TYPES
   label: calls
---- # connection/CMP-TEMPLATES--embeds--CMP-PARTIALS.yml
+--- # link/CMP-TEMPLATES--embeds--CMP-PARTIALS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-TEMPLATES--embeds--CMP-PARTIALS
 spec:
   from: CMP-TEMPLATES
   to: CMP-PARTIALS
   label: embeds
---- # connection/CMP-TOKENSCMD--calls--CMP-TOKENSPKG.yml
+--- # link/CMP-TOKENSCMD--calls--CMP-TOKENSPKG.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-TOKENSCMD--calls--CMP-TOKENSPKG
 spec:
   from: CMP-TOKENSCMD
   to: CMP-TOKENSPKG
   label: calls
---- # connection/CMP-TOKENSCMD--reads--CMP-TOKENSJSON.yml
+--- # link/CMP-TOKENSCMD--reads--CMP-TOKENSJSON.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-TOKENSCMD--reads--CMP-TOKENSJSON
 spec:
   from: CMP-TOKENSCMD
   to: CMP-TOKENSJSON
   label: reads
---- # connection/CMP-TOKENSCMD--writes--CMP-TOKENSCSS.yml
+--- # link/CMP-TOKENSCMD--writes--CMP-TOKENSCSS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-TOKENSCMD--writes--CMP-TOKENSCSS
 spec:
@@ -1062,18 +1062,18 @@ spec:
     text: "4"
     description: |
       `go run ./cmd/ui-kit-tokens` writes a temporary file beside css/tokens.css and renames it into place; CI fails a pull request whose tokens.css is stale.
---- # connection/CMP-TOKENSPKG--embeds--CMP-TOKENSJSON.yml
+--- # link/CMP-TOKENSPKG--embeds--CMP-TOKENSJSON.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-TOKENSPKG--embeds--CMP-TOKENSJSON
 spec:
   from: CMP-TOKENSPKG
   to: CMP-TOKENSJSON
   label: embeds
---- # connection/CMP-UIKIT--data--CMP-BROWSER.yml
+--- # link/CMP-UIKIT--data--CMP-BROWSER.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-UIKIT--data--CMP-BROWSER
 spec:
@@ -1085,9 +1085,9 @@ spec:
     text: "5"
     description: |
       `kit.css`, `tokens.css`, the fonts and `kit.js` reach the viewer's browser through the app that serves them (`/ui-kit/…` from a Go app, or the Vite app's bundle). The kit adds no token or login of its own; the app decides who may see a page.
---- # connection/CMP-UIKIT--release--CMP-GITHUB.yml
+--- # link/CMP-UIKIT--release--CMP-GITHUB.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-UIKIT--release--CMP-GITHUB
 spec:
@@ -1099,9 +1099,9 @@ spec:
     text: "6"
     description: |
       A merge to main makes a release tag from the commit types (`release.yml`, a tag and notes, no binaries); CI checks every pull request on a self-hosted Linux runner. The tag is the only version.
---- # connection/CMP-VITEAPP--api--CMP-UIKIT.yml
+--- # link/CMP-VITEAPP--api--CMP-UIKIT.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-VITEAPP--api--CMP-UIKIT
 spec:
@@ -1113,18 +1113,18 @@ spec:
     text: "4"
     description: |
       A Vite app installs `@elderlygate/ui-kit` from `github:ElderlyGate/ui-kit#<tag>` and imports `css/kit.css` and the React wrappers; nothing is built.
---- # connection/CMP-VITEAPP--calls--CMP-REACT.yml
+--- # link/CMP-VITEAPP--calls--CMP-REACT.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-VITEAPP--calls--CMP-REACT
 spec:
   from: CMP-VITEAPP
   to: CMP-REACT
   label: calls
---- # connection/CMP-VITEAPP--loads--CMP-KITCSS.yml
+--- # link/CMP-VITEAPP--loads--CMP-KITCSS.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: CMP-VITEAPP--loads--CMP-KITCSS
 spec:
@@ -1132,18 +1132,18 @@ spec:
   to: CMP-KITCSS
   label: loads
   sides: b-r
---- # connection/QST-PRODUCT-RECORD--related--CMP-UIKIT.yml
+--- # link/QST-PRODUCT-RECORD--related--CMP-UIKIT.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: QST-PRODUCT-RECORD--related--CMP-UIKIT
 spec:
   from: QST-PRODUCT-RECORD
   to: CMP-UIKIT
   label: related
---- # connection/QST-WARN-SHADE--related--CMP-TOKENSJSON.yml
+--- # link/QST-WARN-SHADE--related--CMP-TOKENSJSON.yml
 apiVersion: core/design/v2
-kind: Connection
+kind: Link
 metadata:
   id: QST-WARN-SHADE--related--CMP-TOKENSJSON
 spec:
