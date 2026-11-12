@@ -1,5 +1,5 @@
 --- # design.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Design
 metadata:
   id: ui-kit
@@ -80,7 +80,7 @@ spec:
         label: release
         meaning: a workflow makes a release tag
 --- # definitions.yml
-apiVersion: core/system/v1
+apiVersion: elderlygate/designer/design/v2
 kind: Definitions
 metadata:
   id: definitions
@@ -126,7 +126,7 @@ spec:
           values:
             - related
 --- # block/CMP-ASSETS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-ASSETS
@@ -149,7 +149,7 @@ spec:
   description: |
     Serves only files under css/, fonts/ and js/ from the embedded file system; anything else is 404. `kit.FS()` gives the same files as an fs.FS.
 --- # block/CMP-BROWSER.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-BROWSER
@@ -166,7 +166,7 @@ spec:
     draws the page with `kit.css`,
     runs `kit.js`; works without it too
 --- # block/CMP-CONFIRM.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-CONFIRM
@@ -192,7 +192,7 @@ spec:
   description: |
     How a change asks before it is made: the action types, the three styles (name, yes-no, never), the server's check of the yes, and the Settings rows.
 --- # block/CMP-DEP-CI.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-DEP-CI
@@ -206,7 +206,7 @@ spec:
     self-hosted `eg-linux` runner: vet, gofmt,
     race tests, stale tokens.css, `npm test`
 --- # block/CMP-DEP-KITPKG.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-DEP-KITPKG
@@ -220,7 +220,7 @@ spec:
     partials, css, fonts and kit.js
     carried in the binary with `go:embed`
 --- # block/CMP-DEP-NPM.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-DEP-NPM
@@ -234,7 +234,7 @@ spec:
     kit.css, tokens.css, fonts, kit.js, React wrappers;
     nothing to build; no Vite app uses it yet
 --- # block/CMP-DEP-PAGE.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-DEP-PAGE
@@ -248,7 +248,7 @@ spec:
     `localStorage` keeps theme, view and folds;
     works without JavaScript
 --- # block/CMP-DEP-PREVIEW.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-DEP-PREVIEW
@@ -262,7 +262,7 @@ spec:
     `go run ./cmd/ui-kit-preview`
     `127.0.0.1:7790`, localhost only
 --- # block/CMP-DEP-SERVER.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-DEP-SERVER
@@ -276,7 +276,7 @@ spec:
     pages drawn with `ui/…`; `/ui-kit/…`
     from `kit.Assets()`, `Cache-Control: no-cache`
 --- # block/CMP-DEP-TAG.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-DEP-TAG
@@ -292,7 +292,7 @@ spec:
     made on a merge to main from commit types;
     a tag and notes, no binaries
 --- # block/CMP-DEP-TOKENS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-DEP-TOKENS
@@ -306,7 +306,7 @@ spec:
     `go run ./cmd/ui-kit-tokens`
     writes css/tokens.css, committed with tokens.json
 --- # block/CMP-DEV.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-DEV
@@ -321,7 +321,7 @@ spec:
     builds a web app with the kit,
     changes a token or a part
 --- # block/CMP-FONTS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-FONTS
@@ -335,7 +335,7 @@ spec:
     Hanken Grotesk, IBM Plex Mono
     woff2, SIL OFL 1.1
 --- # block/CMP-GITHUB.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-GITHUB
@@ -350,7 +350,7 @@ spec:
     the repository, its checks,
     and the release tags apps take
 --- # block/CMP-GOAPP.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-GOAPP
@@ -369,7 +369,7 @@ spec:
   description: |
     Any Go web app of the org. In the org's checkouts, control-room is the one that imports the kit today (its go.mod requires `github.com/ElderlyGate/ui-kit v0.4.0`; it calls `kit.Assets`, `kit.Templates`, `kit.Funcs`, `kit.HTML`, `kit.Confirmed` and `kit.RefuseUnconfirmed`).
 --- # block/CMP-KITCSS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-KITCSS
@@ -385,7 +385,7 @@ spec:
     the shell and every part,
     `ui-` classes, `--ui-*` values only
 --- # block/CMP-KITJS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-KITJS
@@ -403,7 +403,7 @@ spec:
   description: |
     One plain script, no build. It only saves a reload: every part also works without it.
 --- # block/CMP-MANKIT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-MANKIT
@@ -418,7 +418,7 @@ spec:
     the CLI kit; its list of action types
     is copied, never imported
 --- # block/CMP-OWNER.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-OWNER
@@ -432,7 +432,7 @@ spec:
     looks at the preview before a release,
     reviews golden HTML like code
 --- # block/CMP-PARTIALS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-PARTIALS
@@ -450,7 +450,7 @@ spec:
   description: |
     Every partial is in partials/*.html (basics, controls, light, product, shell, work). The binding names shell.html, which holds ui/shell and ui/assets, since the code check reads files, not folders.
 --- # block/CMP-PREVIEW.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-PREVIEW
@@ -468,7 +468,7 @@ spec:
   description: |
     preview/cases.go lists every part in every state; the golden tests in testdata/golden/ check the same cases.
 --- # block/CMP-PREVIEWCMD.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-PREVIEWCMD
@@ -483,7 +483,7 @@ spec:
   caption: |
     `127.0.0.1:7790`, localhost only
 --- # block/CMP-REACT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-REACT
@@ -501,7 +501,7 @@ spec:
   description: |
     Plain ES modules with createElement, types in react/index.d.ts. They draw the kit's classes; kit.css does the rest. A `Section` catches an error in its children and shows its own error box.
 --- # block/CMP-TEMPLATES.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-TEMPLATES
@@ -525,7 +525,7 @@ spec:
   description: |
     Parses partials/*.html once with the kit's functions (`ext`, `pill`, `lazySection`, `failedSection`, …) and hands each app a clone to parse its own views into.
 --- # block/CMP-TOKENSCMD.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-TOKENSCMD
@@ -541,7 +541,7 @@ spec:
     writes css/tokens.css
     from tokens.json, whole
 --- # block/CMP-TOKENSCSS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-TOKENSCSS
@@ -557,7 +557,7 @@ spec:
     the `--ui-*` properties,
     generated from tokens.json
 --- # block/CMP-TOKENSJSON.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-TOKENSJSON
@@ -572,7 +572,7 @@ spec:
   caption: |
     every token, written once
 --- # block/CMP-TOKENSPKG.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-TOKENSPKG
@@ -587,7 +587,7 @@ spec:
   caption: |
     `Parse`, `Default`, `Set.CSS()`
 --- # block/CMP-TYPES.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-TYPES
@@ -605,7 +605,7 @@ spec:
   description: |
     The server fills every value, tone and label; the partial only draws it.
 --- # block/CMP-UIKIT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-UIKIT
@@ -622,7 +622,7 @@ spec:
   description: |
     The org's shared UI kit, a library with no command of its own (constitution/tech-stack.md, override H-1). It draws what an app's server sends and decides nothing (mission principle 2).
 --- # block/CMP-VITEAPP.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Block
 metadata:
   id: CMP-VITEAPP
@@ -641,7 +641,7 @@ spec:
   description: |
     How a Vite app takes the kit, as the README says. No Vite app in the org's checkouts depends on the package today.
 --- # link/CMP-ASSETS--embeds--CMP-FONTS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-ASSETS--embeds--CMP-FONTS
@@ -650,7 +650,7 @@ spec:
   to: CMP-FONTS
   label: embeds
 --- # link/CMP-ASSETS--embeds--CMP-KITCSS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-ASSETS--embeds--CMP-KITCSS
@@ -659,7 +659,7 @@ spec:
   to: CMP-KITCSS
   label: embeds
 --- # link/CMP-ASSETS--embeds--CMP-KITJS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-ASSETS--embeds--CMP-KITJS
@@ -668,7 +668,7 @@ spec:
   to: CMP-KITJS
   label: embeds
 --- # link/CMP-ASSETS--embeds--CMP-TOKENSCSS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-ASSETS--embeds--CMP-TOKENSCSS
@@ -677,7 +677,7 @@ spec:
   to: CMP-TOKENSCSS
   label: embeds
 --- # link/CMP-BROWSER--http--CMP-GOAPP.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-BROWSER--http--CMP-GOAPP
@@ -687,7 +687,7 @@ spec:
   label: http
   sides: b-t
 --- # link/CMP-BROWSER--loads--CMP-KITJS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-BROWSER--loads--CMP-KITJS
@@ -697,7 +697,7 @@ spec:
   label: loads
   sides: r-t
 --- # link/CMP-CONFIRM--calls--CMP-TYPES.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-CONFIRM--calls--CMP-TYPES
@@ -706,7 +706,7 @@ spec:
   to: CMP-TYPES
   label: calls
 --- # link/CMP-DEP-CI--release--CMP-DEP-TAG.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-DEP-CI--release--CMP-DEP-TAG
@@ -720,7 +720,7 @@ spec:
     description: |
       On a merge to main, release.yml (the org's shared release workflow, `build: none`) runs after the checks and makes the next tag from the commit types; a red check means no release.
 --- # link/CMP-DEP-KITPKG--calls--CMP-DEP-SERVER.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-DEP-KITPKG--calls--CMP-DEP-SERVER
@@ -729,7 +729,7 @@ spec:
   to: CMP-DEP-SERVER
   label: calls
 --- # link/CMP-DEP-NPM--loads--CMP-DEP-PAGE.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-DEP-NPM--loads--CMP-DEP-PAGE
@@ -739,7 +739,7 @@ spec:
   label: loads
   sides: r-b
 --- # link/CMP-DEP-PAGE--http--CMP-DEP-SERVER.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-DEP-PAGE--http--CMP-DEP-SERVER
@@ -753,7 +753,7 @@ spec:
     description: |
       kit.js fetches lazy sections and lights from the same origin (`credentials: same-origin`) and sends a confirmed form with `confirm=yes`; the server still checks it with `kit.Confirmed`.
 --- # link/CMP-DEP-SERVER--http--CMP-DEP-PAGE.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-DEP-SERVER--http--CMP-DEP-PAGE
@@ -767,7 +767,7 @@ spec:
     description: |
       The app sends pages and the kit's files `/ui-kit/css`, `/ui-kit/fonts`, `/ui-kit/js` on its own address. The kit adds no token or login; whatever the app checks applies.
 --- # link/CMP-DEP-TAG--module--CMP-DEP-KITPKG.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-DEP-TAG--module--CMP-DEP-KITPKG
@@ -781,7 +781,7 @@ spec:
     description: |
       `go build` fetches `github.com/ElderlyGate/ui-kit` at the tag the app's go.mod names; go.sum pins the module's hash, so a changed tag fails the build.
 --- # link/CMP-DEP-TAG--module--CMP-DEP-NPM.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-DEP-TAG--module--CMP-DEP-NPM
@@ -795,7 +795,7 @@ spec:
     description: |
       npm installs the package from `github:ElderlyGate/ui-kit#<tag>`, a git tag, no registry.
 --- # link/CMP-DEV--uses--CMP-TOKENSCMD.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-DEV--uses--CMP-TOKENSCMD
@@ -805,7 +805,7 @@ spec:
   label: uses
   sides: b-t
 --- # link/CMP-DEV--uses--CMP-UIKIT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-DEV--uses--CMP-UIKIT
@@ -819,7 +819,7 @@ spec:
     description: |
       The developer reads the README, changes `tokens/tokens.json` or a partial with its class and wrapper, runs `go run ./cmd/ui-kit-tokens` and `go test -run Golden -update`.
 --- # link/CMP-GOAPP--api--CMP-UIKIT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-GOAPP--api--CMP-UIKIT
@@ -833,7 +833,7 @@ spec:
     description: |
       A Go app imports package `kit` at a release tag (go.mod, pinned by go.sum). It mounts `kit.Assets()` at `/ui-kit/`, parses its views into `kit.Templates()`, fills the types of `types.go`, and checks every change with `kit.Confirmed`.
 --- # link/CMP-GOAPP--calls--CMP-ASSETS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-GOAPP--calls--CMP-ASSETS
@@ -847,7 +847,7 @@ spec:
     description: |
       `mux.Handle(kit.Prefix, kit.Assets())`: the app serves the kit's files under `/ui-kit/` from its own binary.
 --- # link/CMP-GOAPP--calls--CMP-CONFIRM.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-GOAPP--calls--CMP-CONFIRM
@@ -861,7 +861,7 @@ spec:
     description: |
       Before a change: `kit.Confirmed(r)`; without the yes, `kit.RefuseUnconfirmed(w)` answers 428 and nothing is changed.
 --- # link/CMP-GOAPP--calls--CMP-TEMPLATES.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-GOAPP--calls--CMP-TEMPLATES
@@ -875,7 +875,7 @@ spec:
     description: |
       `kit.Templates().ParseFS(views, …)`: the app's views and the kit's partials in one template set; `kit.HTML` draws a part into a section's body.
 --- # link/CMP-GOAPP--calls--CMP-TYPES.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-GOAPP--calls--CMP-TYPES
@@ -885,7 +885,7 @@ spec:
   label: calls
   sides: r-l
 --- # link/CMP-KITCSS--loads--CMP-FONTS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-KITCSS--loads--CMP-FONTS
@@ -894,7 +894,7 @@ spec:
   to: CMP-FONTS
   label: loads
 --- # link/CMP-KITCSS--loads--CMP-TOKENSCSS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-KITCSS--loads--CMP-TOKENSCSS
@@ -903,7 +903,7 @@ spec:
   to: CMP-TOKENSCSS
   label: loads
 --- # link/CMP-KITJS--http--CMP-GOAPP.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-KITJS--http--CMP-GOAPP
@@ -917,7 +917,7 @@ spec:
     description: |
       kit.js fetches each lazy section's and lazy light's `data-ui-src` (same-origin credentials, `Accept: text/html`) and sends a confirmed form with `confirm=yes` or `confirm=remember`.
 --- # link/CMP-MANKIT--data--CMP-UIKIT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-MANKIT--data--CMP-UIKIT
@@ -931,7 +931,7 @@ spec:
     description: |
       mankit's action types are copied by hand into `testdata/mankit-action-types.txt`; a test checks Go, React and that copy name the same types in the same order. ui-kit does not import mankit.
 --- # link/CMP-OWNER--uses--CMP-UIKIT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-OWNER--uses--CMP-UIKIT
@@ -945,7 +945,7 @@ spec:
     description: |
       The owner opens the preview gallery, `go run ./cmd/ui-kit-preview` on `http://127.0.0.1:7790` (localhost only), and reviews the golden HTML in `testdata/golden/` before a release.
 --- # link/CMP-PARTIALS--loads--CMP-KITCSS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-PARTIALS--loads--CMP-KITCSS
@@ -954,7 +954,7 @@ spec:
   to: CMP-KITCSS
   label: loads
 --- # link/CMP-PARTIALS--loads--CMP-KITJS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-PARTIALS--loads--CMP-KITJS
@@ -963,7 +963,7 @@ spec:
   to: CMP-KITJS
   label: loads
 --- # link/CMP-PREVIEW--calls--CMP-ASSETS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-PREVIEW--calls--CMP-ASSETS
@@ -973,7 +973,7 @@ spec:
   label: calls
   sides: b-t
 --- # link/CMP-PREVIEW--calls--CMP-CONFIRM.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-PREVIEW--calls--CMP-CONFIRM
@@ -983,7 +983,7 @@ spec:
   label: calls
   sides: l-l
 --- # link/CMP-PREVIEW--calls--CMP-TEMPLATES.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-PREVIEW--calls--CMP-TEMPLATES
@@ -993,7 +993,7 @@ spec:
   label: calls
   sides: l-l
 --- # link/CMP-PREVIEW--calls--CMP-TYPES.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-PREVIEW--calls--CMP-TYPES
@@ -1003,7 +1003,7 @@ spec:
   label: calls
   sides: l-l
 --- # link/CMP-PREVIEWCMD--calls--CMP-PREVIEW.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-PREVIEWCMD--calls--CMP-PREVIEW
@@ -1013,7 +1013,7 @@ spec:
   label: calls
   sides: l-r
 --- # link/CMP-TEMPLATES--calls--CMP-TYPES.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-TEMPLATES--calls--CMP-TYPES
@@ -1022,7 +1022,7 @@ spec:
   to: CMP-TYPES
   label: calls
 --- # link/CMP-TEMPLATES--embeds--CMP-PARTIALS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-TEMPLATES--embeds--CMP-PARTIALS
@@ -1031,7 +1031,7 @@ spec:
   to: CMP-PARTIALS
   label: embeds
 --- # link/CMP-TOKENSCMD--calls--CMP-TOKENSPKG.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-TOKENSCMD--calls--CMP-TOKENSPKG
@@ -1040,7 +1040,7 @@ spec:
   to: CMP-TOKENSPKG
   label: calls
 --- # link/CMP-TOKENSCMD--reads--CMP-TOKENSJSON.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-TOKENSCMD--reads--CMP-TOKENSJSON
@@ -1049,7 +1049,7 @@ spec:
   to: CMP-TOKENSJSON
   label: reads
 --- # link/CMP-TOKENSCMD--writes--CMP-TOKENSCSS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-TOKENSCMD--writes--CMP-TOKENSCSS
@@ -1063,7 +1063,7 @@ spec:
     description: |
       `go run ./cmd/ui-kit-tokens` writes a temporary file beside css/tokens.css and renames it into place; CI fails a pull request whose tokens.css is stale.
 --- # link/CMP-TOKENSPKG--embeds--CMP-TOKENSJSON.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-TOKENSPKG--embeds--CMP-TOKENSJSON
@@ -1072,7 +1072,7 @@ spec:
   to: CMP-TOKENSJSON
   label: embeds
 --- # link/CMP-UIKIT--data--CMP-BROWSER.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-UIKIT--data--CMP-BROWSER
@@ -1086,7 +1086,7 @@ spec:
     description: |
       `kit.css`, `tokens.css`, the fonts and `kit.js` reach the viewer's browser through the app that serves them (`/ui-kit/…` from a Go app, or the Vite app's bundle). The kit adds no token or login of its own; the app decides who may see a page.
 --- # link/CMP-UIKIT--release--CMP-GITHUB.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-UIKIT--release--CMP-GITHUB
@@ -1100,7 +1100,7 @@ spec:
     description: |
       A merge to main makes a release tag from the commit types (`release.yml`, a tag and notes, no binaries); CI checks every pull request on a self-hosted Linux runner. The tag is the only version.
 --- # link/CMP-VITEAPP--api--CMP-UIKIT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-VITEAPP--api--CMP-UIKIT
@@ -1114,7 +1114,7 @@ spec:
     description: |
       A Vite app installs `@elderlygate/ui-kit` from `github:ElderlyGate/ui-kit#<tag>` and imports `css/kit.css` and the React wrappers; nothing is built.
 --- # link/CMP-VITEAPP--calls--CMP-REACT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-VITEAPP--calls--CMP-REACT
@@ -1123,7 +1123,7 @@ spec:
   to: CMP-REACT
   label: calls
 --- # link/CMP-VITEAPP--loads--CMP-KITCSS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: CMP-VITEAPP--loads--CMP-KITCSS
@@ -1133,7 +1133,7 @@ spec:
   label: loads
   sides: b-r
 --- # link/QST-PRODUCT-RECORD--related--CMP-UIKIT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: QST-PRODUCT-RECORD--related--CMP-UIKIT
@@ -1142,7 +1142,7 @@ spec:
   to: CMP-UIKIT
   label: related
 --- # link/QST-WARN-SHADE--related--CMP-TOKENSJSON.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Link
 metadata:
   id: QST-WARN-SHADE--related--CMP-TOKENSJSON
@@ -1151,7 +1151,7 @@ spec:
   to: CMP-TOKENSJSON
   label: related
 --- # flow/ask-before-a-change.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Flow
 metadata:
   id: ask-before-a-change
@@ -1185,7 +1185,7 @@ spec:
       phase: return
       label: The app makes the change; with remember it sets that type to never
 --- # flow/load-a-lazy-section.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Flow
 metadata:
   id: load-a-lazy-section
@@ -1219,7 +1219,7 @@ spec:
       label: kit.js puts the section in its place and fills ui/read-at
       note: A fetch that fails shows the section's own error box with Retry; the rest of the page stays.
 --- # flow/open-a-page.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Flow
 metadata:
   id: open-a-page
@@ -1269,7 +1269,7 @@ spec:
       phase: return
       label: kit.js sets the theme before the first paint and wires the parts
 --- # flow/regenerate-tokens.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Flow
 metadata:
   id: regenerate-tokens
@@ -1306,7 +1306,7 @@ spec:
       label: css/tokens.css is replaced whole, through a temporary file and a rename
       note: CI runs the same command and fails a pull request whose tokens.css differs.
 --- # group/GRP-DEP-BROWSER.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Group
 metadata:
   id: GRP-DEP-BROWSER
@@ -1316,7 +1316,7 @@ spec:
   ui-design:
     look: soft
 --- # group/GRP-DEP-DEV.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Group
 metadata:
   id: GRP-DEP-DEV
@@ -1326,7 +1326,7 @@ spec:
   ui-design:
     look: soft
 --- # group/GRP-DEP-GITHUB.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Group
 metadata:
   id: GRP-DEP-GITHUB
@@ -1336,7 +1336,7 @@ spec:
   ui-design:
     look: soft
 --- # group/GRP-DEP-GOBIN.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Group
 metadata:
   id: GRP-DEP-GOBIN
@@ -1346,7 +1346,7 @@ spec:
   ui-design:
     look: accent
 --- # group/GRP-DEP-VITE.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Group
 metadata:
   id: GRP-DEP-VITE
@@ -1356,7 +1356,7 @@ spec:
   ui-design:
     look: soft
 --- # group/GRP-FILES.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Group
 metadata:
   id: GRP-FILES
@@ -1366,7 +1366,7 @@ spec:
   ui-design:
     look: soft
 --- # group/GRP-KIT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Group
 metadata:
   id: GRP-KIT
@@ -1376,7 +1376,7 @@ spec:
   ui-design:
     look: accent
 --- # group/GRP-PREVIEW.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Group
 metadata:
   id: GRP-PREVIEW
@@ -1386,7 +1386,7 @@ spec:
   ui-design:
     look: soft
 --- # group/GRP-REACT.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Group
 metadata:
   id: GRP-REACT
@@ -1396,7 +1396,7 @@ spec:
   ui-design:
     look: soft
 --- # group/GRP-TOKENS.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Group
 metadata:
   id: GRP-TOKENS
@@ -1406,7 +1406,7 @@ spec:
   ui-design:
     look: soft
 --- # question/QST-PRODUCT-RECORD.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Question
 metadata:
   id: QST-PRODUCT-RECORD
@@ -1421,7 +1421,7 @@ spec:
   description: |
     The design should hold a `Product` record for ID `ui-kit` (G-PLAN-12, G-PLAN-13), but the e-designer build used here has no Product kind (its kinds: Adr, Block, Connection, Contradiction, Design, Flow, Group, Open, Question, Request, Risk, Suggestion, Suite). Add it when the kind ships; until then the ID lives in the product-family design and hubman's catalog.
 --- # question/QST-WARN-SHADE.yml
-apiVersion: core/design/v2
+apiVersion: elderlygate/designer/design/v2
 kind: Question
 metadata:
   id: QST-WARN-SHADE
