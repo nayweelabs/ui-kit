@@ -59,6 +59,7 @@
 {{- end}}
 
 {{define "ui/bar-action" -}}
+{{- /* rel is noopener, not noreferrer: a same-origin POST must keep its Origin for the server's check. */ -}}
 <form class="ui-bar-action" method="post" action="{{.Action}}"{{with .Target}} target="{{.}}" rel="noopener"{{end}}>{{template "ui/button" (submitButton .Button)}}{{with .Count}}{{template "ui/count" .}}{{end}}</form>
 {{- end}}
 

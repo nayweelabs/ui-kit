@@ -101,12 +101,12 @@ func Funcs() template.FuncMap {
 			s.Problem = &Problem{Title: "Can’t load " + s.Title + ".", Retry: src}
 			return s
 		},
-		// lazyLight is a lazy light's placeholder: grey, its icon and word only.
 		// submitButton is b as the submit button of its form.
 		"submitButton": func(b Button) Button {
 			b.Type = "submit"
 			return b
 		},
+		// lazyLight is a lazy light's placeholder: grey, its icon and word only.
 		"lazyLight": func(l Light) Light {
 			return Light{Icon: l.Icon, Label: l.Label, Href: l.Href}
 		},

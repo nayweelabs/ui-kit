@@ -442,7 +442,7 @@ export function Bar({ app, sub, href = "/", pages = [], apps, status = [], light
     h("div", { className: "ui-bar-end" },
       status.map((s) => h("span", { key: s.label, className: "ui-status", title: s.label }, h("span", { className: "ui-dot", "data-tone": s.tone || "none" }), h("span", { className: "ui-status-word" }, s.label))),
       lights.map((l) => h(Light, { key: l.id, ...l })), children,
-      actions.map((a) => h(BarAction, { key: a.action, ...a })), noTheme ? null : h(ThemeToggle))));
+      actions.map((a, i) => h(BarAction, { key: a.action + " " + i, ...a })), noTheme ? null : h(ThemeToggle))));
 }
 
 // BarAction is one action of the page in the top bar: its button submits a form to action, in target when set.
