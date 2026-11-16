@@ -137,6 +137,7 @@ a.ui-num:hover{color:var(--ui-accent)}
 .ui-pill[data-variant="tag"][data-tone="bad"]{color:var(--ui-bad)}
 .ui-pill[data-variant="tag"][data-tone="info"]{color:var(--ui-info)}
 .ui-pill[data-variant="tag"][data-tone="accent"]{color:var(--ui-accent)}
+.ui-pill[data-pulse]::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none;animation:ui-pulse 1.6s ease-in-out infinite}
 
 /* ---------- count badge ---------- */
 .ui-count{display:inline-grid;place-items:center;min-width:20px;height:18px;padding:0 6px;border-radius:var(--ui-radius-pill);background:var(--ui-sunk);color:var(--ui-ink);font:600 11px/1 var(--ui-font-data);font-variant-numeric:tabular-nums}
@@ -246,6 +247,7 @@ a.ui-count:hover{box-shadow:0 0 0 2px var(--ui-focus-soft)}
 @keyframes ui-appear{from{visibility:hidden}to{visibility:visible}}
 @keyframes ui-spin{to{transform:rotate(360deg)}}
 @keyframes ui-progress{from{transform:scaleX(.08)}to{transform:scaleX(1)}}
+@keyframes ui-pulse{0%,100%{opacity:1}50%{opacity:.25}}
 
 /* ---------- product card and card grid ---------- */
 .ui-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:var(--ui-space-3);align-items:start}
@@ -426,5 +428,6 @@ button.ui-id[data-copied]::after{content:" copied";color:var(--ui-good)}
 @media (prefers-reduced-motion: reduce){
   .ui-page *,.ui-page *::before,.ui-page *::after,.ui-skel,.ui-drawer{animation-duration:0s!important;animation-iteration-count:1!important;transition:none!important;scroll-behavior:auto!important}
   .ui-skel{animation:none!important}
+  .ui-pill[data-pulse]::before{animation:none!important}
   .ui-skel-group{animation:ui-appear 0s linear .3s both!important}
 }

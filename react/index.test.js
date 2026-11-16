@@ -6,6 +6,7 @@ import * as kit from "./index.js";
 
 test("pill draws the same classes and tone as the Go partial", () => {
   assert.equal(render(h(kit.Pill, { tone: "warn", label: "3 behind" })), '<span class="ui-pill" data-tone="warn">3 behind</span>');
+  assert.equal(render(h(kit.Pill, { tone: "warn", label: "building", pulse: true })), '<span class="ui-pill" data-tone="warn" data-pulse="">building</span>');
 });
 
 test("count hides zero, shows 99+ with the true number for screen readers", () => {

@@ -23,7 +23,7 @@
 {{- end}}
 
 {{define "ui/pill" -}}
-{{if .Href}}<a class="ui-pill" href="{{.Href}}"{{ext .Href}}{{else}}<span class="ui-pill"{{end}}{{with .Tone}} data-tone="{{.}}"{{end}}{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Title}} title="{{.}}"{{end}}>{{.Label}}{{if .Href}}</a>{{else}}</span>{{end}}
+{{if .Href}}<a class="ui-pill" href="{{.Href}}"{{ext .Href}}{{else}}<span class="ui-pill"{{end}}{{with .Tone}} data-tone="{{.}}"{{end}}{{with .Variant}} data-variant="{{.}}"{{end}}{{with .Title}} title="{{.}}"{{end}}{{if .Pulse}} data-pulse{{end}}>{{.Label}}{{if .Href}}</a>{{else}}</span>{{end}}
 {{- end}}
 
 {{define "ui/count" -}}
