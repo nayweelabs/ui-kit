@@ -205,6 +205,7 @@ a.ui-count:hover{box-shadow:0 0 0 2px var(--ui-focus-soft)}
 .ui-section-tools [data-ui-again]{width:28px;height:28px}
 .ui-read{font:var(--ui-text-xs)/1 var(--ui-font-data);color:var(--ui-muted);white-space:nowrap}
 .ui-bar-end .ui-read{margin-right:2px}
+.ui-bar-action{display:inline-flex;align-items:center;gap:4px;margin:0}
 .ui-again-done{font-size:var(--ui-text-xs);font-weight:600;color:var(--ui-good)}
 .ui-again-done:empty{display:none}
 [data-ui-again][aria-busy="true"]{opacity:.6;cursor:progress;pointer-events:none}

@@ -102,6 +102,11 @@ func Funcs() template.FuncMap {
 			return s
 		},
 		// lazyLight is a lazy light's placeholder: grey, its icon and word only.
+		// submitButton is b as the submit button of its form.
+		"submitButton": func(b Button) Button {
+			b.Type = "submit"
+			return b
+		},
 		"lazyLight": func(l Light) Light {
 			return Light{Icon: l.Icon, Label: l.Label, Href: l.Href}
 		},
