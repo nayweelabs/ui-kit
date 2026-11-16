@@ -138,3 +138,12 @@ test("confirm settings say the real default of a type with a change to the syste
   assert.match(html, /<legend>delete<\/legend><span class="ui-choice-now">Ask y\/N · name for changes to the system /);
   assert.match(html, /<legend>move<\/legend><span class="ui-choice-now">Ask y\/N <span/);
 });
+
+test("a bar action is a form that posts its button, left of the theme switch, as the Go partial draws it", () => {
+  const bar = render(h(kit.Bar, { app: "Control room", actions: [{ button: { label: "Open design", size: "sm" }, action: "/product/room/open/design", target: "_blank", count: { n: 3, tone: "accent" } }] }));
+  const form = bar.match(/<form class="ui-bar-action"[^>]*>(.*?)<\/form>/);
+  assert.ok(form, bar);
+  for (const attr of ['method="post"', 'action="/product/room/open/design"', 'target="_blank"', 'rel="noopener"']) assert.ok(form[0].includes(attr), attr);
+  assert.match(form[1], /^<button class="ui-btn" data-size="sm" type="submit">Open design<\/button><span class="ui-count" data-tone="accent">3<\/span>$/);
+  assert.ok(bar.indexOf("ui-bar-action") < bar.indexOf('aria-label="Switch light or dark theme"'));
+});

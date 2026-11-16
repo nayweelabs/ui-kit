@@ -404,7 +404,18 @@ type Bar struct {
 	Lights  []Light
 	Refresh *Link
 	Read    *ReadAt // when the page was read, left of Refresh
+	Actions []BarAction
 	NoTheme bool
+}
+
+// BarAction is one action of the page in the top bar, left of the theme switch ("ui/bar-action"): Button
+// drawn as the submit button of a form that posts to Action, opened in Target when set ("_blank" for a new
+// tab), with an optional Count beside it. The button asks first as any kit button does (Confirm).
+type BarAction struct {
+	Button Button
+	Action string
+	Target string
+	Count  *Count
 }
 
 // Light is a status light in the top bar ("ui/light"): a traffic-light dot (Tone "good", "warn", "bad" or "none"), an icon and a short Label. It is a link to Href, the app's full page for it; kit.js makes it open a popover under it instead, holding Title, Text, the Details and the Actions menu. Open draws the popover open.

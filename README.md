@@ -45,6 +45,8 @@ A link inside a lazy section can change only that section's view, like a toolbar
 
 A status light (`kit.Light`, in `kit.Bar.Lights`) is a dot, an icon and a word in the top bar for one connection, such as GitHub. It is a link to the app's full page for it; `kit.js` makes it open a popover under it with the facts (`Details`) and an Actions menu. An action links, opens a dialog of `Dialogs` (a `kit.Dialog` whose `Body` holds its fields), or asks once more inside the popover (`Confirm`) before it posts. Give it a `Src` and the bar draws it grey at once and fetches it, like a lazy section.
 
+A page's own actions (`kit.BarAction`, in `kit.Bar.Actions`) sit in the top bar left of the theme switch, such as Open design. Each is a form that posts to `Action`, in `Target` when set (`_blank` for a new tab), with the action's `Button` as its submit button, so in Go it asks first as any kit button does (`Confirm`), and an optional `Count` beside it. React: `Bar`'s `actions`; React's `Button` has no confirm today.
+
 ### A change asks first
 
 Every change asks before it is made (the org rule), and the user picks how, per action type. The types are the same words in every product (`kit.ActionTypes`): create, edit, move, focus, archive, close, delete, settings, connect, run. Each type asks in one of three ways: `name` (type the name to go ahead), `yes-no`, or `never`. By default every type asks yes-no, delete included. A change to the system itself (uninstalling, removing a token, dropping data, deleting a board) asks for the name; the product names those changes, and the user can still pick another way.
@@ -132,7 +134,7 @@ Put `class="ui-page"` on `<body>`. The wrappers are plain ES modules with types;
 
 ### Partials
 
-Shell: `ui/shell`, `ui/assets`, `ui/preview-banner`, `ui/bar`, `ui/light`, `ui/rail`, `ui/page-header`, `ui/footer`.
+Shell: `ui/shell`, `ui/assets`, `ui/preview-banner`, `ui/bar`, `ui/bar-action`, `ui/light`, `ui/rail`, `ui/page-header`, `ui/footer`.
 Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/confirm-settings`, `ui/locations`, `ui/drawer`, `ui/star`, `ui/skeleton`.
 Pieces they share: `ui/icon`, `ui/num`, `ui/fact`, `ui/cell`, `ui/read-at`.
 

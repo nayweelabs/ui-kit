@@ -76,7 +76,8 @@ export interface LightDetail { label: string; value: string }
 export interface LightConfirm { text: string; label: string; action?: string; hidden?: { name: string; value: string }[]; onConfirm?: () => void }
 export interface LightAction { label: string; variant?: "danger"; href?: string; opens?: string; onSelect?: () => void; confirm?: LightConfirm }
 export interface LightProps { id: string; tone?: Tone; icon?: string; label: string; href?: string; title?: string; text?: string; details?: LightDetail[]; actions?: LightAction[]; open?: boolean; children?: ReactNode }
-export interface BarProps { app: string; sub?: string; href?: string; pages?: Link[]; apps?: Link[]; status?: StatusProps[]; lights?: LightProps[]; noTheme?: boolean; children?: ReactNode }
+export interface BarActionProps { button: ButtonProps; action: string; target?: string; count?: CountProps }
+export interface BarProps { app: string; sub?: string; href?: string; pages?: Link[]; apps?: Link[]; status?: StatusProps[]; lights?: LightProps[]; actions?: BarActionProps[]; noTheme?: boolean; children?: ReactNode }
 export interface HeadProps { crumb?: Link[]; title: string; lede?: string; actions?: ButtonProps[] }
 export interface Build { version?: string; branch?: string; commit?: string; dirty?: boolean; released?: boolean }
 export interface FooterProps { version?: string; versionHref?: string; branch?: string; fresh?: StatusProps; links?: Link[] }
@@ -118,6 +119,7 @@ export function Drawer(props: DrawerProps): ReactElement;
 export function ThemeToggle(): ReactElement;
 export function Light(props: LightProps): ReactElement;
 export function Bar(props: BarProps): ReactElement;
+export function BarAction(props: BarActionProps): ReactElement;
 export function PageHeader(props: HeadProps): ReactElement;
 export function PreviewBanner(props: Build): ReactElement | null;
 export function Footer(props: FooterProps): ReactElement;
