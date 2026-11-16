@@ -31,8 +31,8 @@ export function Status({ tone: t, label }) {
   return h("span", { className: "ui-status" }, h("span", { className: "ui-dot", "data-tone": t || "none" }), label);
 }
 
-export function Pill({ tone: t, variant, label, title, href, children }) {
-  const props = { className: "ui-pill", "data-tone": tone(t), "data-variant": variant || undefined, title };
+export function Pill({ tone: t, variant, label, title, href, pulse, children }) {
+  const props = { className: "ui-pill", "data-tone": tone(t), "data-variant": variant || undefined, title, "data-pulse": pulse ? "" : undefined };
   return href ? h("a", { ...props, href }, label ?? children) : h("span", props, label ?? children);
 }
 

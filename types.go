@@ -24,13 +24,15 @@ type Status struct {
 	Label string
 }
 
-// Pill is a short state or a tag ("ui/pill"). Variant is "", "outline" or "tag".
+// Pill is a short state or a tag ("ui/pill"). Variant is "", "outline" or "tag". Pulse marks a state that is
+// in progress, such as building: a dot before the label pulses gently, and stands still when motion is reduced.
 type Pill struct {
 	Tone    string
 	Variant string
 	Label   string
 	Title   string
 	Href    string
+	Pulse   bool
 }
 
 // Count is how many of something ("ui/count"). Zero hides it unless ShowZero; over 99 shows "99+".
