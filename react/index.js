@@ -432,7 +432,7 @@ export function ThemeToggle() {
   return h("button", { className: "ui-iconbtn", type: "button", "aria-label": "Switch light or dark theme", title: "Switch light or dark theme", onClick: flip }, h(Icon, { name: "theme" }));
 }
 
-export function Bar({ app, sub, href = "/", pages = [], apps, status = [], lights = [], noTheme, children }) {
+export function Bar({ app, sub, href = "/", pages = [], apps, status = [], lights = [], actions = [], noTheme, children }) {
   return h("header", { className: "ui-bar ui-gutter" }, h("div", { className: "ui-wrap" },
     apps && apps.length
       ? h("details", { className: "ui-apps" }, h("summary", { className: "ui-brand" }, app, sub ? h(Fragment, null, " ", h("small", null, sub)) : null),
@@ -441,7 +441,14 @@ export function Bar({ app, sub, href = "/", pages = [], apps, status = [], light
     pages.length ? h("nav", { className: "ui-nav", "aria-label": "Pages" }, pages.map((p) => h("a", { key: p.href, href: p.href, "aria-current": p.current ? "page" : undefined }, p.label, p.count ? h(Fragment, null, " ", h(Count, p.count)) : null))) : null,
     h("div", { className: "ui-bar-end" },
       status.map((s) => h("span", { key: s.label, className: "ui-status", title: s.label }, h("span", { className: "ui-dot", "data-tone": s.tone || "none" }), h("span", { className: "ui-status-word" }, s.label))),
-      lights.map((l) => h(Light, { key: l.id, ...l })), children, noTheme ? null : h(ThemeToggle))));
+      lights.map((l) => h(Light, { key: l.id, ...l })), children,
+      actions.map((a) => h(BarAction, { key: a.action, ...a })), noTheme ? null : h(ThemeToggle))));
+}
+
+// BarAction is one action of the page in the top bar: its button submits a form to action, in target when set.
+export function BarAction({ button, action, target, count }) {
+  return h("form", { className: "ui-bar-action", method: "post", action, target: target || undefined, rel: target ? "noopener" : undefined },
+    h(Button, { ...button, type: "submit" }), count ? h(Count, count) : null);
 }
 
 export function PageHeader({ crumb, title, lede, actions = [] }) {
