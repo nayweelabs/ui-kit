@@ -57,7 +57,8 @@ export function Num({ text, href, command }) {
 export function Button({ label, variant, size, type = "button", href, kbd, disabled, busy, onClick, children, ...rest }) {
   const props = { className: "ui-btn", "data-variant": variant || undefined, "data-size": size || undefined, onClick, ...rest };
   const body = [label ?? children, kbd ? h(Fragment, { key: "k" }, " ", h("kbd", null, kbd)) : null];
-  if (href) return h("a", { ...props, href, "aria-disabled": disabled || busy ? "true" : undefined, "aria-busy": busy ? "true" : undefined }, ...body);
+  const away = /^https?:\/\//.test(href || "") ? { target: "_blank", rel: "noopener noreferrer" } : {}; // as the partials' ext
+  if (href) return h("a", { ...props, href, ...away, "aria-disabled": disabled || busy ? "true" : undefined, "aria-busy": busy ? "true" : undefined }, ...body);
   return h("button", { ...props, type, disabled: disabled || busy, "aria-busy": busy ? "true" : undefined, "aria-keyshortcuts": kbd }, ...body);
 }
 
