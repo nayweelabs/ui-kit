@@ -30,6 +30,7 @@
     }
    ],
    "licenses": null,
+   "refused": null,
    "state": ""
   }
  },
@@ -81,7 +82,7 @@
     },
     {
      "covers": "apply, edit, connect, delete, focus, the design files and word lists",
-     "from": "",
+     "from": "none",
      "id": "edit",
      "on": true,
      "tier": "free",
@@ -89,7 +90,7 @@
     },
     {
      "covers": "moving, tidying and arranging boxes and lines",
-     "from": "",
+     "from": "none",
      "id": "layout",
      "on": true,
      "tier": "free",
@@ -98,7 +99,7 @@
     {
      "by": "default",
      "covers": "saved requests, runs and suites",
-     "from": "",
+     "from": "none",
      "id": "tracing",
      "on": false,
      "startsOff": true,
@@ -108,7 +109,7 @@
     {
      "by": "switch",
      "covers": "reading a project’s code into documents",
-     "from": "",
+     "from": "none",
      "id": "workshop",
      "on": false,
      "tier": "free",
@@ -183,7 +184,7 @@
     },
     {
      "covers": "apply, edit, connect, delete, focus, the design files and word lists",
-     "from": "",
+     "from": "none",
      "id": "edit",
      "on": true,
      "tier": "free",
@@ -191,7 +192,7 @@
     },
     {
      "covers": "moving, tidying and arranging boxes and lines",
-     "from": "",
+     "from": "none",
      "id": "layout",
      "on": true,
      "tier": "free",
@@ -200,7 +201,7 @@
     {
      "by": "default",
      "covers": "saved requests, runs and suites",
-     "from": "",
+     "from": "none",
      "id": "tracing",
      "on": false,
      "startsOff": true,
@@ -210,7 +211,7 @@
     {
      "by": "switch",
      "covers": "reading a project’s code into documents",
-     "from": "",
+     "from": "none",
      "id": "workshop",
      "on": false,
      "tier": "free",
@@ -227,6 +228,7 @@
      "until": "2026-11-10"
     }
    ],
+   "refused": [],
    "state": "ended",
    "version": "v9.4.1"
   }
@@ -279,7 +281,7 @@
     },
     {
      "covers": "apply, edit, connect, delete, focus, the design files and word lists",
-     "from": "",
+     "from": "none",
      "id": "edit",
      "on": true,
      "tier": "free",
@@ -287,7 +289,7 @@
     },
     {
      "covers": "moving, tidying and arranging boxes and lines",
-     "from": "",
+     "from": "none",
      "id": "layout",
      "on": true,
      "tier": "free",
@@ -296,7 +298,7 @@
     {
      "by": "default",
      "covers": "saved requests, runs and suites",
-     "from": "",
+     "from": "none",
      "id": "tracing",
      "on": false,
      "startsOff": true,
@@ -306,7 +308,7 @@
     {
      "by": "switch",
      "covers": "reading a project’s code into documents",
-     "from": "",
+     "from": "none",
      "id": "workshop",
      "on": false,
      "tier": "free",
@@ -322,11 +324,11 @@
      "kind": "org",
      "until": "2026-12-01",
      "window": {
-      "left": 12,
       "of": 14
      }
     }
    ],
+   "refused": [],
    "state": "ending",
    "version": "v9.4.1"
   }
@@ -384,7 +386,7 @@
     },
     {
      "covers": "apply, edit, connect, delete, focus, the design files and word lists",
-     "from": "",
+     "from": "none",
      "id": "edit",
      "on": true,
      "tier": "free",
@@ -392,7 +394,7 @@
     },
     {
      "covers": "moving, tidying and arranging boxes and lines",
-     "from": "",
+     "from": "none",
      "id": "layout",
      "on": true,
      "tier": "free",
@@ -401,7 +403,7 @@
     {
      "by": "default",
      "covers": "saved requests, runs and suites",
-     "from": "",
+     "from": "none",
      "id": "tracing",
      "on": false,
      "startsOff": true,
@@ -411,7 +413,7 @@
     {
      "by": "switch",
      "covers": "reading a project’s code into documents",
-     "from": "",
+     "from": "none",
      "id": "workshop",
      "on": false,
      "tier": "free",
@@ -436,6 +438,7 @@
      "until": "2027-03-01"
     }
    ],
+   "refused": [],
    "state": "licensed",
    "version": "v9.4.1"
   }
@@ -465,6 +468,7 @@
     }
    ],
    "licenses": null,
+   "refused": null,
    "state": ""
   }
  },
@@ -510,7 +514,7 @@
     },
     {
      "covers": "apply, edit, connect, delete, focus, the design files and word lists",
-     "from": "",
+     "from": "none",
      "id": "edit",
      "on": true,
      "tier": "free",
@@ -518,7 +522,7 @@
     },
     {
      "covers": "moving, tidying and arranging boxes and lines",
-     "from": "",
+     "from": "none",
      "id": "layout",
      "on": true,
      "tier": "free",
@@ -527,7 +531,7 @@
     {
      "by": "default",
      "covers": "saved requests, runs and suites",
-     "from": "",
+     "from": "none",
      "id": "tracing",
      "on": false,
      "startsOff": true,
@@ -537,7 +541,7 @@
     {
      "by": "switch",
      "covers": "reading a project’s code into documents",
-     "from": "",
+     "from": "none",
      "id": "workshop",
      "on": false,
      "tier": "free",
@@ -545,6 +549,7 @@
     }
    ],
    "licenses": [],
+   "refused": [],
    "state": "none",
    "trial": "https://example.com/trial-key",
    "version": "v9.4.1"
@@ -598,7 +603,7 @@
     },
     {
      "covers": "apply, edit, connect, delete, focus, the design files and word lists",
-     "from": "",
+     "from": "none",
      "id": "edit",
      "on": true,
      "tier": "free",
@@ -606,7 +611,7 @@
     },
     {
      "covers": "moving, tidying and arranging boxes and lines",
-     "from": "",
+     "from": "none",
      "id": "layout",
      "on": true,
      "tier": "free",
@@ -615,7 +620,7 @@
     {
      "by": "default",
      "covers": "saved requests, runs and suites",
-     "from": "",
+     "from": "none",
      "id": "tracing",
      "on": false,
      "startsOff": true,
@@ -625,7 +630,7 @@
     {
      "by": "switch",
      "covers": "reading a project’s code into documents",
-     "from": "",
+     "from": "none",
      "id": "workshop",
      "on": false,
      "tier": "free",
@@ -641,11 +646,11 @@
      "kind": "trial",
      "until": "2026-12-03",
      "window": {
-      "left": 10,
       "of": 14
      }
     }
    ],
+   "refused": [],
    "state": "trial",
    "version": "v9.4.1"
   }
@@ -697,7 +702,7 @@
     },
     {
      "covers": "apply, edit, connect, delete, focus, the design files and word lists",
-     "from": "",
+     "from": "none",
      "id": "edit",
      "on": true,
      "tier": "free",
@@ -705,7 +710,7 @@
     },
     {
      "covers": "moving, tidying and arranging boxes and lines",
-     "from": "",
+     "from": "none",
      "id": "layout",
      "on": true,
      "tier": "free",
@@ -714,7 +719,7 @@
     {
      "by": "default",
      "covers": "saved requests, runs and suites",
-     "from": "",
+     "from": "none",
      "id": "tracing",
      "on": false,
      "startsOff": true,
@@ -724,7 +729,7 @@
     {
      "by": "switch",
      "covers": "reading a project’s code into documents",
-     "from": "",
+     "from": "none",
      "id": "workshop",
      "on": false,
      "tier": "free",
@@ -741,6 +746,7 @@
      "until": "2026-12-03"
     }
    ],
+   "refused": [],
    "state": "trial-ended",
    "trial": "https://example.com/trial-key",
    "version": "v9.4.1"

@@ -189,10 +189,10 @@ var (
 	lockedEvents    = kit.LicenseFeature{ID: "events", Title: "Live events", Covers: "GET /api/events, the live stream of what changed", Tier: "enterprise", By: "license", StartsOff: true, From: "none"}
 	brokenTelemetry = kit.LicenseFeature{ID: "telemetry", Title: "Telemetry", Covers: "traces, metrics and logs sent to another system over OpenTelemetry", Tier: "enterprise", On: true, StartsOff: true, Missing: []kit.FeatureValue{{Name: "OTEL_EXPORTER_OTLP_ENDPOINT", Purpose: "where telemetry is sent"}}, From: "org", Until: "2027-11-19"}
 	freeFeatures    = []kit.LicenseFeature{
-		{ID: "edit", Title: "Edit", Covers: "apply, edit, connect, delete, focus, the design files and word lists", Tier: "free", On: true},
-		{ID: "layout", Title: "Layout", Covers: "moving, tidying and arranging boxes and lines", Tier: "free", On: true},
-		{ID: "tracing", Title: "Tracing", Covers: "saved requests, runs and suites", Tier: "free", By: "default", StartsOff: true},
-		{ID: "workshop", Title: "Workshop", Covers: "reading a project’s code into documents", Tier: "free", By: "switch"},
+		{ID: "edit", Title: "Edit", Covers: "apply, edit, connect, delete, focus, the design files and word lists", Tier: "free", On: true, From: "none"},
+		{ID: "layout", Title: "Layout", Covers: "moving, tidying and arranging boxes and lines", Tier: "free", On: true, From: "none"},
+		{ID: "tracing", Title: "Tracing", Covers: "saved requests, runs and suites", Tier: "free", By: "default", StartsOff: true, From: "none"},
+		{ID: "workshop", Title: "Workshop", Covers: "reading a project’s code into documents", Tier: "free", By: "switch", From: "none"},
 	}
 )
 
@@ -213,7 +213,7 @@ func enterprise(from, until string) []kit.LicenseFeature {
 var (
 	addLicense  = kit.Button{Label: "Add a license", Href: "#add-license"}
 	showLicense = kit.Button{Label: "Show the license file", Href: "#license-file"}
-	trialFile   = kit.LicenseFile{Kind: "trial", For: "Ada Example", Until: "2026-12-03", DaysLeft: 10, KeyID: "prod-2026-a", Window: &kit.Window{Left: 10, Of: 14}}
+	trialFile   = kit.LicenseFile{Kind: "trial", For: "Ada Example", Until: "2026-12-03", DaysLeft: 10, KeyID: "prod-2026-a", Window: &kit.Window{Of: 14}}
 	orgFile     = kit.LicenseFile{Kind: "org", For: "Example Ltd", Until: "2027-11-19", DaysLeft: 365, KeyID: "prod-2026-a"}
 	locked      = kit.LicenseCounts{Free: 4, Enterprise: 2, On: 2, Locked: 2}
 	open        = kit.LicenseCounts{Free: 4, Enterprise: 2, On: 3}
@@ -224,7 +224,7 @@ func SampleLicenses() map[string]kit.License {
 	trialEnded := trialFile
 	trialEnded.DaysLeft, trialEnded.Ended, trialEnded.Window = 0, true, nil
 	ending := orgFile
-	ending.Until, ending.DaysLeft, ending.Window = "2026-12-01", 12, &kit.Window{Left: 12, Of: 14}
+	ending.Until, ending.DaysLeft, ending.Window = "2026-12-01", 12, &kit.Window{Of: 14}
 	ended := orgFile
 	ended.Until, ended.DaysLeft, ended.Ended = "2026-11-10", 0, true
 	product := kit.LicenseFile{Kind: "product", For: "Example Ltd", Until: "2027-03-01", DaysLeft: 102, KeyID: "prod-2026-a"}
@@ -232,7 +232,7 @@ func SampleLicenses() map[string]kit.License {
 	licensed[1] = brokenTelemetry
 	devFile := kit.LicenseFile{Kind: "product", For: "Ada Example", Until: "2027-01-01", DaysLeft: 43, KeyID: "dev-1"}
 	release, version := kit.LicenseBuild{Release: true}, "v9.4.1"
-	return map[string]kit.License{
+	all := map[string]kit.License{
 		"none":        {State: "none", Build: release, Version: version, Licenses: []kit.LicenseFile{}, Features: enterprise("none", ""), Counts: locked, Trial: "https://example.com/trial-key", Actions: []kit.Button{addLicense}},
 		"trial":       {State: "trial", Build: release, Version: version, Licenses: []kit.LicenseFile{trialFile}, Features: enterprise("trial", "2026-12-03"), Counts: open, Actions: []kit.Button{{Label: "Add a license", Variant: "primary", Href: "#add-license"}, showLicense}},
 		"trial-ended": {State: "trial-ended", Build: release, Version: version, Licenses: []kit.LicenseFile{trialEnded}, Features: enterprise("none", ""), Counts: locked, Trial: "https://example.com/trial-key", Actions: []kit.Button{addLicense, showLicense}},
@@ -241,6 +241,13 @@ func SampleLicenses() map[string]kit.License {
 		"ended":       {State: "ended", Build: release, Version: version, Licenses: []kit.LicenseFile{ended}, Features: enterprise("none", ""), Counts: locked, Actions: []kit.Button{{Label: "Add the renewed license", Variant: "primary", Href: "#add-license"}, showLicense}},
 		"dev-build":   {State: "licensed", Version: "main@3d91aef", Licenses: []kit.LicenseFile{devFile}, Refused: []kit.RefusedFile{{File: "/home/ada/.config/elderlygate/license", Type: "refused", Reason: "other_build"}}, Features: enterprise("product", "2027-01-01"), Counts: open, Actions: []kit.Button{{Label: "Add a dev license", Href: "#add-license"}, showLicense}},
 	}
+	for name, l := range all {
+		if l.Refused == nil {
+			l.Refused = []kit.RefusedFile{}
+		}
+		all[name] = l
+	}
+	return all
 }
 
 // Parts lists the shell pieces and the 20 parts in the order the gallery shows them.
