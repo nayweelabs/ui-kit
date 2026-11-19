@@ -462,3 +462,17 @@ func TestActionTypesAreTheSameInGoReactAndMankit(t *testing.T) {
 		t.Errorf("Go %v\nReact %v\nmankit %v", kit.ActionTypes, got, mankit)
 	}
 }
+
+// A state or a closing word the kit has no words for is drawn as given, since both are open words in the contracts schema.
+func TestLicenseDrawsAnUnknownWordAsGiven(t *testing.T) {
+	var b bytes.Buffer
+	err := kit.Render(&b, "ui/license", kit.License{State: "public", Release: true, Features: []kit.LicenseFeature{{ID: "share", Tier: "enterprise", By: "public_mode", From: "none"}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{`<span class="ui-pill">public</span><b class="ui-license-title">public</b>`, `<td>public_mode</td>`, `<span class="ui-dot" data-tone="none"></span>Off`} {
+		if !strings.Contains(b.String(), want) {
+			t.Errorf("license lacks %q:\n%s", want, b.String())
+		}
+	}
+}

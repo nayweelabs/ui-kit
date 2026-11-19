@@ -185,6 +185,61 @@ func SampleMilestones() kit.Milestones {
 	}
 }
 
+var (
+	lockedEvents    = kit.LicenseFeature{ID: "events", Covers: "GET /api/events, the live stream of what changed", Tier: "enterprise", By: "license", StartsOff: true, From: "none"}
+	brokenTelemetry = kit.LicenseFeature{ID: "telemetry", Covers: "traces, metrics and logs sent to another system over OpenTelemetry", Tier: "enterprise", On: true, StartsOff: true, Missing: []kit.FeatureValue{{Name: "OTEL_EXPORTER_OTLP_ENDPOINT", Purpose: "where telemetry is sent"}}, From: "org", Until: "2027-11-19"}
+)
+
+// sampleLicense is e-designer's Settings section in one license state, shaped like license show and its feature list.
+func sampleLicense(state string) kit.License {
+	l := kit.License{State: state, Release: true, Version: "v9.4.1", Trial: "https://example.com/trial-key"}
+	from, until := "none", ""
+	switch state {
+	case "trial", "trial-ended":
+		l.Licenses = []kit.LicenseFile{{Kind: "trial", For: "Ada Example", Until: "2026-12-03", Ended: state == "trial-ended", KeyID: "prod-2026-a"}}
+	case "licensed":
+		l.Licenses = []kit.LicenseFile{{Kind: "org", For: "Example Ltd", Until: "2027-11-19", KeyID: "prod-2026-a"}}
+	case "ending":
+		l.Licenses = []kit.LicenseFile{{Kind: "org", For: "Example Ltd", Until: "2026-12-01", KeyID: "prod-2026-a"}}
+	case "dev":
+		l.Release, l.Version = false, "dev-3d91aef"
+		l.Licenses = []kit.LicenseFile{{Kind: "product", For: "Ada Example", Until: "2027-01-01", KeyID: "dev-1"}}
+	}
+	switch state {
+	case "none", "trial-ended":
+		l.Actions = []kit.Button{{Label: "Add a license", Href: "#add-license"}}
+	case "trial":
+		from, until = "trial", "2026-12-03"
+		l.Countdown = &kit.Countdown{Left: 10, Of: 14}
+		l.Actions = []kit.Button{{Label: "Add a license", Variant: "primary", Href: "#add-license"}}
+	case "licensed":
+		from, until = "org", "2027-11-19"
+		l.Actions = []kit.Button{{Label: "Replace the license", Href: "#add-license"}}
+	case "ending":
+		from, until = "org", "2026-12-01"
+		l.Countdown = &kit.Countdown{Left: 12, Of: 14}
+		l.Actions = []kit.Button{{Label: "Add the renewed license", Variant: "primary", Href: "#add-license"}}
+	case "dev":
+		from, until = "product", "2027-01-01"
+		l.Actions = []kit.Button{{Label: "Add a dev license", Href: "#add-license"}}
+	}
+	events, telemetry := lockedEvents, kit.LicenseFeature{ID: "telemetry", Covers: brokenTelemetry.Covers, Tier: "enterprise", By: "license", StartsOff: true, From: "none"}
+	if from != "none" {
+		events = kit.LicenseFeature{ID: "events", Covers: lockedEvents.Covers, Tier: "enterprise", On: true, StartsOff: true, From: from, Until: until}
+		telemetry = kit.LicenseFeature{ID: "telemetry", Covers: brokenTelemetry.Covers, Tier: "enterprise", By: "default", StartsOff: true, From: from, Until: until}
+	}
+	if state == "licensed" {
+		telemetry = brokenTelemetry
+	}
+	l.Features = []kit.LicenseFeature{events, telemetry,
+		{ID: "edit", Covers: "apply, edit, connect, delete, focus, the design files and word lists", Tier: "free", On: true},
+		{ID: "layout", Covers: "moving, tidying and arranging boxes and lines", Tier: "free", On: true},
+		{ID: "tracing", Covers: "saved requests, runs and suites", Tier: "free", By: "default", StartsOff: true},
+		{ID: "workshop", Covers: "reading a project’s code into documents", Tier: "free", By: "switch"},
+	}
+	return l
+}
+
 // Parts lists the shell pieces and the 20 parts in the order the gallery shows them.
 func Parts() []Part {
 	return []Part{
@@ -215,6 +270,7 @@ func Parts() []Part {
 		{"crumb", "Breadcrumb", ".ui-crumb", "Where this page sits, for pages two or more levels down.", []string{"The last item is the current page and is not a link."}},
 		{"dialog", "Modal", "dialog.ui-dialog", "Asks before acting.", []string{"Native <dialog>: traps focus, closes on Escape. Cancel gets first focus. The confirm button repeats the verb and the count."}},
 		{"confirm-settings", "How changes ask", ".ui-confirm-settings · .ui-choice", "Settings: the user picks, per action type, how a change asks.", []string{"Type the name, Ask y/N, or Don’t ask. By default every type asks y/N, delete included; a change to the system itself asks for the name.", "Each row says the style in use and where it comes from: this app or default.", "Use the default drops this app's own value. Remember my answer sets it."}},
+		{"license", "License and features", ".ui-license · .ui-tier", "On a Settings page: the license state and every feature with its tier, its state and what unlocks it, from <app> license show and the feature list.", []string{"Six states: none, trial, trial-ended, licensed, ending, dev. Free use shows no warning; a trial and a license's last days count down.", "Locked is an enterprise feature no license or trial key names; a free feature never needs a license.", "No app starts a trial: with no license or an ended trial, a button says how to get a trial key, where the app says.", "The app sends the order, enterprise first, and the countdown; the kit only draws them."}},
 		{"locations", "Where things are kept", ".ui-locations", "On a Settings page: where the app keeps its config and data.", []string{"The app passes the real paths; the home folder shows as ~.", "Each path is a copy button that copies the full path."}},
 		{"drawer", "Drawer", "dialog.ui-drawer", "Detail next to the list you came from.", []string{"On a phone the drawer becomes a full page."}},
 		{"star", "Focus marker", ".ui-star", "A yellow star: this is what we focus on now.", []string{"Only --ui-focus draws it, and it draws nothing else.", "If more than three things carry a star, nothing is in focus.", "Whether a thing is in focus is data (focus: true), never decided by the UI."}},
@@ -337,6 +393,14 @@ func Cases() []Case {
 		{Part: "crumb", State: "default", Items: one("ui/crumb", []kit.Link{{Label: "Products", Href: "#"}, {Label: "kanban", Href: "#"}, {Label: "20261027-a188"}})},
 		{Part: "dialog", State: "confirm-danger", Stage: true, Items: one("ui/dialog", kit.Dialog{ID: "dlg-archive-demo", Title: "Archive 4 done cards?", Text: "They move to archive/ and leave the board. You can bring them back with kanban restore.", Confirm: kit.Button{Label: "Archive 4 cards", Variant: "danger", Type: "submit", Value: "confirm"}, Open: true})},
 		{Part: "dialog", State: "with-body", Stage: true, Note: "Body holds fields and steps; the form posts to Action.", Items: one("ui/dialog", tokenDialog("dlg-token-demo", true))},
+		{Part: "license", State: "none", Note: "No license: enterprise features are locked, and a button says how to get a trial key.", Items: one("ui/license", sampleLicense("none"))},
+		{Part: "license", State: "trial", Items: one("ui/license", sampleLicense("trial"))},
+		{Part: "license", State: "trial-ended", Items: one("ui/license", sampleLicense("trial-ended"))},
+		{Part: "license", State: "licensed", Note: "An org license; telemetry is on but misses a value.", Items: one("ui/license", sampleLicense("licensed"))},
+		{Part: "license", State: "ending", Items: one("ui/license", sampleLicense("ending"))},
+		{Part: "license", State: "dev", Items: one("ui/license", sampleLicense("dev"))},
+		{Part: "license", State: "locked-row", Note: "An enterprise feature no license or trial key names.", Items: one("ui/license-features", []kit.LicenseFeature{lockedEvents})},
+		{Part: "license", State: "broken-row", Note: "An enterprise feature that is on but cannot run: a value it needs is not set.", Items: one("ui/license-features", []kit.LicenseFeature{brokenTelemetry})},
 		{Part: "locations", State: "kanban", Items: one("ui/locations", kit.Locations{Home: "/home/ada", Items: []kit.Location{{Label: "This app’s config", Path: "/home/ada/.config/elderlygate/kanban/config.yaml"}, {Label: "This app’s data", Path: "/home/ada/.local/share/elderlygate/kanban/"}, {Label: "Board", Path: "/srv/work/kit/.kanban"}}})},
 		{Part: "confirm-settings", State: "chosen", Note: "In kanban: move is this app's own (Remember my answer), the rest are defaults; deleting a board is a change to the system, so delete says so (System); Use the default drops a type from this app's config.", Items: one("ui/confirm-settings", kit.ConfirmSettings{Action: "#settings", Types: []string{"edit", "move", "archive", "delete"}, App: map[string]string{"move": kit.AskNever}, System: []string{"delete"}})},
 		{Part: "drawer", State: "open", Stage: true, Items: one("ui/drawer", kit.Drawer{ID: "drw-demo", Title: "checkman #5", Open: true, Body: html("ui/pr-item", compact)})},
