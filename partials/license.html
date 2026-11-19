@@ -1,0 +1,74 @@
+{{/* License and features: the License card and the features table of a Settings page. It draws the state it is given and decides nothing. */}}
+
+{{define "ui/license" -}}
+<section class="ui-license" aria-label="License and features" data-state="{{.State}}">
+<div class="ui-license-card"{{if or (eq .State "ending") (eq .State "dev")}} data-tone="warn"{{else if eq .State "trial"}} data-tone="info"{{end}}>
+<div class="ui-license-main">
+<div class="ui-license-top">{{template "ui/license-badge" .State}}<b class="ui-license-title">{{template "ui/license-title" .State}}</b></div>
+<p class="ui-license-line">{{template "ui/license-line" .State}}</p>
+{{- with .Countdown}}
+<div class="ui-license-count"><meter class="ui-license-meter" min="0" max="{{.Of}}" value="{{.Left}}"{{if eq $.State "ending"}} data-tone="warn"{{else}} data-tone="info"{{end}} aria-label="{{.Left}} of {{.Of}} days left"></meter><span>{{.Left}} of {{.Of}} days left</span></div>
+{{- end}}
+</div>
+<dl class="ui-license-facts">
+{{- range .Licenses}}
+<div><dt>For</dt><dd>{{.For}}</dd></div><div><dt>Kind</dt><dd>{{template "ui/license-kind" .Kind}}{{if .Ended}} · ended{{end}}</dd></div><div><dt>Until</dt><dd><code>{{.Until}}</code></dd></div><div><dt>Signed by key</dt><dd><code>{{.KeyID}}</code></dd></div>
+{{- else}}
+<div><dt>License</dt><dd>none</dd></div>
+{{- end}}
+<div><dt>This build</dt><dd>{{if .Release}}release{{else}}not a release{{end}}{{with .Version}} <code>{{.}}</code>{{end}}</dd></div>
+</dl>
+{{- if or (and .Trial (or (eq .State "none") (eq .State "trial-ended"))) .Actions}}
+<div class="ui-license-acts">
+{{- if and .Trial (or (eq .State "none") (eq .State "trial-ended"))}}<a class="ui-btn" data-variant="primary" href="{{.Trial}}"{{ext .Trial}}>How to get a trial key</a>{{end}}
+{{- range .Actions}}{{template "ui/button" .}}{{end -}}
+</div>
+{{- end}}
+</div>
+{{- with .Features}}
+{{template "ui/license-features" .}}
+{{- end}}
+</section>
+{{- end}}
+
+{{define "ui/license-features" -}}
+<div class="ui-list ui-license-features" role="region" aria-label="Features" tabindex="0">
+<table>
+<thead><tr><th scope="col">Feature</th><th scope="col">Tier</th><th scope="col">State</th><th scope="col">Why</th><th scope="col">Unlocked by</th></tr></thead>
+<tbody>
+{{- range .}}
+<tr><td><code class="ui-license-id">{{.ID}}</code>{{with .Covers}}<span class="ui-item-sub">{{.}}</span>{{end}}</td><td>{{if eq .Tier "enterprise"}}<span class="ui-tier" data-tier="enterprise">Enterprise</span>{{else}}<span class="ui-tier">Free</span>{{end}}</td><td>{{template "ui/license-state" .}}</td><td>{{template "ui/license-why" .}}</td><td>{{template "ui/license-from" .}}</td></tr>
+{{- end}}
+</tbody>
+</table>
+<p class="ui-license-note">Locked means the feature is enterprise and no valid license or trial key names it. What it already made stays readable. Free features never need a license.</p>
+</div>
+{{- end}}
+
+{{define "ui/license-badge" -}}
+{{if or (eq . "licensed") (eq . "ending")}}<span class="ui-tier" data-tier="enterprise">Enterprise</span>{{else if eq . "trial"}}<span class="ui-pill" data-tone="info">Trial</span>{{else if eq . "dev"}}<span class="ui-pill" data-tone="warn">Dev build</span>{{else if or (eq . "none") (eq . "trial-ended")}}<span class="ui-pill">Free</span>{{else}}<span class="ui-pill">{{.}}</span>{{end}}
+{{- end}}
+
+{{define "ui/license-title" -}}
+{{if eq . "none"}}No license{{else if eq . "trial"}}Trial: every enterprise feature is open{{else if eq . "trial-ended"}}The trial has ended{{else if eq . "licensed"}}Licensed{{else if eq . "ending"}}A license ends soon{{else if eq . "dev"}}Dev build: dev licenses only{{else}}{{.}}{{end}}
+{{- end}}
+
+{{define "ui/license-line" -}}
+{{if eq . "none"}}Every free feature works. Enterprise features are locked until a license or a trial key names them.{{else if eq . "trial"}}Until the trial ends you can use everything, and each enterprise feature is marked as enterprise. After that, free features keep working and enterprise ones lock again.{{else if eq . "trial-ended"}}Free features keep working. Enterprise features are locked again; what they made stays readable.{{else if eq . "licensed"}}A license names the enterprise features it unlocks, until a date.{{else if eq . "ending"}}When it ends, the enterprise features it names lock again. What they made stays readable, and free features keep working.{{else if eq . "dev"}}This build is not a release, so it accepts only licenses signed with a dev key and keeps its files in its -dev folders.{{end}}
+{{- end}}
+
+{{define "ui/license-kind" -}}
+{{if eq . "org"}}org license{{else if eq . "product"}}product license{{else if eq . "trial"}}trial key{{else}}{{.}}{{end}}
+{{- end}}
+
+{{define "ui/license-state" -}}
+{{if .On}}<span class="ui-status"><span class="ui-dot" data-tone="{{if .Missing}}warn{{else}}good{{end}}"></span>On</span>{{else if eq .By "license"}}<span class="ui-status" data-tone="warn"><span class="ui-dot" data-tone="warn"></span>Locked</span>{{else}}<span class="ui-status"><span class="ui-dot" data-tone="none"></span>Off</span>{{end}}
+{{- end}}
+
+{{define "ui/license-why" -}}
+{{if and .On .Missing}}<span class="ui-license-broken">On, but not working:{{range $i, $v := .Missing}}{{if $i}};{{end}} <code title="{{$v.Purpose}}">{{$v.Name}}</code> is not set{{end}}</span>{{else if .On}}{{if .StartsOff}}switched on{{else}}on by default{{end}}{{else if eq .By "license"}}needs a license or a trial key{{else if eq .By "switch"}}switched off{{else if eq .By "default"}}starts off{{else}}{{.By}}{{end}}
+{{- end}}
+
+{{define "ui/license-from" -}}
+{{if ne .Tier "enterprise"}}free, no license needed{{else if eq .From "org"}}org license{{else if eq .From "product"}}product license{{else if eq .From "both"}}org and product license{{else if eq .From "trial"}}trial key{{else}}none{{end}}{{if and (eq .Tier "enterprise") .Until}} · until <code>{{.Until}}</code>{{end}}
+{{- end}}
