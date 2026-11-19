@@ -70,6 +70,10 @@ export interface ConfirmSettingsProps {
   action?: string; types?: string[]; app?: Record<string, string>; system?: string[]; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
 }
 export interface Location { label: string; path: string; note?: string }
+export interface LicenseFile { kind: "org" | "product" | "trial" | string; for: string; until: string; ended?: boolean; keyId: string }
+export interface FeatureValue { name: string; purpose: string }
+export interface LicenseFeature { id: string; covers?: string; tier?: "free" | "enterprise"; on: boolean; by?: string; startsOff?: boolean; missing?: FeatureValue[]; from?: "org" | "product" | "both" | "trial" | "none"; until?: string }
+export interface LicenseProps { state: "none" | "trial" | "trial-ended" | "licensed" | "ending" | "dev" | string; release: boolean; version?: string; licenses?: LicenseFile[]; features?: LicenseFeature[]; countdown?: { left: number; of: number }; trial?: string; actions?: ButtonProps[] }
 export interface LocationsProps { home?: string; items?: Location[] }
 export interface DrawerProps { id: string; title: string; open?: boolean; onClose?: () => void; children?: ReactNode }
 export interface LightDetail { label: string; value: string }
@@ -115,6 +119,8 @@ export const actionTypes: ActionType[];
 export function resolveConfirm(app: string | undefined, def?: ConfirmStyle): { style: ConfirmStyle; source: ConfirmSource };
 export function ConfirmSettings(props: ConfirmSettingsProps): ReactElement;
 export function Locations(props: LocationsProps): ReactElement;
+export function License(props: LicenseProps): ReactElement;
+export function LicenseFeatures(props: { items?: LicenseFeature[] }): ReactElement;
 export function Drawer(props: DrawerProps): ReactElement;
 export function ThemeToggle(): ReactElement;
 export function Light(props: LightProps): ReactElement;

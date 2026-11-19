@@ -1,5 +1,5 @@
 // Compiles only if the types in index.d.ts fit the way an app uses the wrappers.
-import { Shell, Section, PrList, Products, Pill, Count, Field, Dialog, ConfirmForm, ConfirmSettings, resolveConfirm, Locations, Light, type PR, type Product } from "./index";
+import { Shell, Section, PrList, Products, Pill, Count, Field, Dialog, ConfirmForm, ConfirmSettings, resolveConfirm, Locations, License, Light, type PR, type Product } from "./index";
 
 const prs: PR[] = [{ repo: "checkman", number: "5", title: "chore: close the accepted review cards", review: { tone: "accent", label: "your review" }, ci: { tone: "good", label: "CI passing" } }];
 const products: Product[] = [{ name: "hubman", href: "/p/hubman", focus: true, facts: [{ label: "Installed", tone: "good", num: { text: "v0.7.0" }, text: "current" }] }];
@@ -17,6 +17,7 @@ export const page = (
     <ConfirmForm id="ask-save" question="Save the settings?" remember method="post" action="/settings" onSubmit={(data) => data.get("confirm")}><button type="submit">Save</button></ConfirmForm>
     <ConfirmForm id="ask-delete" question="Delete card 7?" confirmName="7" remember={resolveConfirm(undefined, "name").style !== "never"}><button type="submit">Delete</button></ConfirmForm>
     <Locations home="/home/ada" items={[{ label: "This app’s config", path: "/home/ada/.config/elderlygate/kanban/config.yaml" }]} />
+    <License state="licensed" release version="v9.4.1" licenses={[{ kind: "org", for: "Example Ltd", until: "2027-11-19", keyId: "prod-2026-a" }]} features={[{ id: "telemetry", tier: "enterprise", on: true, missing: [{ name: "OTEL_EXPORTER_OTLP_ENDPOINT", purpose: "where telemetry is sent" }], from: "org" }]} actions={[{ label: "Replace the license", href: "#add" }]} />
     <ConfirmSettings action="/settings" types={["move", "delete"]} app={{ move: "never" }} />
     <Light id="gh" tone="good" icon="github" label="GitHub" details={[{ label: "Account", value: "bot" }]} actions={[{ label: "Enter a new token…", opens: "d" }, { label: "Disconnect", variant: "danger", confirm: { text: "Removes it.", label: "Disconnect now", onConfirm: () => {} } }]} />
   </Shell>

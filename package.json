@@ -29,6 +29,6 @@
     "typescript": "^5.6.0"
   },
   "scripts": {
-    "test": "node --test react/index.test.js react/confirm.test.js test/kit.test.js && tsc -p react"
+    "test": "node --test react/index.test.js react/confirm.test.js react/license.test.js test/kit.test.js && tsc -p react"
   }
 }
