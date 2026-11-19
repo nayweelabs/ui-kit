@@ -9,8 +9,8 @@
 {{- if not .Build.Release}}
 <p class="ui-license-line">This build is not a release, so it accepts only dev-key licenses and keeps its files in its -dev folders.</p>
 {{- end}}
-{{- range .Licenses}}{{with .Window}}
-<div class="ui-license-count"><meter class="ui-license-meter" min="0" max="{{.Of}}" value="{{.Left}}"{{if eq $.State "trial"}} data-tone="info" aria-label="{{.Left}} of {{.Of}} days left"></meter><span>{{.Left}} of {{.Of}} days left</span>{{else}} data-tone="warn" aria-label="{{.Left}} days left"></meter><span>{{.Left}} days left</span>{{end}}</div>
+{{- range .Licenses}}{{if .Window}}
+<div class="ui-license-count"><meter class="ui-license-meter" min="0" max="{{.Window.Of}}" value="{{.DaysLeft}}"{{if eq $.State "trial"}} data-tone="info" aria-label="{{.DaysLeft}} of {{.Window.Of}} days left"></meter><span>{{.DaysLeft}} of {{.Window.Of}} days left</span>{{else}} data-tone="warn" aria-label="{{.DaysLeft}} days left"></meter><span>{{.DaysLeft}} days left</span>{{end}}</div>
 {{- end}}{{end}}
 {{- range .Refused}}
 <p class="ui-license-refused"><span class="ui-dot" data-tone="warn"></span><span>Not taken: <code>{{.File}}</code>: {{template "ui/license-refused" .Reason}}</span></p>

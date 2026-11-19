@@ -428,9 +428,9 @@ export function License({ state, build = {}, licenses = [], refused = [], featur
           build.release ? null : h(Pill, { tone: "warn", label: "Dev build" }), h("b", { className: "ui-license-title" }, w.title)),
         h("p", { className: "ui-license-line" }, w.line),
         build.release ? null : h("p", { className: "ui-license-line" }, "This build is not a release, so it accepts only dev-key licenses and keeps its files in its -dev folders."),
-        licenses.filter((l) => l.window).map(({ window: c }, i) => {
-          const left = state === "trial" ? `${c.left} of ${c.of} days left` : `${c.left} days left`;
-          return h("div", { key: i, className: "ui-license-count" }, h("meter", { className: "ui-license-meter", min: 0, max: c.of, value: c.left, "data-tone": state === "trial" ? "info" : "warn", "aria-label": left }), h("span", null, left));
+        licenses.filter((l) => l.window).map((l, i) => {
+          const left = state === "trial" ? `${l.daysLeft} of ${l.window.of} days left` : `${l.daysLeft} days left`;
+          return h("div", { key: i, className: "ui-license-count" }, h("meter", { className: "ui-license-meter", min: 0, max: l.window.of, value: l.daysLeft, "data-tone": state === "trial" ? "info" : "warn", "aria-label": left }), h("span", null, left));
         }),
         refused.map((r) => h("p", { key: r.file, className: "ui-license-refused" }, h("span", { className: "ui-dot", "data-tone": "warn" }), h("span", null, "Not taken: ", h("code", null, r.file), ": ", refusedWords[r.reason] || r.reason)))),
       h("dl", { className: "ui-license-facts" },

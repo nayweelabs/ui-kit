@@ -70,7 +70,7 @@ export interface ConfirmSettingsProps {
   action?: string; types?: string[]; app?: Record<string, string>; system?: string[]; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
 }
 export interface Location { label: string; path: string; note?: string }
-export interface LicenseFile { kind: "org" | "product" | "trial"; for: string; until: string; daysLeft: number; ended: boolean; keyId: string; window?: { left: number; of: number } }
+export interface LicenseFile { kind: "org" | "product" | "trial"; for: string; until: string; daysLeft: number; ended: boolean; keyId: string; window?: { of: number } }
 export interface RefusedFile { file: string; type: string; reason: string }
 export interface FeatureValue { name: string; purpose: string }
 export interface LicenseFeature { id: string; title: string; covers: string; needs?: FeatureValue[]; tier: "free" | "enterprise"; on: boolean; by?: string; startsOff?: true; missing?: FeatureValue[]; from: "org" | "product" | "both" | "trial" | "none"; until?: string }
