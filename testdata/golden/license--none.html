@@ -5,23 +5,24 @@
 <p class="ui-license-line">Every free feature works. Enterprise features are locked until a license or a trial key names them.</p>
 </div>
 <dl class="ui-license-facts">
-<div><dt>License</dt><dd>none</dd></div>
-<div><dt>This build</dt><dd>release <code>v9.4.1</code></dd></div>
+<div><dt>For</dt><dd>—</dd></div><div><dt>Kind</dt><dd>none</dd></div><div><dt>Until</dt><dd>—</dd></div><div><dt>Signed by key</dt><dd>—</dd></div>
+<div><dt>This build</dt><dd>release <code>v9.4.1</code> (prod)</dd></div>
 </dl>
-<div class="ui-license-acts"><a class="ui-btn" data-variant="primary" href="https://example.com/trial-key" target="_blank" rel="noopener noreferrer">How to get a trial key</a><a class="ui-btn" href="#add-license">Add a license</a></div>
+<div class="ui-license-acts"><a class="ui-btn" href="https://example.com/trial-key" target="_blank" rel="noopener noreferrer" data-variant="primary">How to get a trial key</a><a class="ui-btn" href="#add-license">Add a license</a></div>
 </div>
 <div class="ui-list ui-license-features" role="region" aria-label="Features" tabindex="0">
+<div class="ui-license-head"><h3>Features</h3><span>4 free</span><span>2 enterprise</span><span>2 on</span><span>2 locked</span></div>
 <table>
 <thead><tr><th scope="col">Feature</th><th scope="col">Tier</th><th scope="col">State</th><th scope="col">Why</th><th scope="col">Unlocked by</th></tr></thead>
 <tbody>
-<tr><td><code class="ui-license-id">events</code><span class="ui-item-sub">GET /api/events, the live stream of what changed</span></td><td><span class="ui-tier" data-tier="enterprise">Enterprise</span></td><td><span class="ui-status" data-tone="warn"><span class="ui-dot" data-tone="warn"></span>Locked</span></td><td>needs a license or a trial key</td><td>none</td></tr>
-<tr><td><code class="ui-license-id">telemetry</code><span class="ui-item-sub">traces, metrics and logs sent to another system over OpenTelemetry</span></td><td><span class="ui-tier" data-tier="enterprise">Enterprise</span></td><td><span class="ui-status" data-tone="warn"><span class="ui-dot" data-tone="warn"></span>Locked</span></td><td>needs a license or a trial key</td><td>none</td></tr>
-<tr><td><code class="ui-license-id">edit</code><span class="ui-item-sub">apply, edit, connect, delete, focus, the design files and word lists</span></td><td><span class="ui-tier">Free</span></td><td><span class="ui-status"><span class="ui-dot" data-tone="good"></span>On</span></td><td>on by default</td><td>free, no license needed</td></tr>
-<tr><td><code class="ui-license-id">layout</code><span class="ui-item-sub">moving, tidying and arranging boxes and lines</span></td><td><span class="ui-tier">Free</span></td><td><span class="ui-status"><span class="ui-dot" data-tone="good"></span>On</span></td><td>on by default</td><td>free, no license needed</td></tr>
-<tr><td><code class="ui-license-id">tracing</code><span class="ui-item-sub">saved requests, runs and suites</span></td><td><span class="ui-tier">Free</span></td><td><span class="ui-status"><span class="ui-dot" data-tone="none"></span>Off</span></td><td>starts off</td><td>free, no license needed</td></tr>
-<tr><td><code class="ui-license-id">workshop</code><span class="ui-item-sub">reading a project’s code into documents</span></td><td><span class="ui-tier">Free</span></td><td><span class="ui-status"><span class="ui-dot" data-tone="none"></span>Off</span></td><td>switched off</td><td>free, no license needed</td></tr>
+<tr><td><code class="ui-license-id" title="Live events">events</code><span class="ui-item-sub">GET /api/events, the live stream of what changed</span></td><td><span class="ui-license-tier" data-tier="enterprise">Enterprise</span></td><td><span class="ui-status" data-tone="warn"><span class="ui-dot" data-tone="warn"></span>Locked</span></td><td>needs a license or trial</td><td>none</td></tr>
+<tr><td><code class="ui-license-id" title="Telemetry">telemetry</code><span class="ui-item-sub">traces, metrics and logs sent to another system over OpenTelemetry</span></td><td><span class="ui-license-tier" data-tier="enterprise">Enterprise</span></td><td><span class="ui-status" data-tone="warn"><span class="ui-dot" data-tone="warn"></span>Locked</span></td><td>needs a license or trial</td><td>none</td></tr>
+<tr><td><code class="ui-license-id" title="Edit">edit</code><span class="ui-item-sub">apply, edit, connect, delete, focus, the design files and word lists</span></td><td><span class="ui-license-tier">Free</span></td><td><span class="ui-status"><span class="ui-dot" data-tone="good"></span>On</span></td><td>on by default</td><td>free, no license needed</td></tr>
+<tr><td><code class="ui-license-id" title="Layout">layout</code><span class="ui-item-sub">moving, tidying and arranging boxes and lines</span></td><td><span class="ui-license-tier">Free</span></td><td><span class="ui-status"><span class="ui-dot" data-tone="good"></span>On</span></td><td>on by default</td><td>free, no license needed</td></tr>
+<tr><td><code class="ui-license-id" title="Tracing">tracing</code><span class="ui-item-sub">saved requests, runs and suites</span></td><td><span class="ui-license-tier">Free</span></td><td><span class="ui-status"><span class="ui-dot" data-tone="none"></span>Off</span></td><td>starts off</td><td>free, no license needed</td></tr>
+<tr><td><code class="ui-license-id" title="Workshop">workshop</code><span class="ui-item-sub">reading a project’s code into documents</span></td><td><span class="ui-license-tier">Free</span></td><td><span class="ui-status"><span class="ui-dot" data-tone="none"></span>Off</span></td><td>switched off in config</td><td>free, no license needed</td></tr>
 </tbody>
 </table>
-<p class="ui-license-note">Locked means the feature is enterprise and no valid license or trial key names it. What it already made stays readable. Free features never need a license.</p>
+<p class="ui-license-note">Locked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.</p>
 </div>
 </section>

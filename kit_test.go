@@ -2,6 +2,7 @@ package kit_test
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"net/http"
 	"net/http/httptest"
@@ -463,10 +464,10 @@ func TestActionTypesAreTheSameInGoReactAndMankit(t *testing.T) {
 	}
 }
 
-// A state or a closing word the kit has no words for is drawn as given, since both are open words in the contracts schema.
+// A closing word the kit has no words for is drawn as given, since by is an open word in the contracts schema; so is a state it does not know.
 func TestLicenseDrawsAnUnknownWordAsGiven(t *testing.T) {
 	var b bytes.Buffer
-	err := kit.Render(&b, "ui/license", kit.License{State: "public", Release: true, Features: []kit.LicenseFeature{{ID: "share", Tier: "enterprise", By: "public_mode", From: "none"}}})
+	err := kit.Render(&b, "ui/license", kit.License{State: "public", Build: kit.LicenseBuild{Release: true}, Features: []kit.LicenseFeature{{ID: "share", Tier: "enterprise", By: "public_mode", From: "none"}}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -474,5 +475,61 @@ func TestLicenseDrawsAnUnknownWordAsGiven(t *testing.T) {
 		if !strings.Contains(b.String(), want) {
 			t.Errorf("license lacks %q:\n%s", want, b.String())
 		}
+	}
+}
+
+// The license cases as JSON, so the React test draws the same samples and must match their goldens.
+func TestGoldenLicenseCasesForReact(t *testing.T) {
+	type sample struct {
+		Template string         `json:"template"`
+		Props    map[string]any `json:"props"`
+	}
+	all := map[string]sample{}
+	for _, c := range preview.Cases() {
+		if c.Part != "license" {
+			continue
+		}
+		l := c.Items[0].Data.(kit.License)
+		b, err := json.Marshal(l)
+		if err != nil {
+			t.Fatal(err)
+		}
+		props := map[string]any{}
+		if err := json.Unmarshal(b, &props); err != nil {
+			t.Fatal(err)
+		}
+		if l.Version != "" {
+			props["version"] = l.Version
+		}
+		if l.Trial != "" {
+			props["trial"] = l.Trial
+		}
+		var actions []map[string]string
+		for _, a := range l.Actions {
+			actions = append(actions, map[string]string{"label": a.Label, "href": a.Href, "variant": a.Variant})
+		}
+		if actions != nil {
+			props["actions"] = actions
+		}
+		all[c.State] = sample{Template: c.Items[0].Template, Props: props}
+	}
+	got, err := json.MarshalIndent(all, "", " ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	got = append(got, '\n')
+	path := filepath.Join("testdata", "golden", "license-cases.json")
+	if *update {
+		if err := os.WriteFile(path, got, 0o644); err != nil {
+			t.Fatal(err)
+		}
+		return
+	}
+	want, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("%v (run go test -run Golden -update to write it)", err)
+	}
+	if !bytes.Equal(got, want) {
+		t.Error("testdata/golden/license-cases.json differs from the license cases; run go test -run Golden -update")
 	}
 }
