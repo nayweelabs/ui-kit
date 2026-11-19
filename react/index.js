@@ -384,7 +384,7 @@ const licenseWords = {
 };
 const licenseTone = { trial: "info", ending: "warn", ended: "warn" };
 const kindWords = { org: "org license", product: "product license", trial: "trial key" };
-const refusedWords = { signature: "its signature does not match what it holds", untrusted_key: "it is signed by a key this build does not trust", other_build: "it is signed with the key of the other build", unreadable: "it cannot be read or is not a license" };
+const refusedWords = { signature: "its signature does not match what it holds", untrusted_key: "it is signed by a key this build does not trust", other_build: "it is signed with the key of the other build", unreadable: "it cannot be read or is not a license", wrong_place: "it is kept in the place of another kind of license", id_mismatch: "its id differs from the id it was signed with" };
 const fromWords = { org: "org", product: "product", both: "org and product", trial: "trial key" };
 const byWords = { license: "needs a license or trial", switch: "switched off in config", default: "starts off" };
 const Tier = ({ enterprise }) => (enterprise ? h("span", { className: "ui-license-tier", "data-tier": "enterprise" }, "Enterprise") : h("span", { className: "ui-license-tier" }, "Free"));

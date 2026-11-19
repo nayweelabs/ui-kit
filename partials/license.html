@@ -69,7 +69,7 @@
 {{- end}}
 
 {{define "ui/license-refused" -}}
-{{if eq . "signature"}}its signature does not match what it holds{{else if eq . "untrusted_key"}}it is signed by a key this build does not trust{{else if eq . "other_build"}}it is signed with the key of the other build{{else if eq . "unreadable"}}it cannot be read or is not a license{{else}}{{.}}{{end}}
+{{if eq . "signature"}}its signature does not match what it holds{{else if eq . "untrusted_key"}}it is signed by a key this build does not trust{{else if eq . "other_build"}}it is signed with the key of the other build{{else if eq . "unreadable"}}it cannot be read or is not a license{{else if eq . "wrong_place"}}it is kept in the place of another kind of license{{else if eq . "id_mismatch"}}its id differs from the id it was signed with{{else}}{{.}}{{end}}
 {{- end}}
 
 {{define "ui/license-state" -}}
