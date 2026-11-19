@@ -131,6 +131,11 @@
      "file": "/home/ada/.config/elderlygate/license",
      "reason": "other_build",
      "type": "refused"
+    },
+    {
+     "file": "/home/ada/.config/elderlygate/designer-dev/license",
+     "reason": "wrong_place",
+     "type": "refused"
     }
    ],
    "state": "licensed",
@@ -161,6 +166,7 @@
     "locked": 2,
     "on": 2
    },
+   "endedOn": "2026-11-10",
    "features": [
     {
      "by": "license",

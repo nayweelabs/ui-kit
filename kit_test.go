@@ -501,6 +501,9 @@ func TestGoldenLicenseCasesForReact(t *testing.T) {
 		if l.Version != "" {
 			props["version"] = l.Version
 		}
+		if l.EndedOn != "" {
+			props["endedOn"] = l.EndedOn
+		}
 		if l.Trial != "" {
 			props["trial"] = l.Trial
 		}
