@@ -378,64 +378,70 @@ const licenseWords = {
   none: { badge: ["pill", "", "Free"], title: "No license", line: "Every free feature works. Enterprise features are locked until a license or a trial key names them." },
   trial: { badge: ["pill", "info", "Trial"], title: "Trial: every enterprise feature is open", line: "Until the trial ends you can use everything, and each enterprise feature is marked as enterprise. After that, free features keep working and enterprise ones lock again." },
   "trial-ended": { badge: ["pill", "", "Free"], title: "The trial has ended", line: "Free features keep working. Enterprise features are locked again; what they made stays readable." },
-  licensed: { badge: ["tier", "enterprise", "Enterprise"], title: "Licensed", line: "A license names the enterprise features it unlocks, until a date." },
-  ending: { badge: ["tier", "enterprise", "Enterprise"], title: "A license ends soon", line: "When it ends, the enterprise features it names lock again. What they made stays readable, and free features keep working." },
-  dev: { badge: ["pill", "warn", "Dev build"], title: "Dev build: dev licenses only", line: "This build is not a release, so it accepts only licenses signed with a dev key and keeps its files in its -dev folders." },
+  licensed: { badge: ["tier"], title: "Licensed", line: "A license names the enterprise features it unlocks, until a date." },
+  ending: { badge: ["tier"], title: "A license ends soon", line: "When it ends, the enterprise features it names lock again. What they made stays readable, and free features keep working." },
+  ended: { badge: ["pill", "warn", "Ended"], title: "License ended", line: "Enterprise features are locked again until the license is replaced. What they made stays readable, and free features keep working." },
 };
+const licenseTone = { trial: "info", ending: "warn", ended: "warn" };
 const kindWords = { org: "org license", product: "product license", trial: "trial key" };
-const fromWords = { org: "org license", product: "product license", both: "org and product license", trial: "trial key" };
-const byWords = { license: "needs a license or a trial key", switch: "switched off", default: "starts off" };
-// external opens a link to another site in a new tab, as the partials' ext does.
-const external = (href) => (/^https?:\/\//.test(href) ? { target: "_blank", rel: "noopener noreferrer" } : {});
-const Tier = ({ enterprise }) => (enterprise ? h("span", { className: "ui-tier", "data-tier": "enterprise" }, "Enterprise") : h("span", { className: "ui-tier" }, "Free"));
+const refusedWords = { signature: "its signature does not match what it holds", untrusted_key: "it is signed by a key this build does not trust", other_build: "it is signed with the key of the other build", unreadable: "it cannot be read or is not a license" };
+const fromWords = { org: "org", product: "product", both: "org and product", trial: "trial key" };
+const byWords = { license: "needs a license or trial", switch: "switched off in config", default: "starts off" };
+const Tier = ({ enterprise }) => (enterprise ? h("span", { className: "ui-license-tier", "data-tier": "enterprise" }, "Enterprise") : h("span", { className: "ui-license-tier" }, "Free"));
 const dot = (t, word, warn) => h("span", { className: "ui-status", "data-tone": warn ? "warn" : undefined }, h("span", { className: "ui-dot", "data-tone": t }), word);
 
 function featureWhy(f) {
   if (f.on && f.missing && f.missing.length) return h("span", { className: "ui-license-broken" }, "On, but not working:", f.missing.map((v, i) => h(Fragment, { key: v.name }, i ? ";" : "", " ", h("code", { title: v.purpose }, v.name), " is not set")));
-  if (f.on) return f.startsOff ? "switched on" : "on by default";
+  if (f.on) return f.startsOff ? "switched on in config" : "on by default";
   return byWords[f.by] || f.by;
 }
 
-// LicenseFeatures is the features table of the License and features section, rows in the app's order.
-export function LicenseFeatures({ items = [] }) {
+// LicenseFeatures is the features table of license show: its features and counts as given.
+export function LicenseFeatures({ features = [], counts = {} }) {
   return h("div", { className: "ui-list ui-license-features", role: "region", "aria-label": "Features", tabIndex: 0 },
+    h("div", { className: "ui-license-head" }, h("h3", null, "Features"),
+      h("span", null, `${counts.free ?? 0} free`), h("span", null, `${counts.enterprise ?? 0} enterprise`), h("span", null, `${counts.on ?? 0} on`), h("span", null, `${counts.locked ?? 0} locked`)),
     h("table", null,
       h("thead", null, h("tr", null, ["Feature", "Tier", "State", "Why", "Unlocked by"].map((c) => h("th", { key: c, scope: "col" }, c)))),
-      h("tbody", null, items.map((f) => {
+      h("tbody", null, features.map((f) => {
         const ent = f.tier === "enterprise";
         return h("tr", { key: f.id },
-          h("td", null, h("code", { className: "ui-license-id" }, f.id), f.covers ? h("span", { className: "ui-item-sub" }, f.covers) : null),
+          h("td", null, h("code", { className: "ui-license-id", title: f.title || undefined }, f.id), f.covers ? h("span", { className: "ui-item-sub" }, f.covers) : null),
           h("td", null, h(Tier, { enterprise: ent })),
           h("td", null, f.on ? dot(f.missing && f.missing.length ? "warn" : "good", "On") : f.by === "license" ? dot("warn", "Locked", true) : dot("none", "Off")),
           h("td", null, featureWhy(f)),
           h("td", null, ent ? fromWords[f.from] || "none" : "free, no license needed", ent && f.until ? h(Fragment, null, " · until ", h("code", null, f.until)) : null));
       }))),
-    h("p", { className: "ui-license-note" }, "Locked means the feature is enterprise and no valid license or trial key names it. What it already made stays readable. Free features never need a license."));
+    h("p", { className: "ui-license-note" }, "Locked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license."));
 }
 
-// License is the License and features section of a Settings page: it draws license show and the feature list as given.
-export function License({ state, release, version, licenses = [], features = [], countdown, trial, actions = [] }) {
+// License is the License and features section of a Settings page: license show's data as given, the build's version, where to ask for a trial key (set by the app for none and trial-ended), and the app's buttons.
+export function License({ state, build = {}, licenses = [], refused = [], features = [], counts, version, trial, actions = [] }) {
   const w = licenseWords[state] || { badge: ["pill", "", state], title: state, line: "" };
   const [kind, t, word] = w.badge;
-  const askTrial = trial && (state === "none" || state === "trial-ended");
   const fact = (dt, dd) => h("div", { key: dt }, h("dt", null, dt), h("dd", null, dd));
+  const code = (v) => (v ? h(Fragment, null, " ", h("code", null, v)) : null);
   return h("section", { className: "ui-license", "aria-label": "License and features", "data-state": state },
-    h("div", { className: "ui-license-card", "data-tone": state === "ending" || state === "dev" ? "warn" : state === "trial" ? "info" : undefined },
+    h("div", { className: "ui-license-card", "data-tone": licenseTone[state] },
       h("div", { className: "ui-license-main" },
-        h("div", { className: "ui-license-top" }, kind === "tier" ? h(Tier, { enterprise: true }) : h(Pill, { tone: tone(t), label: word }), h("b", { className: "ui-license-title" }, w.title)),
+        h("div", { className: "ui-license-top" }, kind === "tier" ? h(Tier, { enterprise: true }) : h(Pill, { tone: tone(t), label: word }),
+          build.release ? null : h(Pill, { tone: "warn", label: "Dev build" }), h("b", { className: "ui-license-title" }, w.title)),
         h("p", { className: "ui-license-line" }, w.line),
-        countdown ? h("div", { className: "ui-license-count" },
-          h("meter", { className: "ui-license-meter", min: 0, max: countdown.of, value: countdown.left, "data-tone": state === "ending" ? "warn" : "info", "aria-label": `${countdown.left} of ${countdown.of} days left` }),
-          h("span", null, `${countdown.left} of ${countdown.of} days left`)) : null),
+        build.release ? null : h("p", { className: "ui-license-line" }, "This build is not a release, so it accepts only dev-key licenses and keeps its files in its -dev folders."),
+        licenses.filter((l) => l.window).map(({ window: c }, i) => {
+          const left = state === "trial" ? `${c.left} of ${c.of} days left` : `${c.left} days left`;
+          return h("div", { key: i, className: "ui-license-count" }, h("meter", { className: "ui-license-meter", min: 0, max: c.of, value: c.left, "data-tone": state === "trial" ? "info" : "warn", "aria-label": left }), h("span", null, left));
+        }),
+        refused.map((r) => h("p", { key: r.file, className: "ui-license-refused" }, h("span", { className: "ui-dot", "data-tone": "warn" }), h("span", null, "Not taken: ", h("code", null, r.file), ": ", refusedWords[r.reason] || r.reason)))),
       h("dl", { className: "ui-license-facts" },
         licenses.length ? licenses.map((l, i) => h(Fragment, { key: i },
-          fact("For", l.for), fact("Kind", (kindWords[l.kind] || l.kind) + (l.ended ? " · ended" : "")), fact("Until", h("code", null, l.until)), fact("Signed by key", h("code", null, l.keyId))))
-          : fact("License", "none"),
-        fact("This build", h(Fragment, null, release ? "release" : "not a release", version ? h(Fragment, null, " ", h("code", null, version)) : null))),
-      askTrial || actions.length ? h("div", { className: "ui-license-acts" },
-        askTrial ? h(Button, { label: "How to get a trial key", variant: "primary", href: trial, ...external(trial) }) : null,
+          fact("For", l.for), fact("Kind", (kindWords[l.kind] || l.kind) + (l.ended ? " (ended)" : "")), fact("Until", h("code", null, l.until)), fact("Signed by key", h("code", null, l.keyId))))
+          : [fact("For", "—"), fact("Kind", "none"), fact("Until", "—"), fact("Signed by key", "—")],
+        fact("This build", build.release ? h(Fragment, null, "release", code(version), " (prod)") : h(Fragment, null, "PREVIEW", code(version)))),
+      trial || actions.length ? h("div", { className: "ui-license-acts" },
+        trial ? h(Button, { label: "How to get a trial key", variant: "primary", href: trial }) : null,
         actions.map((a) => h(Button, { key: a.label, ...a }))) : null),
-    features.length ? h(LicenseFeatures, { items: features }) : null);
+    features.length ? h(LicenseFeatures, { features, counts }) : null);
 }
 
 export function Drawer({ id, title, open, onClose, children }) {
