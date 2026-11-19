@@ -4,7 +4,7 @@
 <section class="ui-license" aria-label="License and features" data-state="{{.State}}">
 <div class="ui-license-card"{{if or (eq .State "ending") (eq .State "ended")}} data-tone="warn"{{else if eq .State "trial"}} data-tone="info"{{end}}>
 <div class="ui-license-main">
-<div class="ui-license-top">{{template "ui/license-badge" .State}}{{if not .Build.Release}}<span class="ui-pill" data-tone="warn">Dev build</span>{{end}}<b class="ui-license-title">{{template "ui/license-title" .State}}</b></div>
+<div class="ui-license-top">{{template "ui/license-badge" .State}}{{if not .Build.Release}}<span class="ui-pill" data-tone="warn">Dev build</span>{{end}}<b class="ui-license-title">{{if and (eq .State "ended") .EndedOn}}License ended on <code>{{.EndedOn}}</code>{{else}}{{template "ui/license-title" .State}}{{end}}</b></div>
 <p class="ui-license-line">{{template "ui/license-line" .State}}</p>
 {{- if not .Build.Release}}
 <p class="ui-license-line">This build is not a release, so it accepts only dev-key licenses and keeps its files in its -dev folders.</p>

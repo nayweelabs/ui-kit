@@ -9,6 +9,7 @@ type License struct {
 	Features []LicenseFeature `json:"features"` // features
 	Counts   LicenseCounts    `json:"counts"`   // counts
 	Version  string           `json:"-"`        // the version of the running build, as the page already has it
+	EndedOn  string           `json:"-"`        // the until of the license that ended, for the ended headline; the app passes it
 	Trial    string           `json:"-"`        // where to ask for a trial key, drawn as a button; the app sets it only for none and trial-ended
 	Actions  []Button         `json:"-"`        // the app's own buttons, such as Add a license
 }

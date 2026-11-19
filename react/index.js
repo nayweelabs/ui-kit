@@ -415,8 +415,8 @@ export function LicenseFeatures({ features = [], counts = {} }) {
     h("p", { className: "ui-license-note" }, "Locked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license."));
 }
 
-// License is the License and features section of a Settings page: license show's data as given, the build's version, where to ask for a trial key (set by the app for none and trial-ended), and the app's buttons.
-export function License({ state, build = {}, licenses = [], refused = [], features = [], counts, version, trial, actions = [] }) {
+// License is the License and features section of a Settings page: license show's data as given, the build's version, the date an ended license ended, where to ask for a trial key (set by the app for none and trial-ended), and the app's buttons.
+export function License({ state, build = {}, licenses = [], refused = [], features = [], counts, version, endedOn, trial, actions = [] }) {
   const w = licenseWords[state] || { badge: ["pill", "", state], title: state, line: "" };
   const [kind, t, word] = w.badge;
   const fact = (dt, dd) => h("div", { key: dt }, h("dt", null, dt), h("dd", null, dd));
@@ -425,7 +425,7 @@ export function License({ state, build = {}, licenses = [], refused = [], featur
     h("div", { className: "ui-license-card", "data-tone": licenseTone[state] },
       h("div", { className: "ui-license-main" },
         h("div", { className: "ui-license-top" }, kind === "tier" ? h(Tier, { enterprise: true }) : h(Pill, { tone: tone(t), label: word }),
-          build.release ? null : h(Pill, { tone: "warn", label: "Dev build" }), h("b", { className: "ui-license-title" }, w.title)),
+          build.release ? null : h(Pill, { tone: "warn", label: "Dev build" }), h("b", { className: "ui-license-title" }, state === "ended" && endedOn ? h(Fragment, null, "License ended on ", h("code", null, endedOn)) : w.title)),
         h("p", { className: "ui-license-line" }, w.line),
         build.release ? null : h("p", { className: "ui-license-line" }, "This build is not a release, so it accepts only dev-key licenses and keeps its files in its -dev folders."),
         licenses.filter((l) => l.window).map((l, i) => {
