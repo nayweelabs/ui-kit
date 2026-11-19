@@ -9,7 +9,7 @@ type License struct {
 	Features []LicenseFeature `json:"features"` // features
 	Counts   LicenseCounts    `json:"counts"`   // counts
 	Version  string           `json:"-"`        // the version of the running build, as the page already has it
-	EndedOn  string           `json:"-"`        // stopgap (G-GIT-12) until license show carries the ended date, card in mankit#61: the date the license ended, passed by the app
+	EndedOn  string           `json:"-"`        // stopgap (G-GIT-12) until license show carries the ended date, mankit card 20261119-32b2: the date the license ended, passed by the app
 	Trial    string           `json:"-"`        // where to ask for a trial key, drawn as a button; the app sets it only for none and trial-ended
 	Actions  []Button         `json:"-"`        // the app's own buttons, such as Add a license
 }
