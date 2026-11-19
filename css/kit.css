@@ -409,14 +409,18 @@ button.ui-id[data-copied]::after{content:" copied";color:var(--ui-good)}
 .ui-license-facts dt{color:var(--ui-muted)}
 .ui-license-facts dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .ui-license code,.ui-license-features code{font-family:var(--ui-font-data);font-size:.92em}
+.ui-license-refused{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:var(--ui-text-sm);color:var(--ui-warn)}
+.ui-license-refused .ui-dot{margin-top:6px}
 .ui-license-acts{display:flex;flex-wrap:wrap;gap:8px;flex-basis:100%}
-.ui-tier{display:inline-flex;align-items:center;padding:1px 8px;border-radius:var(--ui-radius-sm);font-size:var(--ui-text-xs);font-weight:600;line-height:18px;white-space:nowrap;color:var(--ui-muted);border:1px solid var(--ui-rule-strong)}
-.ui-tier[data-tier="enterprise"]{background:var(--ui-ink);color:var(--ui-surface);border-color:var(--ui-ink)}
+.ui-license-tier{display:inline-flex;align-items:center;padding:1px 8px;border-radius:var(--ui-radius-sm);font-size:var(--ui-text-xs);font-weight:600;line-height:18px;white-space:nowrap;color:var(--ui-muted);border:1px solid var(--ui-rule-strong)}
+.ui-license-tier[data-tier="enterprise"]{background:var(--ui-ink);color:var(--ui-surface);border-color:var(--ui-ink)}
+.ui-license-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;padding:12px 14px;font-size:var(--ui-text-xs);color:var(--ui-muted)}
+.ui-license-head h3{margin:0 auto 0 0;font-size:var(--ui-text-md);font-weight:650;color:var(--ui-ink)}
 .ui-license-features td{vertical-align:top}
 .ui-license-id{font-weight:600;color:var(--ui-ink)}
 .ui-license-broken{color:var(--ui-warn)}
 .ui-license-note{margin:0;padding:10px 14px;border-top:1px solid var(--ui-rule);font-size:var(--ui-text-xs);color:var(--ui-muted);line-height:1.5}
-@media (forced-colors: active){.ui-tier[data-tier="enterprise"]{forced-color-adjust:none;background:CanvasText;color:Canvas}}
+@media (forced-colors: active){.ui-license-tier[data-tier="enterprise"]{forced-color-adjust:none;background:CanvasText;color:Canvas}}
 .ui-drawer{position:fixed;inset:0 0 0 auto;margin:0;height:100%;max-height:none;width:min(100vw,380px);border:0;border-left:1px solid var(--ui-rule);padding:16px;background:var(--ui-surface);color:var(--ui-ink);box-shadow:var(--ui-shadow-pop);font-size:var(--ui-text-sm)}
 .ui-drawer[open]{display:grid;align-content:start;gap:10px;animation:ui-slide .18s ease-out}
 .ui-drawer-head{display:flex;justify-content:space-between;align-items:center;gap:8px}

@@ -1,47 +1,80 @@
 package kit
 
-// License is the License and features section of a Settings page ("ui/license"): `<app> license show` and the feature list, each field's meaning in the contracts schema (mankit/v1), drawn as given.
+// License is the License and features section of a Settings page ("ui/license"): the data of `<app> license show` as it is, each field's meaning in the contracts schema (mankit/v1 license-show), drawn as given.
 type License struct {
-	State     string           // licenseShow state: none, trial, trial-ended, licensed, ending or dev
-	Release   bool             // licenseShow build.release
-	Version   string           // the version of the running build, as the page already has it
-	Licenses  []LicenseFile    // licenseShow licenses, in its order
-	Features  []LicenseFeature // in the app's order, enterprise features first
-	Countdown *Countdown       // nil draws no bar
-	Trial     string           // where to ask for a trial key; with it, no license or an ended trial draws a button that goes there
-	Actions   []Button         // the app's own buttons, such as Add a license
+	State    string           `json:"state"`             // state: none, trial, trial-ended, licensed, ending or ended
+	Build    LicenseBuild     `json:"build"`             // build; a build that is not a release also draws the dev look
+	Licenses []LicenseFile    `json:"licenses"`          // licenses
+	Refused  []RefusedFile    `json:"refused,omitempty"` // refused
+	Features []LicenseFeature `json:"features"`          // features
+	Counts   LicenseCounts    `json:"counts"`            // counts
+	Version  string           `json:"-"`                 // the version of the running build, as the page already has it
+	Trial    string           `json:"-"`                 // where to ask for a trial key, drawn as a button; the app sets it only for none and trial-ended
+	Actions  []Button         `json:"-"`                 // the app's own buttons, such as Add a license
 }
 
-// LicenseFile is one license file the app read: licenseShow licenses[].
+// LicenseBuild is license show build.
+type LicenseBuild struct {
+	Release bool `json:"release"`
+}
+
+// LicenseFile is one of license show licenses.
 type LicenseFile struct {
-	Kind  string // org, product or trial
-	For   string
-	Until string
-	Ended bool
-	KeyID string
+	Kind     string  `json:"kind"`
+	For      string  `json:"for"`
+	Until    string  `json:"until"`
+	DaysLeft int     `json:"daysLeft"`
+	Ended    bool    `json:"ended"`
+	KeyID    string  `json:"keyId"`
+	Window   *Window `json:"window,omitempty"` // drawn as the countdown bar
 }
 
-// LicenseFeature is one row of the features table: a featureState of the feature list with from and until of licenseShow features[].
+// RefusedFile is one of license show refused: a file the app read but did not take.
+type RefusedFile struct {
+	File   string `json:"file"`
+	Type   string `json:"type"`
+	Reason string `json:"reason"`
+}
+
+// LicenseCounts is license show counts.
+type LicenseCounts struct {
+	Free       int `json:"free"`
+	Enterprise int `json:"enterprise"`
+	On         int `json:"on"`
+	Locked     int `json:"locked"`
+}
+
+// Window is license show licenses[].window: Left of Of days.
+type Window struct {
+	Left int `json:"left"`
+	Of   int `json:"of"`
+}
+
+// LicenseFeature is one of license show features: a featureState with from and until.
 type LicenseFeature struct {
-	ID        string
-	Covers    string
-	Tier      string // free or enterprise; empty is free
-	On        bool
-	By        string
-	StartsOff bool
-	Missing   []FeatureValue
-	From      string // org, product, both, trial or none
-	Until     string
+	ID        string         `json:"id"`
+	Title     string         `json:"title"`
+	Covers    string         `json:"covers"`
+	Needs     []FeatureValue `json:"needs,omitempty"`
+	Tier      string         `json:"tier"`
+	On        bool           `json:"on"`
+	By        string         `json:"by,omitempty"`
+	StartsOff bool           `json:"startsOff,omitempty"`
+	Missing   []FeatureValue `json:"missing,omitempty"`
+	From      string         `json:"from"`
+	Until     string         `json:"until,omitempty"`
 }
 
 // FeatureValue is one value a feature needs: featureValue.
 type FeatureValue struct {
-	Name    string
-	Purpose string
+	Name    string `json:"name"`
+	Purpose string `json:"purpose"`
 }
 
-// Countdown is the bar under the license's headline: Left of Of days, as the app counts them.
-type Countdown struct {
-	Left int
-	Of   int
+// TrialButton is the button that says how to get a trial key, or nil without Trial.
+func (l License) TrialButton() *Button {
+	if l.Trial == "" {
+		return nil
+	}
+	return &Button{Label: "How to get a trial key", Variant: "primary", Href: l.Trial}
 }
