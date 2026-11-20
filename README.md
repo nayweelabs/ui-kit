@@ -101,6 +101,10 @@ kit.Locations{Items: []kit.Location{
 
 `Home` sets the folder shown as `~`; left empty, it is the home of the user the server runs as. In React, `<Locations home items>` draws the same; pass `home`, since a browser does not know it.
 
+### License and features
+
+Every product's Settings page shows its license and its features with `ui/license`, from a `kit.License`: the data of `<app> license show` as it is (its JSON decodes straight into it); what each field means is said once, in the contracts schema (mankit/v1 license-show). The kit draws it and decides nothing: the states, the features in their order, the counts, a countdown of each license's `daysLeft` against its `window.of`, and every refused file with its reason. A build that is not a release draws the dev look beside its state. The page adds the build's `Version`, in `EndedOn` the `until` of the license that ended (for the ended headline), its own buttons in `Actions`, and in `Trial` where to ask for a trial key, which the app sets only for none and trial-ended. `ui/license-features` is the features table alone. In React, `<License>` and `<LicenseFeatures>` take the same answer; a test draws the Go cases (`testdata/golden/license-cases.json`) in React and checks each against its golden.
+
 A page that does not use `ui/shell` links `/ui-kit/css/kit.css` and `/ui-kit/js/kit.js` (in `<head>`, without `defer`) and puts `class="ui-page"` on its body.
 
 ## In a Vite app
@@ -135,7 +139,7 @@ Put `class="ui-page"` on `<body>`. The wrappers are plain ES modules with types;
 ### Partials
 
 Shell: `ui/shell`, `ui/assets`, `ui/preview-banner`, `ui/bar`, `ui/bar-action`, `ui/light`, `ui/rail`, `ui/page-header`, `ui/footer`.
-Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/confirm-settings`, `ui/locations`, `ui/drawer`, `ui/star`, `ui/skeleton`.
+Parts: `ui/product-card`, `ui/product-row`, `ui/products`, `ui/pr-item`, `ui/pr-list`, `ui/milestones`, `ui/status`, `ui/pill`, `ui/count`, `ui/section`, `ui/error`, `ui/notice`, `ui/empty`, `ui/table`, `ui/ticket`, `ui/button`, `ui/field`, `ui/toolbar`, `ui/view-toggle`, `ui/tabs`, `ui/crumb`, `ui/dialog`, `ui/confirm-settings`, `ui/locations`, `ui/license`, `ui/license-features`, `ui/drawer`, `ui/star`, `ui/skeleton`.
 Pieces they share: `ui/icon`, `ui/num`, `ui/fact`, `ui/cell`, `ui/read-at`.
 
 A count with an `Icon` (`eye`, `check`, `alert`, `edit`, or any `ui/icon`) is a badge: icon and number in its tone, and its `Label` as a tooltip on hover and on keyboard focus, read out through the same hidden label. With `Href` it is a link, such as to a group further down the page (an anchor inside the page; it opens no new tab).
