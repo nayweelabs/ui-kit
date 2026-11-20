@@ -2,16 +2,16 @@ package kit
 
 // License is the License and features section of a Settings page ("ui/license"): the data of `<app> license show` as it is, each field's meaning in the contracts schema (mankit/v1 license-show), drawn as given.
 type License struct {
-	State    string           `json:"state"`    // state: none, trial, trial-ended, licensed, ending or ended
-	Build    LicenseBuild     `json:"build"`    // build; a build that is not a release also draws the dev look
-	Licenses []LicenseFile    `json:"licenses"` // licenses
-	Refused  []RefusedFile    `json:"refused"`  // refused
-	Features []LicenseFeature `json:"features"` // features
-	Counts   LicenseCounts    `json:"counts"`   // counts
-	Version  string           `json:"-"`        // the version of the running build, as the page already has it
-	EndedOn  string           `json:"-"`        // stopgap (G-GIT-12) until license show carries the ended date, mankit card 20261119-32b2: the date the license ended, passed by the app
-	Trial    string           `json:"-"`        // where to ask for a trial key, drawn as a button; the app sets it only for none and trial-ended
-	Actions  []Button         `json:"-"`        // the app's own buttons, such as Add a license
+	State    string           `json:"state"`             // state: none, trial, trial-ended, licensed, ending or ended
+	EndedOn  string           `json:"endedOn,omitempty"` // endedOn, the date of the ended headline
+	Build    LicenseBuild     `json:"build"`             // build; a build that is not a release also draws the dev look
+	Licenses []LicenseFile    `json:"licenses"`          // licenses
+	Refused  []RefusedFile    `json:"refused"`           // refused
+	Features []LicenseFeature `json:"features"`          // features
+	Counts   LicenseCounts    `json:"counts"`            // counts
+	Version  string           `json:"-"`                 // the version of the running build, as the page already has it
+	Trial    string           `json:"-"`                 // where to ask for a trial key, drawn as a button; the app sets it only for none and trial-ended
+	Actions  []Button         `json:"-"`                 // the app's own buttons, such as Add a license
 }
 
 // LicenseBuild is license show build.

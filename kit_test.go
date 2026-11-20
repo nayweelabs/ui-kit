@@ -478,6 +478,26 @@ func TestLicenseDrawsAnUnknownWordAsGiven(t *testing.T) {
 	}
 }
 
+// The ended headline's date is license show's endedOn, decoded with the rest of the answer; without one it is the plain headline.
+func TestLicenseEndedHeadlineTakesEndedOnFromTheAnswer(t *testing.T) {
+	for answer, want := range map[string]string{
+		`{"state":"ended","endedOn":"2026-11-10","build":{"release":true}}`: `<b class="ui-license-title">License ended on <code>2026-11-10</code></b>`,
+		`{"state":"ended","build":{"release":true}}`:                        `<b class="ui-license-title">License ended</b>`,
+	} {
+		var l kit.License
+		if err := json.Unmarshal([]byte(answer), &l); err != nil {
+			t.Fatal(err)
+		}
+		var b bytes.Buffer
+		if err := kit.Render(&b, "ui/license", l); err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(b.String(), want) {
+			t.Errorf("%s lacks %q:\n%s", answer, want, b.String())
+		}
+	}
+}
+
 // The license cases as JSON, so the React test draws the same samples and must match their goldens.
 func TestGoldenLicenseCasesForReact(t *testing.T) {
 	type sample struct {
@@ -500,9 +520,6 @@ func TestGoldenLicenseCasesForReact(t *testing.T) {
 		}
 		if l.Version != "" {
 			props["version"] = l.Version
-		}
-		if l.EndedOn != "" {
-			props["endedOn"] = l.EndedOn
 		}
 		if l.Trial != "" {
 			props["trial"] = l.Trial
