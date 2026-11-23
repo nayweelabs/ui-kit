@@ -110,7 +110,7 @@ A page that does not use `ui/shell` links `/ui-kit/css/kit.css` and `/ui-kit/js/
 ## In a Vite app
 
 ```json
-"dependencies": { "@elderlygate/ui-kit": "github:ElderlyGate/ui-kit#v0.1.0" }
+"dependencies": { "@elderlygate/ui-kit": "github:nayweelabs/ui-kit#v0.1.0" }
 ```
 
 ```js
