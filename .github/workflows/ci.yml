@@ -16,6 +16,7 @@ jobs:
   go:
     name: local · linux · go
     runs-on: [self-hosted, eg-linux]
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
         with:
@@ -53,6 +54,7 @@ jobs:
   react:
     name: local · linux · react
     runs-on: [self-hosted, eg-linux]
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
         with:
