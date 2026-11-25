@@ -66,11 +66,11 @@
 {{- with .Sentence}}
 <p class="ui-license-sentence">{{.}}</p>
 {{- end}}
-{{- if .Features}}
-{{template "ui/license-features" .}}
-{{- end}}
 {{- if .Actions}}
 <div class="ui-license-acts">{{range .Actions}}{{template "ui/button" .}}{{end}}</div>
+{{- end}}
+{{- if .Features}}
+{{template "ui/license-features" .}}
 {{- end}}
 </div>
 {{- end}}

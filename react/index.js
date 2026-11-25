@@ -448,13 +448,13 @@ export function License({ state, warn, sentence, build = {}, licenses = [], refu
     features.length ? h(LicenseFeatures, { features, counts }) : null);
 }
 
-// LicensePanel is the License panel of the top bar: the badge, license show's sentence as given, its features and the app's buttons.
+// LicensePanel is the License panel of the top bar: the badge, license show's sentence as given, the app's buttons and its features.
 export function LicensePanel({ state, warn, sentence, features = [], counts, actions = [] }) {
   return h("div", { className: "ui-license-panel", "data-state": state },
     h("div", { className: "ui-license-top" }, h("b", { className: "ui-pop-title" }, "License"), h(LicenseBadge, { state, warn })),
     sentence ? h("p", { className: "ui-license-sentence" }, sentence) : null,
-    features.length ? h(LicenseFeatures, { features, counts }) : null,
-    actions.length ? h("div", { className: "ui-license-acts" }, actions.map((a) => h(Button, { key: a.label, ...a }))) : null);
+    actions.length ? h("div", { className: "ui-license-acts" }, actions.map((a) => h(Button, { key: a.label, ...a }))) : null,
+    features.length ? h(LicenseFeatures, { features, counts }) : null);
 }
 
 // LicenseLight is the license badge of the top bar, a link to href (the app's Settings page) that opens the License panel.
