@@ -1,0 +1,880 @@
+{
+ "a-dev-build": {
+  "data": {
+   "state": "licensed",
+   "build": {
+    "release": false
+   },
+   "licenses": [
+    {
+     "kind": "org",
+     "for": "Acme Ltd",
+     "until": "2027-11-06",
+     "daysLeft": 352,
+     "ended": false,
+     "keyId": "dev"
+    },
+    {
+     "kind": "product",
+     "for": "ada@acme.example",
+     "until": "2027-03-01",
+     "daysLeft": 102,
+     "ended": false,
+     "keyId": "dev"
+    }
+   ],
+   "refused": [],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 4,
+    "locked": 1
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "org",
+     "until": "2027-11-06"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "product",
+     "until": "2027-03-01"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "both",
+     "until": "2027-11-06"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\"\u003eLicensed\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"licensed\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\"\u003eLicensed\u003c/span\u003e\u003c/div\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e4 on\u003c/span\u003e\u003cspan\u003e1 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003eorg · until \u003ccode\u003e2027-11-06\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003eproduct · until \u003ccode\u003e2027-03-01\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003eorg and product · until \u003ccode\u003e2027-11-06\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ },
+ "a-license-that-ends-soon": {
+  "data": {
+   "state": "ending",
+   "warn": true,
+   "build": {
+    "release": true
+   },
+   "licenses": [
+    {
+     "kind": "product",
+     "for": "ada@acme.example",
+     "until": "2026-11-29",
+     "daysLeft": 10,
+     "ended": false,
+     "keyId": "prod-2026",
+     "window": {
+      "of": 14
+     }
+    }
+   ],
+   "refused": [],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 3,
+    "locked": 2
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "product",
+     "until": "2026-11-29"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "product",
+     "until": "2026-11-29"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\" data-tone=\"warn\"\u003eLicensed\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"ending\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\" data-tone=\"warn\"\u003eLicensed\u003c/span\u003e\u003c/div\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e3 on\u003c/span\u003e\u003cspan\u003e2 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003eproduct · until \u003ccode\u003e2026-11-29\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003eproduct · until \u003ccode\u003e2026-11-29\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ },
+ "a-paid-license-that-ended": {
+  "data": {
+   "state": "ended",
+   "endedOn": "2026-11-01",
+   "warn": true,
+   "build": {
+    "release": true
+   },
+   "licenses": [
+    {
+     "kind": "product",
+     "for": "ada@acme.example",
+     "until": "2026-11-01",
+     "daysLeft": 0,
+     "ended": true,
+     "keyId": "prod-2026"
+    }
+   ],
+   "refused": [],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 1,
+    "locked": 4
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "from": "none",
+     "by": "license"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "from": "none",
+     "by": "license"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "from": "none",
+     "by": "license"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\" data-tone=\"warn\"\u003eFree\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"ended\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\" data-tone=\"warn\"\u003eFree\u003c/span\u003e\u003c/div\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e1 on\u003c/span\u003e\u003cspan\u003e4 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ },
+ "a-refused-file": {
+  "data": {
+   "state": "licensed",
+   "build": {
+    "release": true
+   },
+   "licenses": [
+    {
+     "kind": "org",
+     "for": "Acme Ltd",
+     "until": "2027-11-06",
+     "daysLeft": 352,
+     "ended": false,
+     "keyId": "prod-2026"
+    }
+   ],
+   "refused": [
+    {
+     "file": "/home/ada/.config/elderlygate/designer/license",
+     "type": "refused",
+     "reason": "untrusted_key"
+    }
+   ],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 3,
+    "locked": 2
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "org",
+     "until": "2027-11-06"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "from": "none",
+     "by": "license"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "org",
+     "until": "2027-11-06"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\"\u003eLicensed\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"licensed\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\"\u003eLicensed\u003c/span\u003e\u003c/div\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e3 on\u003c/span\u003e\u003cspan\u003e2 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003eorg · until \u003ccode\u003e2027-11-06\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003eorg · until \u003ccode\u003e2027-11-06\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ },
+ "a-release-trial-offer-that-ended": {
+  "data": {
+   "state": "none",
+   "sentence": "This version doesn't include a free trial anymore. Download the latest version to try Designer.",
+   "build": {
+    "release": true
+   },
+   "licenses": [
+    {
+     "kind": "release-trial",
+     "for": "designer 9",
+     "until": "2026-11-20",
+     "offerEnds": "2026-11-20",
+     "daysLeft": 0,
+     "ended": true,
+     "keyId": "prod-2026"
+    }
+   ],
+   "refused": [],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 1,
+    "locked": 4
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\"\u003eFree\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"none\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\"\u003eFree\u003c/span\u003e\u003c/div\u003e\n\u003cp class=\"ui-license-sentence\"\u003eThis version doesn\u0026#39;t include a free trial anymore. Download the latest version to try Designer.\u003c/p\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e1 on\u003c/span\u003e\u003cspan\u003e4 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ },
+ "a-started-release-trial": {
+  "data": {
+   "state": "trial",
+   "build": {
+    "release": true
+   },
+   "licenses": [
+    {
+     "kind": "release-trial",
+     "for": "designer 9",
+     "until": "2026-12-03",
+     "trialEnds": "2026-12-03",
+     "offerEnds": "2027-11-20",
+     "daysLeft": 14,
+     "ended": false,
+     "keyId": "prod-2026",
+     "window": {
+      "of": 14
+     }
+    }
+   ],
+   "refused": [],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 5,
+    "locked": 0
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\"\u003eTrial\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"trial\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\"\u003eTrial\u003c/span\u003e\u003c/div\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e5 on\u003c/span\u003e\u003cspan\u003e0 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ },
+ "a-trial-key": {
+  "data": {
+   "state": "trial",
+   "sentence": "Trial: 14 days left (ends 2026-12-03)",
+   "warn": false,
+   "build": {
+    "release": true
+   },
+   "licenses": [
+    {
+     "kind": "trial",
+     "for": "ada@acme.example",
+     "until": "2026-12-03",
+     "daysLeft": 14,
+     "ended": false,
+     "keyId": "prod-2026",
+     "window": {
+      "of": 14
+     }
+    }
+   ],
+   "refused": [],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 5,
+    "locked": 0
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\"\u003eTrial\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"trial\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\"\u003eTrial\u003c/span\u003e\u003c/div\u003e\n\u003cp class=\"ui-license-sentence\"\u003eTrial: 14 days left (ends 2026-12-03)\u003c/p\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e5 on\u003c/span\u003e\u003cspan\u003e0 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ },
+ "a-trial-key-that-ended": {
+  "data": {
+   "state": "trial-ended",
+   "sentence": "Your trial has ended. Buy a license to keep the paid features.",
+   "warn": true,
+   "build": {
+    "release": true
+   },
+   "licenses": [
+    {
+     "kind": "trial",
+     "for": "ada@acme.example",
+     "until": "2026-11-18",
+     "daysLeft": 0,
+     "ended": true,
+     "keyId": "prod-2026"
+    }
+   ],
+   "refused": [],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 1,
+    "locked": 4
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\" data-tone=\"warn\"\u003eFree\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"trial-ended\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\" data-tone=\"warn\"\u003eFree\u003c/span\u003e\u003c/div\u003e\n\u003cp class=\"ui-license-sentence\"\u003eYour trial has ended. Buy a license to keep the paid features.\u003c/p\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e1 on\u003c/span\u003e\u003cspan\u003e4 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ },
+ "a-trial-with-two-days-left": {
+  "data": {
+   "state": "trial",
+   "sentence": "Trial: 2 days left (ends 2026-12-03)",
+   "warn": true,
+   "build": {
+    "release": true
+   },
+   "licenses": [
+    {
+     "kind": "trial",
+     "for": "ada@acme.example",
+     "until": "2026-12-03",
+     "daysLeft": 2,
+     "ended": false,
+     "keyId": "prod-2026",
+     "window": {
+      "of": 14
+     }
+    }
+   ],
+   "refused": [],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 5,
+    "locked": 0
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": true,
+     "from": "trial",
+     "until": "2026-12-03"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\" data-tone=\"warn\"\u003eTrial\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"trial\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\" data-tone=\"warn\"\u003eTrial\u003c/span\u003e\u003c/div\u003e\n\u003cp class=\"ui-license-sentence\"\u003eTrial: 2 days left (ends 2026-12-03)\u003c/p\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e5 on\u003c/span\u003e\u003cspan\u003e0 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eswitched on in config\u003c/td\u003e\u003ctd\u003etrial key · until \u003ccode\u003e2026-12-03\u003c/code\u003e\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ },
+ "an-unstarted-release-trial": {
+  "data": {
+   "state": "none",
+   "build": {
+    "release": true
+   },
+   "licenses": [
+    {
+     "kind": "release-trial",
+     "for": "designer 9",
+     "until": "2027-11-20",
+     "offerEnds": "2027-11-20",
+     "daysLeft": 362,
+     "ended": false,
+     "keyId": "prod-2026"
+    }
+   ],
+   "refused": [],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 1,
+    "locked": 4
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\"\u003eFree\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"none\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\"\u003eFree\u003c/span\u003e\u003c/div\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e1 on\u003c/span\u003e\u003cspan\u003e4 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ },
+ "no-license": {
+  "data": {
+   "state": "none",
+   "build": {
+    "release": true
+   },
+   "licenses": [],
+   "refused": [],
+   "counts": {
+    "free": 1,
+    "enterprise": 4,
+    "on": 1,
+    "locked": 4
+   },
+   "features": [
+    {
+     "id": "edit",
+     "title": "Change a design",
+     "covers": "apply, edit, connect, delete, focus, the design's files and its word lists",
+     "tier": "free",
+     "on": true,
+     "from": "none"
+    },
+    {
+     "id": "events",
+     "title": "Live events",
+     "covers": "the /api/events stream",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "multi-design",
+     "title": "Many designs",
+     "covers": "more than one design in a folder",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "share",
+     "title": "Share a design",
+     "covers": "sharing a design with others",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    },
+    {
+     "id": "sync",
+     "title": "Sync designs",
+     "covers": "keeping designs the same on several machines",
+     "startsOff": true,
+     "tier": "enterprise",
+     "on": false,
+     "by": "license",
+     "from": "none"
+    }
+   ]
+  },
+  "badge": "\u003cspan class=\"ui-pill ui-license-badge\"\u003eFree\u003c/span\u003e",
+  "panel": "\u003cdiv class=\"ui-license-panel\" data-state=\"none\"\u003e\n\u003cdiv class=\"ui-license-top\"\u003e\u003cb class=\"ui-pop-title\"\u003eLicense\u003c/b\u003e\u003cspan class=\"ui-pill ui-license-badge\"\u003eFree\u003c/span\u003e\u003c/div\u003e\n\u003cdiv class=\"ui-list ui-license-features\" role=\"region\" aria-label=\"Features\" tabindex=\"0\"\u003e\n\u003cdiv class=\"ui-license-head\"\u003e\u003ch3\u003eFeatures\u003c/h3\u003e\u003cspan\u003e1 free\u003c/span\u003e\u003cspan\u003e4 enterprise\u003c/span\u003e\u003cspan\u003e1 on\u003c/span\u003e\u003cspan\u003e4 locked\u003c/span\u003e\u003c/div\u003e\n\u003ctable\u003e\n\u003cthead\u003e\u003ctr\u003e\u003cth scope=\"col\"\u003eFeature\u003c/th\u003e\u003cth scope=\"col\"\u003eTier\u003c/th\u003e\u003cth scope=\"col\"\u003eState\u003c/th\u003e\u003cth scope=\"col\"\u003eWhy\u003c/th\u003e\u003cth scope=\"col\"\u003eUnlocked by\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Change a design\"\u003eedit\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003eapply, edit, connect, delete, focus, the design\u0026#39;s files and its word lists\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\"\u003eFree\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"good\"\u003e\u003c/span\u003eOn\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eon by default\u003c/td\u003e\u003ctd\u003efree, no license needed\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Live events\"\u003eevents\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ethe /api/events stream\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Many designs\"\u003emulti-design\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003emore than one design in a folder\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Share a design\"\u003eshare\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003esharing a design with others\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003e\u003ccode class=\"ui-license-id\" title=\"Sync designs\"\u003esync\u003c/code\u003e\u003cspan class=\"ui-item-sub\"\u003ekeeping designs the same on several machines\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-license-tier\" data-tier=\"enterprise\"\u003eEnterprise\u003c/span\u003e\u003c/td\u003e\u003ctd\u003e\u003cspan class=\"ui-status\" data-tone=\"warn\"\u003e\u003cspan class=\"ui-dot\" data-tone=\"warn\"\u003e\u003c/span\u003eLocked\u003c/span\u003e\u003c/td\u003e\u003ctd\u003eneeds a license or trial\u003c/td\u003e\u003ctd\u003enone\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp class=\"ui-license-note\"\u003eLocked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.\u003c/p\u003e\n\u003c/div\u003e\n\u003c/div\u003e"
+ }
+}
