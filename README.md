@@ -158,3 +158,9 @@ A count with an `Icon` (`eye`, `check`, `alert`, `edit`, or any `ui/icon`) is a 
 - Checks: `go vet ./... && go test -race -count=1 ./...` and `npm test`.
 
 A merge to `main` releases by itself from the commit types. A new token or part is `feat`; renaming or removing a class, partial, wrapper or field is `feat!`.
+
+## License
+
+Elastic License 2.0 (ELv2), see [LICENSE](LICENSE).
+You may use, copy and change this code. You may not offer it as a hosted or managed service,
+and you may not remove or get around its license keys.
