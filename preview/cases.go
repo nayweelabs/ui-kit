@@ -213,8 +213,8 @@ func enterprise(from, until string) []kit.LicenseFeature {
 var (
 	addLicense  = kit.Button{Label: "Add a license", Href: "#add-license"}
 	showLicense = kit.Button{Label: "Show the license file", Href: "#license-file"}
-	trialFile   = kit.LicenseFile{Kind: "trial", For: "Ada Example", Until: "2026-12-03", DaysLeft: 10, KeyID: "prod-2026-a", Window: &kit.Window{Of: 14}}
-	orgFile     = kit.LicenseFile{Kind: "org", For: "Example Ltd", Until: "2027-11-19", DaysLeft: 365, KeyID: "prod-2026-a"}
+	trialFile   = kit.LicenseFile{Kind: "trial", For: "Ada Example", Until: "2026-12-03", DaysLeft: 10, KeyID: "test-2026-a", Window: &kit.Window{Of: 14}}
+	orgFile     = kit.LicenseFile{Kind: "org", For: "Example Ltd", Until: "2027-11-19", DaysLeft: 365, KeyID: "test-2026-a"}
 	locked      = kit.LicenseCounts{Free: 4, Enterprise: 2, On: 2, Locked: 2}
 	open        = kit.LicenseCounts{Free: 4, Enterprise: 2, On: 3}
 )
@@ -227,7 +227,7 @@ func SampleLicenses() map[string]kit.License {
 	ending.Until, ending.DaysLeft, ending.Window = "2026-12-01", 12, &kit.Window{Of: 14}
 	ended := orgFile
 	ended.Until, ended.DaysLeft, ended.Ended = "2026-11-10", 0, true
-	product := kit.LicenseFile{Kind: "product", For: "Example Ltd", Until: "2027-03-01", DaysLeft: 102, KeyID: "prod-2026-a"}
+	product := kit.LicenseFile{Kind: "product", For: "Example Ltd", Until: "2027-03-01", DaysLeft: 102, KeyID: "test-2026-a"}
 	licensed := enterprise("both", "2027-11-19")
 	licensed[1] = brokenTelemetry
 	devFile := kit.LicenseFile{Kind: "product", For: "Ada Example", Until: "2027-01-01", DaysLeft: 43, KeyID: "dev-1"}
