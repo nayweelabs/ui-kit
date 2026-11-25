@@ -28,9 +28,10 @@ test("a button that goes to another site opens in a new tab, as the Go partial d
   assert.match(render(h(License, { state: "none", build: { release: true }, trial: "https://example.com/trial-key" })), /href="https:\/\/example.com\/trial-key" target="_blank" rel="noopener noreferrer"/);
 });
 
-// Every contracts sample answer (written by go test -run Golden -update): React draws the Go badge and panel, and the bar holds both.
-for (const [name, { data, badge, panel }] of Object.entries(JSON.parse(read("license-samples.json")))) {
-  test(`license sample ${name} draws the Go badge and panel`, () => {
+// Every contracts sample answer (written by go test -run Golden -update): React draws the Go badge, panel and Settings card, and the bar holds the badge and panel.
+for (const [name, { data, badge, panel, card }] of Object.entries(JSON.parse(read("license-samples.json")))) {
+  test(`license sample ${name} draws the Go badge, panel and card`, () => {
+    assert.equal(same(render(h(License, data))), same(card));
     assert.equal(same(render(h(LicenseBadge, data))), same(badge));
     assert.equal(same(render(h(LicensePanel, data))), same(panel));
     const bar = same(render(h(Bar, { app: "Designer", license: { href: "/settings", license: data } })));

@@ -60,6 +60,7 @@ func TestGoldenLicenseSamplesDrawWordColourAndSentence(t *testing.T) {
 		Data  json.RawMessage `json:"data"`
 		Badge string          `json:"badge"`
 		Panel string          `json:"panel"`
+		Card  string          `json:"card"`
 	}
 	all := map[string]sample{}
 	for name, raw := range licenseSamples(t) {
@@ -94,7 +95,25 @@ func TestGoldenLicenseSamplesDrawWordColourAndSentence(t *testing.T) {
 		if !strings.Contains(bar, `aria-haspopup="dialog" title="License"><span class="ui-sr">License: </span>`+badge+`</a>`) || !strings.Contains(bar, panel) {
 			t.Errorf("%s: the bar lacks the badge or its panel:\n%s", name, bar)
 		}
-		all[name] = sample{Data: answer.Data, Badge: badge, Panel: panel}
+		card := draw(t, "ui/license", l)
+		if l.Sentence != "" && !strings.Contains(card, `<b class="ui-license-title">`+template.HTMLEscapeString(l.Sentence)+`</b>`) {
+			t.Errorf("%s: the card's headline is not the sentence %q:\n%s", name, l.Sentence, card)
+		}
+		for _, f := range l.Licenses {
+			row := `<div><dt>Until</dt><dd><code>` + f.Until + `</code></dd></div>`
+			if f.TrialEnds != "" {
+				row = `<div><dt>Trial ends</dt><dd><code>` + f.TrialEnds + `</code></dd></div>`
+			} else if f.OfferEnds != "" {
+				row = `<div><dt>Offer ends</dt><dd><code>` + f.OfferEnds + `</code></dd></div>`
+			}
+			if !strings.Contains(card, row) {
+				t.Errorf("%s: the card lacks %s:\n%s", name, row, card)
+			}
+			if f.Kind == "release-trial" && strings.Contains(card, "<dt>Until</dt>") {
+				t.Errorf("%s: a release-trial shows an Until row:\n%s", name, card)
+			}
+		}
+		all[name] = sample{Data: answer.Data, Badge: badge, Panel: panel, Card: card}
 	}
 	got, err := json.MarshalIndent(all, "", " ")
 	if err != nil {
