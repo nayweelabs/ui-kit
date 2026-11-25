@@ -138,6 +138,7 @@
      "type": "refused"
     }
    ],
+   "sentence": "Licensed to Ada Example · Designer",
    "state": "licensed",
    "version": "main@3d91aef"
   }
@@ -236,7 +237,8 @@
    ],
    "refused": [],
    "state": "ended",
-   "version": "v9.4.1"
+   "version": "v9.4.1",
+   "warn": true
   }
  },
  "ending": {
@@ -336,7 +338,8 @@
    ],
    "refused": [],
    "state": "ending",
-   "version": "v9.4.1"
+   "version": "v9.4.1",
+   "warn": true
   }
  },
  "licensed": {
@@ -445,6 +448,7 @@
     }
    ],
    "refused": [],
+   "sentence": "Licensed to Example Ltd · Designer",
    "state": "licensed",
    "version": "v9.4.1"
   }
@@ -561,6 +565,574 @@
    "version": "v9.4.1"
   }
  },
+ "panel-ended": {
+  "template": "ui/license-panel",
+  "props": {
+   "actions": [
+    {
+     "href": "#add-license",
+     "label": "Add a license",
+     "variant": ""
+    }
+   ],
+   "build": {
+    "release": true
+   },
+   "counts": {
+    "enterprise": 2,
+    "free": 4,
+    "locked": 2,
+    "on": 2
+   },
+   "endedOn": "2026-11-10",
+   "features": [
+    {
+     "by": "license",
+     "covers": "GET /api/events, the live stream of what changed",
+     "from": "none",
+     "id": "events",
+     "on": false,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Live events"
+    },
+    {
+     "by": "license",
+     "covers": "traces, metrics and logs sent to another system over OpenTelemetry",
+     "from": "none",
+     "id": "telemetry",
+     "on": false,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Telemetry"
+    },
+    {
+     "covers": "apply, edit, connect, delete, focus, the design files and word lists",
+     "from": "none",
+     "id": "edit",
+     "on": true,
+     "tier": "free",
+     "title": "Edit"
+    },
+    {
+     "covers": "moving, tidying and arranging boxes and lines",
+     "from": "none",
+     "id": "layout",
+     "on": true,
+     "tier": "free",
+     "title": "Layout"
+    },
+    {
+     "by": "default",
+     "covers": "saved requests, runs and suites",
+     "from": "none",
+     "id": "tracing",
+     "on": false,
+     "startsOff": true,
+     "tier": "free",
+     "title": "Tracing"
+    },
+    {
+     "by": "switch",
+     "covers": "reading a project’s code into documents",
+     "from": "none",
+     "id": "workshop",
+     "on": false,
+     "tier": "free",
+     "title": "Workshop"
+    }
+   ],
+   "licenses": [
+    {
+     "daysLeft": 0,
+     "ended": true,
+     "for": "Example Ltd",
+     "keyId": "prod-2026-a",
+     "kind": "org",
+     "until": "2026-11-10"
+    }
+   ],
+   "refused": [],
+   "state": "ended",
+   "version": "v9.4.1",
+   "warn": true
+  }
+ },
+ "panel-ending": {
+  "template": "ui/license-panel",
+  "props": {
+   "actions": [
+    {
+     "href": "#add-license",
+     "label": "Add a license",
+     "variant": ""
+    }
+   ],
+   "build": {
+    "release": true
+   },
+   "counts": {
+    "enterprise": 2,
+    "free": 4,
+    "locked": 0,
+    "on": 3
+   },
+   "features": [
+    {
+     "covers": "GET /api/events, the live stream of what changed",
+     "from": "org",
+     "id": "events",
+     "on": true,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Live events",
+     "until": "2026-12-01"
+    },
+    {
+     "by": "default",
+     "covers": "traces, metrics and logs sent to another system over OpenTelemetry",
+     "from": "org",
+     "id": "telemetry",
+     "on": false,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Telemetry",
+     "until": "2026-12-01"
+    },
+    {
+     "covers": "apply, edit, connect, delete, focus, the design files and word lists",
+     "from": "none",
+     "id": "edit",
+     "on": true,
+     "tier": "free",
+     "title": "Edit"
+    },
+    {
+     "covers": "moving, tidying and arranging boxes and lines",
+     "from": "none",
+     "id": "layout",
+     "on": true,
+     "tier": "free",
+     "title": "Layout"
+    },
+    {
+     "by": "default",
+     "covers": "saved requests, runs and suites",
+     "from": "none",
+     "id": "tracing",
+     "on": false,
+     "startsOff": true,
+     "tier": "free",
+     "title": "Tracing"
+    },
+    {
+     "by": "switch",
+     "covers": "reading a project’s code into documents",
+     "from": "none",
+     "id": "workshop",
+     "on": false,
+     "tier": "free",
+     "title": "Workshop"
+    }
+   ],
+   "licenses": [
+    {
+     "daysLeft": 12,
+     "ended": false,
+     "for": "Example Ltd",
+     "keyId": "prod-2026-a",
+     "kind": "org",
+     "until": "2026-12-01",
+     "window": {
+      "of": 14
+     }
+    }
+   ],
+   "refused": [],
+   "state": "ending",
+   "version": "v9.4.1",
+   "warn": true
+  }
+ },
+ "panel-licensed": {
+  "template": "ui/license-panel",
+  "props": {
+   "actions": [
+    {
+     "href": "#add-license",
+     "label": "Add a license",
+     "variant": ""
+    }
+   ],
+   "build": {
+    "release": true
+   },
+   "counts": {
+    "enterprise": 2,
+    "free": 4,
+    "locked": 0,
+    "on": 4
+   },
+   "features": [
+    {
+     "covers": "GET /api/events, the live stream of what changed",
+     "from": "both",
+     "id": "events",
+     "on": true,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Live events",
+     "until": "2027-11-19"
+    },
+    {
+     "covers": "traces, metrics and logs sent to another system over OpenTelemetry",
+     "from": "org",
+     "id": "telemetry",
+     "missing": [
+      {
+       "name": "OTEL_EXPORTER_OTLP_ENDPOINT",
+       "purpose": "where telemetry is sent"
+      }
+     ],
+     "on": true,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Telemetry",
+     "until": "2027-11-19"
+    },
+    {
+     "covers": "apply, edit, connect, delete, focus, the design files and word lists",
+     "from": "none",
+     "id": "edit",
+     "on": true,
+     "tier": "free",
+     "title": "Edit"
+    },
+    {
+     "covers": "moving, tidying and arranging boxes and lines",
+     "from": "none",
+     "id": "layout",
+     "on": true,
+     "tier": "free",
+     "title": "Layout"
+    },
+    {
+     "by": "default",
+     "covers": "saved requests, runs and suites",
+     "from": "none",
+     "id": "tracing",
+     "on": false,
+     "startsOff": true,
+     "tier": "free",
+     "title": "Tracing"
+    },
+    {
+     "by": "switch",
+     "covers": "reading a project’s code into documents",
+     "from": "none",
+     "id": "workshop",
+     "on": false,
+     "tier": "free",
+     "title": "Workshop"
+    }
+   ],
+   "licenses": [
+    {
+     "daysLeft": 365,
+     "ended": false,
+     "for": "Example Ltd",
+     "keyId": "prod-2026-a",
+     "kind": "org",
+     "until": "2027-11-19"
+    },
+    {
+     "daysLeft": 102,
+     "ended": false,
+     "for": "Example Ltd",
+     "keyId": "prod-2026-a",
+     "kind": "product",
+     "until": "2027-03-01"
+    }
+   ],
+   "refused": [],
+   "sentence": "Licensed to Example Ltd · Designer",
+   "state": "licensed",
+   "version": "v9.4.1"
+  }
+ },
+ "panel-none": {
+  "template": "ui/license-panel",
+  "props": {
+   "actions": [
+    {
+     "href": "#add-license",
+     "label": "Add a license",
+     "variant": ""
+    }
+   ],
+   "build": {
+    "release": true
+   },
+   "counts": {
+    "enterprise": 2,
+    "free": 4,
+    "locked": 2,
+    "on": 2
+   },
+   "features": [
+    {
+     "by": "license",
+     "covers": "GET /api/events, the live stream of what changed",
+     "from": "none",
+     "id": "events",
+     "on": false,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Live events"
+    },
+    {
+     "by": "license",
+     "covers": "traces, metrics and logs sent to another system over OpenTelemetry",
+     "from": "none",
+     "id": "telemetry",
+     "on": false,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Telemetry"
+    },
+    {
+     "covers": "apply, edit, connect, delete, focus, the design files and word lists",
+     "from": "none",
+     "id": "edit",
+     "on": true,
+     "tier": "free",
+     "title": "Edit"
+    },
+    {
+     "covers": "moving, tidying and arranging boxes and lines",
+     "from": "none",
+     "id": "layout",
+     "on": true,
+     "tier": "free",
+     "title": "Layout"
+    },
+    {
+     "by": "default",
+     "covers": "saved requests, runs and suites",
+     "from": "none",
+     "id": "tracing",
+     "on": false,
+     "startsOff": true,
+     "tier": "free",
+     "title": "Tracing"
+    },
+    {
+     "by": "switch",
+     "covers": "reading a project’s code into documents",
+     "from": "none",
+     "id": "workshop",
+     "on": false,
+     "tier": "free",
+     "title": "Workshop"
+    }
+   ],
+   "licenses": [],
+   "refused": [],
+   "state": "none",
+   "trial": "https://example.com/trial-key",
+   "version": "v9.4.1"
+  }
+ },
+ "panel-trial": {
+  "template": "ui/license-panel",
+  "props": {
+   "actions": [
+    {
+     "href": "#add-license",
+     "label": "Add a license",
+     "variant": ""
+    }
+   ],
+   "build": {
+    "release": true
+   },
+   "counts": {
+    "enterprise": 2,
+    "free": 4,
+    "locked": 0,
+    "on": 3
+   },
+   "features": [
+    {
+     "covers": "GET /api/events, the live stream of what changed",
+     "from": "trial",
+     "id": "events",
+     "on": true,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Live events",
+     "until": "2026-12-03"
+    },
+    {
+     "by": "default",
+     "covers": "traces, metrics and logs sent to another system over OpenTelemetry",
+     "from": "trial",
+     "id": "telemetry",
+     "on": false,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Telemetry",
+     "until": "2026-12-03"
+    },
+    {
+     "covers": "apply, edit, connect, delete, focus, the design files and word lists",
+     "from": "none",
+     "id": "edit",
+     "on": true,
+     "tier": "free",
+     "title": "Edit"
+    },
+    {
+     "covers": "moving, tidying and arranging boxes and lines",
+     "from": "none",
+     "id": "layout",
+     "on": true,
+     "tier": "free",
+     "title": "Layout"
+    },
+    {
+     "by": "default",
+     "covers": "saved requests, runs and suites",
+     "from": "none",
+     "id": "tracing",
+     "on": false,
+     "startsOff": true,
+     "tier": "free",
+     "title": "Tracing"
+    },
+    {
+     "by": "switch",
+     "covers": "reading a project’s code into documents",
+     "from": "none",
+     "id": "workshop",
+     "on": false,
+     "tier": "free",
+     "title": "Workshop"
+    }
+   ],
+   "licenses": [
+    {
+     "daysLeft": 10,
+     "ended": false,
+     "for": "Ada Example",
+     "keyId": "prod-2026-a",
+     "kind": "trial",
+     "until": "2026-12-03",
+     "window": {
+      "of": 14
+     }
+    }
+   ],
+   "refused": [],
+   "sentence": "Trial: 10 days left (ends 2026-12-03)",
+   "state": "trial",
+   "version": "v9.4.1"
+  }
+ },
+ "panel-trial-ended": {
+  "template": "ui/license-panel",
+  "props": {
+   "actions": [
+    {
+     "href": "#add-license",
+     "label": "Add a license",
+     "variant": ""
+    }
+   ],
+   "build": {
+    "release": true
+   },
+   "counts": {
+    "enterprise": 2,
+    "free": 4,
+    "locked": 2,
+    "on": 2
+   },
+   "features": [
+    {
+     "by": "license",
+     "covers": "GET /api/events, the live stream of what changed",
+     "from": "none",
+     "id": "events",
+     "on": false,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Live events"
+    },
+    {
+     "by": "license",
+     "covers": "traces, metrics and logs sent to another system over OpenTelemetry",
+     "from": "none",
+     "id": "telemetry",
+     "on": false,
+     "startsOff": true,
+     "tier": "enterprise",
+     "title": "Telemetry"
+    },
+    {
+     "covers": "apply, edit, connect, delete, focus, the design files and word lists",
+     "from": "none",
+     "id": "edit",
+     "on": true,
+     "tier": "free",
+     "title": "Edit"
+    },
+    {
+     "covers": "moving, tidying and arranging boxes and lines",
+     "from": "none",
+     "id": "layout",
+     "on": true,
+     "tier": "free",
+     "title": "Layout"
+    },
+    {
+     "by": "default",
+     "covers": "saved requests, runs and suites",
+     "from": "none",
+     "id": "tracing",
+     "on": false,
+     "startsOff": true,
+     "tier": "free",
+     "title": "Tracing"
+    },
+    {
+     "by": "switch",
+     "covers": "reading a project’s code into documents",
+     "from": "none",
+     "id": "workshop",
+     "on": false,
+     "tier": "free",
+     "title": "Workshop"
+    }
+   ],
+   "licenses": [
+    {
+     "daysLeft": 0,
+     "ended": true,
+     "for": "Ada Example",
+     "keyId": "prod-2026-a",
+     "kind": "trial",
+     "until": "2026-12-03"
+    }
+   ],
+   "refused": [],
+   "sentence": "Your trial has ended. Buy a license to keep the paid features.",
+   "state": "trial-ended",
+   "trial": "https://example.com/trial-key",
+   "version": "v9.4.1",
+   "warn": true
+  }
+ },
  "trial": {
   "template": "ui/license",
   "props": {
@@ -657,6 +1229,7 @@
     }
    ],
    "refused": [],
+   "sentence": "Trial: 10 days left (ends 2026-12-03)",
    "state": "trial",
    "version": "v9.4.1"
   }
@@ -753,9 +1326,11 @@
     }
    ],
    "refused": [],
+   "sentence": "Your trial has ended. Buy a license to keep the paid features.",
    "state": "trial-ended",
    "trial": "https://example.com/trial-key",
-   "version": "v9.4.1"
+   "version": "v9.4.1",
+   "warn": true
   }
  }
 }

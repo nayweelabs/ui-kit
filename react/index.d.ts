@@ -70,20 +70,21 @@ export interface ConfirmSettingsProps {
   action?: string; types?: string[]; app?: Record<string, string>; system?: string[]; hidden?: { name: string; value: string }[]; save?: ButtonProps; onSubmit?: (data: FormData) => void;
 }
 export interface Location { label: string; path: string; note?: string }
-export interface LicenseFile { kind: "org" | "product" | "trial"; for: string; until: string; daysLeft: number; ended: boolean; keyId: string; window?: { of: number } }
+export interface LicenseFile { kind: "org" | "product" | "trial" | "release-trial"; for: string; until: string; trialEnds?: string; offerEnds?: string; daysLeft: number; ended: boolean; keyId: string; window?: { of: number } }
 export interface RefusedFile { file: string; type: string; reason: string }
 export interface FeatureValue { name: string; purpose: string }
 export interface LicenseFeature { id: string; title: string; covers: string; needs?: FeatureValue[]; tier: "free" | "enterprise"; on: boolean; by?: string; startsOff?: true; missing?: FeatureValue[]; from: "org" | "product" | "both" | "trial" | "none"; until?: string }
 export interface LicenseCounts { free: number; enterprise: number; on: number; locked: number }
-export interface LicenseProps { state: "none" | "trial" | "trial-ended" | "licensed" | "ending" | "ended" | string; build: { release: boolean }; licenses?: LicenseFile[]; refused?: RefusedFile[]; features?: LicenseFeature[]; counts?: LicenseCounts; version?: string; endedOn?: string; trial?: string; actions?: ButtonProps[] }
+export interface LicenseProps { state: "none" | "trial" | "trial-ended" | "licensed" | "ending" | "ended" | string; build: { release: boolean }; warn?: boolean; sentence?: string; licenses?: LicenseFile[]; refused?: RefusedFile[]; features?: LicenseFeature[]; counts?: LicenseCounts; version?: string; endedOn?: string; trial?: string; actions?: ButtonProps[] }
 export interface LocationsProps { home?: string; items?: Location[] }
 export interface DrawerProps { id: string; title: string; open?: boolean; onClose?: () => void; children?: ReactNode }
 export interface LightDetail { label: string; value: string }
 export interface LightConfirm { text: string; label: string; action?: string; hidden?: { name: string; value: string }[]; onConfirm?: () => void }
 export interface LightAction { label: string; variant?: "danger"; href?: string; opens?: string; onSelect?: () => void; confirm?: LightConfirm }
+export interface LicenseLightProps { href?: string; license: LicenseProps; open?: boolean }
 export interface LightProps { id: string; tone?: Tone; icon?: string; label: string; href?: string; title?: string; text?: string; details?: LightDetail[]; actions?: LightAction[]; open?: boolean; children?: ReactNode }
 export interface BarActionProps { button: ButtonProps; action: string; target?: string; count?: CountProps }
-export interface BarProps { app: string; sub?: string; href?: string; pages?: Link[]; apps?: Link[]; status?: StatusProps[]; lights?: LightProps[]; actions?: BarActionProps[]; noTheme?: boolean; children?: ReactNode }
+export interface BarProps { app: string; sub?: string; href?: string; pages?: Link[]; apps?: Link[]; status?: StatusProps[]; license?: LicenseLightProps; lights?: LightProps[]; actions?: BarActionProps[]; noTheme?: boolean; children?: ReactNode }
 export interface HeadProps { crumb?: Link[]; title: string; lede?: string; actions?: ButtonProps[] }
 export interface Build { version?: string; branch?: string; commit?: string; dirty?: boolean; released?: boolean }
 export interface FooterProps { version?: string; versionHref?: string; branch?: string; fresh?: StatusProps; links?: Link[] }
@@ -122,6 +123,9 @@ export function resolveConfirm(app: string | undefined, def?: ConfirmStyle): { s
 export function ConfirmSettings(props: ConfirmSettingsProps): ReactElement;
 export function Locations(props: LocationsProps): ReactElement;
 export function License(props: LicenseProps): ReactElement;
+export function LicenseBadge(props: { state: LicenseProps["state"]; warn?: boolean }): ReactElement;
+export function LicensePanel(props: LicenseProps): ReactElement;
+export function LicenseLight(props: LicenseLightProps): ReactElement;
 export function LicenseFeatures(props: { features?: LicenseFeature[]; counts?: LicenseCounts }): ReactElement;
 export function Drawer(props: DrawerProps): ReactElement;
 export function ThemeToggle(): ReactElement;

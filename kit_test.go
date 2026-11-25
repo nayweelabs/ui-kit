@@ -471,7 +471,7 @@ func TestLicenseDrawsAnUnknownWordAsGiven(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{`<span class="ui-pill">public</span><b class="ui-license-title">public</b>`, `<td>public_mode</td>`, `<span class="ui-dot" data-tone="none"></span>Off`} {
+	for _, want := range []string{`<span class="ui-pill ui-license-badge">public</span><b class="ui-license-title">public</b>`, `<td>public_mode</td>`, `<span class="ui-dot" data-tone="none"></span>Off`} {
 		if !strings.Contains(b.String(), want) {
 			t.Errorf("license lacks %q:\n%s", want, b.String())
 		}
