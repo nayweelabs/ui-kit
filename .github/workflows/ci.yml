@@ -68,11 +68,11 @@ jobs:
           else
             echo "Only cards, designs or Markdown changed: no tests."
           fi
+      # Actions cache save hangs on our self-hosted runners; npm's cache stays on the runner.
       - uses: actions/setup-node@v5
         if: steps.scope.outputs.code == 'true'
         with:
           node-version: lts/*
-          cache: npm
       - run: npm ci
         if: steps.scope.outputs.code == 'true'
       - run: npm test
