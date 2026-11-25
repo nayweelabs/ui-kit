@@ -2,15 +2,15 @@
 
 {{define "ui/license" -}}
 <section class="ui-license" aria-label="License and features" data-state="{{.State}}">
-<div class="ui-license-card"{{if or (eq .State "ending") (eq .State "ended")}} data-tone="warn"{{else if eq .State "trial"}} data-tone="info"{{end}}>
+<div class="ui-license-card"{{if .Warn}} data-tone="warn"{{end}}>
 <div class="ui-license-main">
-<div class="ui-license-top">{{template "ui/license-badge" .State}}{{if not .Build.Release}}<span class="ui-pill" data-tone="warn">Dev build</span>{{end}}<b class="ui-license-title">{{if and (eq .State "ended") .EndedOn}}License ended on <code>{{.EndedOn}}</code>{{else}}{{template "ui/license-title" .State}}{{end}}</b></div>
+<div class="ui-license-top">{{template "ui/license-badge" .}}{{if not .Build.Release}}<span class="ui-pill" data-tone="warn">Dev build</span>{{end}}<b class="ui-license-title">{{if .Sentence}}{{.Sentence}}{{else if and (eq .State "ended") .EndedOn}}License ended on <code>{{.EndedOn}}</code>{{else}}{{template "ui/license-title" .State}}{{end}}</b></div>
 <p class="ui-license-line">{{template "ui/license-line" .State}}</p>
 {{- if not .Build.Release}}
 <p class="ui-license-line">This build is not a release, so it accepts only dev-key licenses and keeps its files in its -dev folders.</p>
 {{- end}}
 {{- range .Licenses}}{{if .Window}}
-<div class="ui-license-count"><meter class="ui-license-meter" min="0" max="{{.Window.Of}}" value="{{.DaysLeft}}"{{if eq $.State "trial"}} data-tone="info" aria-label="{{.DaysLeft}} of {{.Window.Of}} days left"></meter><span>{{.DaysLeft}} of {{.Window.Of}} days left</span>{{else}} data-tone="warn" aria-label="{{.DaysLeft}} days left"></meter><span>{{.DaysLeft}} days left</span>{{end}}</div>
+<div class="ui-license-count"><meter class="ui-license-meter" min="0" max="{{.Window.Of}}" value="{{.DaysLeft}}" data-tone="{{if $.Warn}}warn{{else}}info{{end}}"{{if eq $.State "trial"}} aria-label="{{.DaysLeft}} of {{.Window.Of}} days left"></meter><span>{{.DaysLeft}} of {{.Window.Of}} days left</span>{{else}} aria-label="{{.DaysLeft}} days left"></meter><span>{{.DaysLeft}} days left</span>{{end}}</div>
 {{- end}}{{end}}
 {{- range .Refused}}
 <p class="ui-license-refused"><span class="ui-dot" data-tone="warn"></span><span>Not taken: <code>{{.File}}</code>: {{template "ui/license-refused" .Reason}}</span></p>
@@ -18,7 +18,7 @@
 </div>
 <dl class="ui-license-facts">
 {{- range .Licenses}}
-<div><dt>For</dt><dd>{{.For}}</dd></div><div><dt>Kind</dt><dd>{{template "ui/license-kind" .Kind}}{{if .Ended}} (ended){{end}}</dd></div><div><dt>Until</dt><dd><code>{{.Until}}</code></dd></div><div><dt>Signed by key</dt><dd><code>{{.KeyID}}</code></dd></div>
+<div><dt>For</dt><dd>{{.For}}</dd></div><div><dt>Kind</dt><dd>{{template "ui/license-kind" .Kind}}{{if .Ended}} (ended){{end}}</dd></div>{{with .TrialEnds}}<div><dt>Trial ends</dt><dd><code>{{.}}</code></dd></div>{{else with .OfferEnds}}<div><dt>Offer ends</dt><dd><code>{{.}}</code></dd></div>{{else}}<div><dt>Until</dt><dd><code>{{.Until}}</code></dd></div>{{end}}<div><dt>Signed by key</dt><dd><code>{{.KeyID}}</code></dd></div>
 {{- else}}
 <div><dt>For</dt><dd>—</dd></div><div><dt>Kind</dt><dd>none</dd></div><div><dt>Until</dt><dd>—</dd></div><div><dt>Signed by key</dt><dd>—</dd></div>
 {{- end}}
@@ -53,7 +53,7 @@
 {{- end}}
 
 {{define "ui/license-badge" -}}
-{{if or (eq . "licensed") (eq . "ending")}}<span class="ui-license-tier" data-tier="enterprise">Enterprise</span>{{else if eq . "trial"}}<span class="ui-pill" data-tone="info">Trial</span>{{else if eq . "ended"}}<span class="ui-pill" data-tone="warn">Ended</span>{{else if or (eq . "none") (eq . "trial-ended")}}<span class="ui-pill">Free</span>{{else}}<span class="ui-pill">{{.}}</span>{{end}}
+<span class="ui-pill ui-license-badge"{{if .Warn}} data-tone="warn"{{end}}>{{if or (eq .State "none") (eq .State "trial-ended") (eq .State "ended")}}Free{{else if eq .State "trial"}}Trial{{else if or (eq .State "licensed") (eq .State "ending")}}Licensed{{else}}{{.State}}{{end}}</span>
 {{- end}}
 
 {{define "ui/license-title" -}}
@@ -65,7 +65,7 @@
 {{- end}}
 
 {{define "ui/license-kind" -}}
-{{if eq . "org"}}org license{{else if eq . "product"}}product license{{else if eq . "trial"}}trial key{{else}}{{.}}{{end}}
+{{if eq . "org"}}org license{{else if eq . "product"}}product license{{else if eq . "trial"}}trial key{{else if eq . "release-trial"}}release trial{{else}}{{.}}{{end}}
 {{- end}}
 
 {{define "ui/license-refused" -}}

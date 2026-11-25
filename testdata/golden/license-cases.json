@@ -138,6 +138,7 @@
      "type": "refused"
     }
    ],
+   "sentence": "Licensed to Ada Example · Designer",
    "state": "licensed",
    "version": "main@3d91aef"
   }
@@ -236,7 +237,8 @@
    ],
    "refused": [],
    "state": "ended",
-   "version": "v9.4.1"
+   "version": "v9.4.1",
+   "warn": true
   }
  },
  "ending": {
@@ -336,7 +338,8 @@
    ],
    "refused": [],
    "state": "ending",
-   "version": "v9.4.1"
+   "version": "v9.4.1",
+   "warn": true
   }
  },
  "licensed": {
@@ -445,6 +448,7 @@
     }
    ],
    "refused": [],
+   "sentence": "Licensed to Example Ltd · Designer",
    "state": "licensed",
    "version": "v9.4.1"
   }
@@ -657,6 +661,7 @@
     }
    ],
    "refused": [],
+   "sentence": "Trial: 10 days left (ends 2026-12-03)",
    "state": "trial",
    "version": "v9.4.1"
   }
@@ -753,9 +758,11 @@
     }
    ],
    "refused": [],
+   "sentence": "Your trial has ended. Buy a license to keep the paid features.",
    "state": "trial-ended",
    "trial": "https://example.com/trial-key",
-   "version": "v9.4.1"
+   "version": "v9.4.1",
+   "warn": true
   }
  }
 }

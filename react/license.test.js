@@ -19,7 +19,7 @@ for (const [name, { template, props }] of Object.entries(JSON.parse(read("licens
 
 test("license draws a state and a closing word it has no words for as given", () => {
   const html = render(h(License, { state: "public", build: { release: true }, features: [{ id: "share", tier: "enterprise", on: false, by: "public_mode", from: "none" }] }));
-  assert.match(html, /<span class="ui-pill">public<\/span><b class="ui-license-title">public<\/b>/);
+  assert.match(html, /<span class="ui-pill ui-license-badge">public<\/span><b class="ui-license-title">public<\/b>/);
   assert.match(html, /<td>public_mode<\/td>/);
   assert.match(html, /<span class="ui-dot" data-tone="none"><\/span>Off/);
 });

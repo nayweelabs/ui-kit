@@ -375,15 +375,15 @@ export function Locations({ home, items = [] }) {
 
 // The words of each license state, as the "ui/license" partial draws them.
 const licenseWords = {
-  none: { badge: ["pill", "", "Free"], title: "No license", line: "Every free feature works. Enterprise features are locked until a license or a trial key names them." },
-  trial: { badge: ["pill", "info", "Trial"], title: "Trial: every enterprise feature is open", line: "Until the trial ends you can use everything, and each enterprise feature is marked as enterprise. After that, free features keep working and enterprise ones lock again." },
-  "trial-ended": { badge: ["pill", "", "Free"], title: "The trial has ended", line: "Free features keep working. Enterprise features are locked again; what they made stays readable." },
-  licensed: { badge: ["tier"], title: "Licensed", line: "A license names the enterprise features it unlocks, until a date." },
-  ending: { badge: ["tier"], title: "A license ends soon", line: "When it ends, the enterprise features it names lock again. What they made stays readable, and free features keep working." },
-  ended: { badge: ["pill", "warn", "Ended"], title: "License ended", line: "Enterprise features are locked again until the license is replaced. What they made stays readable, and free features keep working." },
+  none: { title: "No license", line: "Every free feature works. Enterprise features are locked until a license or a trial key names them." },
+  trial: { title: "Trial: every enterprise feature is open", line: "Until the trial ends you can use everything, and each enterprise feature is marked as enterprise. After that, free features keep working and enterprise ones lock again." },
+  "trial-ended": { title: "The trial has ended", line: "Free features keep working. Enterprise features are locked again; what they made stays readable." },
+  licensed: { title: "Licensed", line: "A license names the enterprise features it unlocks, until a date." },
+  ending: { title: "A license ends soon", line: "When it ends, the enterprise features it names lock again. What they made stays readable, and free features keep working." },
+  ended: { title: "License ended", line: "Enterprise features are locked again until the license is replaced. What they made stays readable, and free features keep working." },
 };
-const licenseTone = { trial: "info", ending: "warn", ended: "warn" };
-const kindWords = { org: "org license", product: "product license", trial: "trial key" };
+const badgeWords = { none: "Free", "trial-ended": "Free", ended: "Free", trial: "Trial", licensed: "Licensed", ending: "Licensed" };
+const kindWords = { org: "org license", product: "product license", trial: "trial key", "release-trial": "release trial" };
 const refusedWords = { signature: "its signature does not match what it holds", untrusted_key: "it is signed by a key this build does not trust", other_build: "it is signed with the key of the other build", unreadable: "it cannot be read or is not a license", wrong_place: "it is kept in the place of another kind of license", id_mismatch: "its id differs from the id it was signed with" };
 const fromWords = { org: "org", product: "product", both: "org and product", trial: "trial key" };
 const byWords = { license: "needs a license or trial", switch: "switched off in config", default: "starts off" };
@@ -415,27 +415,31 @@ export function LicenseFeatures({ features = [], counts = {} }) {
     h("p", { className: "ui-license-note" }, "Locked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license."));
 }
 
+// LicenseBadge is the license word of license show's state, in the warn colour when the answer warns.
+export function LicenseBadge({ state, warn }) {
+  return h("span", { className: "ui-pill ui-license-badge", "data-tone": warn ? "warn" : undefined }, badgeWords[state] || state);
+}
+
 // License is the License and features section of a Settings page: license show's data as given, the build's version, the date an ended license ended, where to ask for a trial key (set by the app for none and trial-ended), and the app's buttons.
-export function License({ state, build = {}, licenses = [], refused = [], features = [], counts, version, endedOn, trial, actions = [] }) {
-  const w = licenseWords[state] || { badge: ["pill", "", state], title: state, line: "" };
-  const [kind, t, word] = w.badge;
+export function License({ state, warn, sentence, build = {}, licenses = [], refused = [], features = [], counts, version, endedOn, trial, actions = [] }) {
+  const w = licenseWords[state] || { title: state, line: "" };
   const fact = (dt, dd) => h("div", { key: dt }, h("dt", null, dt), h("dd", null, dd));
   const code = (v) => (v ? h(Fragment, null, " ", h("code", null, v)) : null);
   return h("section", { className: "ui-license", "aria-label": "License and features", "data-state": state },
-    h("div", { className: "ui-license-card", "data-tone": licenseTone[state] },
+    h("div", { className: "ui-license-card", "data-tone": warn ? "warn" : undefined },
       h("div", { className: "ui-license-main" },
-        h("div", { className: "ui-license-top" }, kind === "tier" ? h(Tier, { enterprise: true }) : h(Pill, { tone: tone(t), label: word }),
-          build.release ? null : h(Pill, { tone: "warn", label: "Dev build" }), h("b", { className: "ui-license-title" }, state === "ended" && endedOn ? h(Fragment, null, "License ended on ", h("code", null, endedOn)) : w.title)),
+        h("div", { className: "ui-license-top" }, h(LicenseBadge, { state, warn }),
+          build.release ? null : h(Pill, { tone: "warn", label: "Dev build" }), h("b", { className: "ui-license-title" }, sentence || (state === "ended" && endedOn ? h(Fragment, null, "License ended on ", h("code", null, endedOn)) : w.title))),
         h("p", { className: "ui-license-line" }, w.line),
         build.release ? null : h("p", { className: "ui-license-line" }, "This build is not a release, so it accepts only dev-key licenses and keeps its files in its -dev folders."),
         licenses.filter((l) => l.window).map((l, i) => {
           const left = state === "trial" ? `${l.daysLeft} of ${l.window.of} days left` : `${l.daysLeft} days left`;
-          return h("div", { key: i, className: "ui-license-count" }, h("meter", { className: "ui-license-meter", min: 0, max: l.window.of, value: l.daysLeft, "data-tone": state === "trial" ? "info" : "warn", "aria-label": left }), h("span", null, left));
+          return h("div", { key: i, className: "ui-license-count" }, h("meter", { className: "ui-license-meter", min: 0, max: l.window.of, value: l.daysLeft, "data-tone": warn ? "warn" : "info", "aria-label": left }), h("span", null, left));
         }),
         refused.map((r) => h("p", { key: r.file, className: "ui-license-refused" }, h("span", { className: "ui-dot", "data-tone": "warn" }), h("span", null, "Not taken: ", h("code", null, r.file), ": ", refusedWords[r.reason] || r.reason)))),
       h("dl", { className: "ui-license-facts" },
         licenses.length ? licenses.map((l, i) => h(Fragment, { key: i },
-          fact("For", l.for), fact("Kind", (kindWords[l.kind] || l.kind) + (l.ended ? " (ended)" : "")), fact("Until", h("code", null, l.until)), fact("Signed by key", h("code", null, l.keyId))))
+          fact("For", l.for), fact("Kind", (kindWords[l.kind] || l.kind) + (l.ended ? " (ended)" : "")), l.trialEnds ? fact("Trial ends", h("code", null, l.trialEnds)) : l.offerEnds ? fact("Offer ends", h("code", null, l.offerEnds)) : fact("Until", h("code", null, l.until)), fact("Signed by key", h("code", null, l.keyId))))
           : [fact("For", "—"), fact("Kind", "none"), fact("Until", "—"), fact("Signed by key", "—")],
         fact("This build", build.release ? h(Fragment, null, "release", code(version), " (prod)") : h(Fragment, null, "PREVIEW", code(version)))),
       trial || actions.length ? h("div", { className: "ui-license-acts" },
