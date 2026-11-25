@@ -2,16 +2,18 @@ package kit
 
 // License is the License and features section of a Settings page ("ui/license"): the data of `<app> license show` as it is, each field's meaning in the contracts schema (mankit/v1 license-show), drawn as given.
 type License struct {
-	State    string           `json:"state"`             // state: none, trial, trial-ended, licensed, ending or ended
-	EndedOn  string           `json:"endedOn,omitempty"` // endedOn, the date of the ended headline
-	Build    LicenseBuild     `json:"build"`             // build; a build that is not a release also draws the dev look
-	Licenses []LicenseFile    `json:"licenses"`          // licenses
-	Refused  []RefusedFile    `json:"refused"`           // refused
-	Features []LicenseFeature `json:"features"`          // features
-	Counts   LicenseCounts    `json:"counts"`            // counts
-	Version  string           `json:"-"`                 // the version of the running build, as the page already has it
-	Trial    string           `json:"-"`                 // where to ask for a trial key, drawn as a button; the app sets it only for none and trial-ended
-	Actions  []Button         `json:"-"`                 // the app's own buttons, such as Add a license
+	State    string           `json:"state"`              // state: none, trial, trial-ended, licensed, ending or ended
+	EndedOn  string           `json:"endedOn,omitempty"`  // endedOn, the date of the ended headline
+	Warn     bool             `json:"warn,omitempty"`     // warn: the badge and the card take the warn colour
+	Sentence string           `json:"sentence,omitempty"` // sentence, shown word for word as the headline and in the panel
+	Build    LicenseBuild     `json:"build"`              // build; a build that is not a release also draws the dev look
+	Licenses []LicenseFile    `json:"licenses"`           // licenses
+	Refused  []RefusedFile    `json:"refused"`            // refused
+	Features []LicenseFeature `json:"features"`           // features
+	Counts   LicenseCounts    `json:"counts"`             // counts
+	Version  string           `json:"-"`                  // the version of the running build, as the page already has it
+	Trial    string           `json:"-"`                  // where to ask for a trial key, drawn as a button; the app sets it only for none and trial-ended
+	Actions  []Button         `json:"-"`                  // the app's own buttons, such as Add a license
 }
 
 // LicenseBuild is license show build.
@@ -21,13 +23,15 @@ type LicenseBuild struct {
 
 // LicenseFile is one of license show licenses.
 type LicenseFile struct {
-	Kind     string  `json:"kind"`
-	For      string  `json:"for"`
-	Until    string  `json:"until"`
-	DaysLeft int     `json:"daysLeft"`
-	Ended    bool    `json:"ended"`
-	KeyID    string  `json:"keyId"`
-	Window   *Window `json:"window,omitempty"` // with it, a countdown bar of DaysLeft
+	Kind      string  `json:"kind"`
+	For       string  `json:"for"`
+	Until     string  `json:"until"`
+	TrialEnds string  `json:"trialEnds,omitempty"` // trialEnds, shown in place of Until on a started release-trial
+	OfferEnds string  `json:"offerEnds,omitempty"` // offerEnds, shown in place of Until on a release-trial not started
+	DaysLeft  int     `json:"daysLeft"`
+	Ended     bool    `json:"ended"`
+	KeyID     string  `json:"keyId"`
+	Window    *Window `json:"window,omitempty"` // with it, a countdown bar of DaysLeft
 }
 
 // RefusedFile is one of license show refused: a file the app read but did not take.
