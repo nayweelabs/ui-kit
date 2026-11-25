@@ -81,9 +81,10 @@ export interface DrawerProps { id: string; title: string; open?: boolean; onClos
 export interface LightDetail { label: string; value: string }
 export interface LightConfirm { text: string; label: string; action?: string; hidden?: { name: string; value: string }[]; onConfirm?: () => void }
 export interface LightAction { label: string; variant?: "danger"; href?: string; opens?: string; onSelect?: () => void; confirm?: LightConfirm }
+export interface LicenseLightProps { href?: string; license: LicenseProps; open?: boolean }
 export interface LightProps { id: string; tone?: Tone; icon?: string; label: string; href?: string; title?: string; text?: string; details?: LightDetail[]; actions?: LightAction[]; open?: boolean; children?: ReactNode }
 export interface BarActionProps { button: ButtonProps; action: string; target?: string; count?: CountProps }
-export interface BarProps { app: string; sub?: string; href?: string; pages?: Link[]; apps?: Link[]; status?: StatusProps[]; lights?: LightProps[]; actions?: BarActionProps[]; noTheme?: boolean; children?: ReactNode }
+export interface BarProps { app: string; sub?: string; href?: string; pages?: Link[]; apps?: Link[]; status?: StatusProps[]; license?: LicenseLightProps; lights?: LightProps[]; actions?: BarActionProps[]; noTheme?: boolean; children?: ReactNode }
 export interface HeadProps { crumb?: Link[]; title: string; lede?: string; actions?: ButtonProps[] }
 export interface Build { version?: string; branch?: string; commit?: string; dirty?: boolean; released?: boolean }
 export interface FooterProps { version?: string; versionHref?: string; branch?: string; fresh?: StatusProps; links?: Link[] }
@@ -122,6 +123,9 @@ export function resolveConfirm(app: string | undefined, def?: ConfirmStyle): { s
 export function ConfirmSettings(props: ConfirmSettingsProps): ReactElement;
 export function Locations(props: LocationsProps): ReactElement;
 export function License(props: LicenseProps): ReactElement;
+export function LicenseBadge(props: { state: LicenseProps["state"]; warn?: boolean }): ReactElement;
+export function LicensePanel(props: LicenseProps): ReactElement;
+export function LicenseLight(props: LicenseLightProps): ReactElement;
 export function LicenseFeatures(props: { features?: LicenseFeature[]; counts?: LicenseCounts }): ReactElement;
 export function Drawer(props: DrawerProps): ReactElement;
 export function ThemeToggle(): ReactElement;

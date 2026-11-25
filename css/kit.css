@@ -414,6 +414,13 @@ button.ui-id[data-copied]::after{content:" copied";color:var(--ui-good)}
 .ui-license-acts{display:flex;flex-wrap:wrap;gap:8px;flex-basis:100%}
 .ui-license-tier{display:inline-flex;align-items:center;padding:1px 8px;border-radius:var(--ui-radius-sm);font-size:var(--ui-text-xs);font-weight:600;line-height:18px;white-space:nowrap;color:var(--ui-muted);border:1px solid var(--ui-rule-strong)}
 .ui-license-tier[data-tier="enterprise"]{background:var(--ui-ink);color:var(--ui-surface);border-color:var(--ui-ink)}
+.ui-license-light .ui-light-btn{height:auto;padding:0;border:0;background:none;border-radius:var(--ui-radius-pill)}
+.ui-license-light .ui-light-btn .ui-license-badge{padding:5px 12px;font-size:var(--ui-text-sm)}
+.ui-license-light .ui-light-btn:hover .ui-license-badge,.ui-license-light .ui-light-btn[aria-expanded="true"] .ui-license-badge{border-color:currentColor}
+.ui-license-pop{width:min(560px,calc(100vw - 32px));max-height:min(70vh,640px);overflow-y:auto}
+.ui-license-panel{display:grid;gap:12px;min-width:0}
+.ui-license-panel .ui-license-top{justify-content:space-between}
+.ui-license-sentence{margin:0;font-size:var(--ui-text-md);line-height:1.45}
 .ui-license-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;padding:12px 14px;font-size:var(--ui-text-xs);color:var(--ui-muted)}
 .ui-license-head h3{margin:0 auto 0 0;font-size:var(--ui-text-md);font-weight:650;color:var(--ui-ink)}
 .ui-license-features td{vertical-align:top}

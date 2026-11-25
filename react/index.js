@@ -448,6 +448,25 @@ export function License({ state, warn, sentence, build = {}, licenses = [], refu
     features.length ? h(LicenseFeatures, { features, counts }) : null);
 }
 
+// LicensePanel is the License panel of the top bar: the badge, license show's sentence as given, its features and the app's buttons.
+export function LicensePanel({ state, warn, sentence, features = [], counts, actions = [] }) {
+  return h("div", { className: "ui-license-panel", "data-state": state },
+    h("div", { className: "ui-license-top" }, h("b", { className: "ui-pop-title" }, "License"), h(LicenseBadge, { state, warn })),
+    sentence ? h("p", { className: "ui-license-sentence" }, sentence) : null,
+    features.length ? h(LicenseFeatures, { features, counts }) : null,
+    actions.length ? h("div", { className: "ui-license-acts" }, actions.map((a) => h(Button, { key: a.label, ...a }))) : null);
+}
+
+// LicenseLight is the license badge of the top bar, a link to href (the app's Settings page) that opens the License panel.
+export function LicenseLight({ href = "#", license, open: initial = false }) {
+  const { open, setOpen, close, box, btn, onKeyDown } = usePop(initial);
+  return h("div", { className: "ui-light ui-license-light", ref: box, onKeyDown },
+    h("a", { className: "ui-light-btn", href, ref: btn, "aria-controls": "ui-license-pop", "aria-expanded": String(open), "aria-haspopup": "dialog", title: "License", onClick: (e) => { e.preventDefault(); open ? close(true) : setOpen(true); } },
+      h("span", { className: "ui-sr" }, "License: "), h(LicenseBadge, license)),
+    h("div", { className: "ui-pop ui-license-pop", id: "ui-license-pop", role: "dialog", "aria-label": "License", tabIndex: -1, hidden: !open, ref: (el) => { if (el && open && !el.contains(document.activeElement)) el.focus(); } },
+      h(LicensePanel, license)));
+}
+
 export function Drawer({ id, title, open, onClose, children }) {
   return h("dialog", { className: "ui-drawer", id, "aria-labelledby": id + "-title", ref: useModal(open, onClose) },
     h("div", { className: "ui-drawer-head" }, h("h2", { className: "ui-dialog-title", id: id + "-title" }, title),
@@ -455,15 +474,12 @@ export function Drawer({ id, title, open, onClose, children }) {
     children);
 }
 
-// Light is a status light for the top bar: a dot, an icon and a word that opens a popover with the facts and an
-// Actions menu. Escape, a click outside or focus leaving closes it. An action links (href), runs onSelect, opens
-// the dialog of id opens, or asks once more inside the popover (confirm: a form to action, or onConfirm).
-export function Light({ id, tone: t, icon, label, href = "#", title, text, details = [], actions = [], open: initial = false, children }) {
+// usePop is a top-bar popover's state: Escape, a click outside or focus leaving closes it, and onClose runs on every close.
+function usePop(initial, onClose) {
   const [open, setOpen] = useState(initial);
-  const [step, setStep] = useState(-1);
   const box = useRef(null);
   const btn = useRef(null);
-  const close = (back) => { setOpen(false); setStep(-1); if (back && btn.current) btn.current.focus(); };
+  const close = (back) => { setOpen(false); if (onClose) onClose(); if (back && btn.current) btn.current.focus(); };
   useEffect(() => {
     if (!open) return undefined;
     const away = (e) => { if (box.current && !box.current.contains(e.target) && !e.target.closest("dialog")) close(false); };
@@ -471,6 +487,16 @@ export function Light({ id, tone: t, icon, label, href = "#", title, text, detai
     document.addEventListener("focusin", away);
     return () => { document.removeEventListener("click", away); document.removeEventListener("focusin", away); };
   }, [open]);
+  const onKeyDown = (e) => { if (e.key === "Escape" && open && !e.target.closest("dialog")) { e.preventDefault(); close(true); } };
+  return { open, setOpen, close, box, btn, onKeyDown };
+}
+
+// Light is a status light for the top bar: a dot, an icon and a word that opens a popover with the facts and an
+// Actions menu. Escape, a click outside or focus leaving closes it. An action links (href), runs onSelect, opens
+// the dialog of id opens, or asks once more inside the popover (confirm: a form to action, or onConfirm).
+export function Light({ id, tone: t, icon, label, href = "#", title, text, details = [], actions = [], open: initial = false, children }) {
+  const [step, setStep] = useState(-1);
+  const { open, setOpen, close, box, btn, onKeyDown } = usePop(initial, () => setStep(-1));
   const pick = (a, i) => {
     if (a.confirm) return setStep(i);
     if (a.opens) { const d = document.getElementById(a.opens); if (d && d.showModal && !d.open) d.showModal(); }
@@ -480,7 +506,7 @@ export function Light({ id, tone: t, icon, label, href = "#", title, text, detai
     ? h("a", { key: i, className: "ui-menu-item", href: a.href, "data-variant": a.variant }, a.label)
     : h("button", { key: i, className: "ui-menu-item", type: "button", "data-variant": a.variant, "aria-haspopup": a.opens ? "dialog" : undefined, "aria-expanded": a.confirm ? String(step === i) : undefined, onClick: () => pick(a, i) }, a.label);
   const c = step >= 0 ? actions[step].confirm : null;
-  return h("div", { className: "ui-light", id, ref: box, onKeyDown: (e) => { if (e.key === "Escape" && open && !e.target.closest("dialog")) { e.preventDefault(); close(true); } } },
+  return h("div", { className: "ui-light", id, ref: box, onKeyDown },
     h("a", { className: "ui-light-btn", href, ref: btn, "aria-controls": id + "-pop", "aria-expanded": String(open), "aria-haspopup": "dialog", title, onClick: (e) => { e.preventDefault(); open ? close(true) : setOpen(true); } },
       h("span", { className: "ui-dot", "data-tone": t || "none" }), icon ? h(Icon, { name: icon }) : null, h("span", { className: "ui-light-word" }, label), title ? h("span", { className: "ui-sr" }, ": " + title) : null),
     h("div", { className: "ui-pop", id: id + "-pop", role: "dialog", "aria-labelledby": id + "-pop-title", tabIndex: -1, hidden: !open, ref: (el) => { if (el && open && !el.contains(document.activeElement)) el.focus(); } },
@@ -508,7 +534,7 @@ export function ThemeToggle() {
   return h("button", { className: "ui-iconbtn", type: "button", "aria-label": "Switch light or dark theme", title: "Switch light or dark theme", onClick: flip }, h(Icon, { name: "theme" }));
 }
 
-export function Bar({ app, sub, href = "/", pages = [], apps, status = [], lights = [], actions = [], noTheme, children }) {
+export function Bar({ app, sub, href = "/", pages = [], apps, status = [], license, lights = [], actions = [], noTheme, children }) {
   return h("header", { className: "ui-bar ui-gutter" }, h("div", { className: "ui-wrap" },
     apps && apps.length
       ? h("details", { className: "ui-apps" }, h("summary", { className: "ui-brand" }, app, sub ? h(Fragment, null, " ", h("small", null, sub)) : null),
@@ -517,7 +543,7 @@ export function Bar({ app, sub, href = "/", pages = [], apps, status = [], light
     pages.length ? h("nav", { className: "ui-nav", "aria-label": "Pages" }, pages.map((p) => h("a", { key: p.href, href: p.href, "aria-current": p.current ? "page" : undefined }, p.label, p.count ? h(Fragment, null, " ", h(Count, p.count)) : null))) : null,
     h("div", { className: "ui-bar-end" },
       status.map((s) => h("span", { key: s.label, className: "ui-status", title: s.label }, h("span", { className: "ui-dot", "data-tone": s.tone || "none" }), h("span", { className: "ui-status-word" }, s.label))),
-      lights.map((l) => h(Light, { key: l.id, ...l })), children,
+      license ? h(LicenseLight, license) : null, lights.map((l) => h(Light, { key: l.id, ...l })), children,
       actions.map((a, i) => h(BarAction, { key: a.action + " " + i, ...a })), noTheme ? null : h(ThemeToggle))));
 }
 

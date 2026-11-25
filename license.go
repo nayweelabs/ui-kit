@@ -16,6 +16,13 @@ type License struct {
 	Actions  []Button         `json:"-"`                  // the app's own buttons, such as Add a license
 }
 
+// LicenseLight is the license badge of the top bar ("ui/license-light"): License's word in its colour, linking to Href, the app's Settings page; kit.js opens the License panel under it instead. Open draws the panel open.
+type LicenseLight struct {
+	Href    string
+	License License
+	Open    bool
+}
+
 // LicenseBuild is license show build.
 type LicenseBuild struct {
 	Release bool `json:"release"`

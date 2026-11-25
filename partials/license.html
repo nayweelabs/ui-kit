@@ -1,4 +1,4 @@
-{{/* License and features: the License card and the features table of a Settings page, drawn from license show as given. */}}
+{{/* License and features: the License card and the features table of a Settings page, and the badge and panel of the top bar, drawn from license show as given. */}}
 
 {{define "ui/license" -}}
 <section class="ui-license" aria-label="License and features" data-state="{{.State}}">
@@ -49,6 +49,29 @@
 </tbody>
 </table>
 <p class="ui-license-note">Locked means the feature is enterprise and no valid license or trial names it. What it already made stays readable. Free features never need a license.</p>
+</div>
+{{- end}}
+
+{{define "ui/license-light" -}}
+<div class="ui-light ui-license-light"><a class="ui-light-btn" href="{{orDefault "#" .Href}}"{{ext (orDefault "#" .Href)}} data-ui-light aria-controls="ui-license-pop" aria-expanded="{{.Open}}" aria-haspopup="dialog" title="License"><span class="ui-sr">License: </span>{{template "ui/license-badge" .License}}</a>
+<div class="ui-pop ui-license-pop" id="ui-license-pop" role="dialog" aria-label="License" tabindex="-1"{{if not .Open}} hidden{{end}}>
+{{template "ui/license-panel" .License}}
+</div>
+</div>
+{{- end}}
+
+{{define "ui/license-panel" -}}
+<div class="ui-license-panel" data-state="{{.State}}">
+<div class="ui-license-top"><b class="ui-pop-title">License</b>{{template "ui/license-badge" .}}</div>
+{{- with .Sentence}}
+<p class="ui-license-sentence">{{.}}</p>
+{{- end}}
+{{- if .Features}}
+{{template "ui/license-features" .}}
+{{- end}}
+{{- if .Actions}}
+<div class="ui-license-acts">{{range .Actions}}{{template "ui/button" .}}{{end}}</div>
+{{- end}}
 </div>
 {{- end}}
 

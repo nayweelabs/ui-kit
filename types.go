@@ -402,6 +402,7 @@ type Bar struct {
 	Apps    []Link
 	Status  []Status
 	Lights  []Light
+	License *LicenseLight // the license badge, left of the lights
 	Refresh *Link
 	Read    *ReadAt // when the page was read, left of Refresh
 	Actions []BarAction

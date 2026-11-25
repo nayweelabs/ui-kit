@@ -3,12 +3,12 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createElement as h } from "react";
 import { renderToStaticMarkup as render } from "react-dom/server";
-import { License, LicenseFeatures } from "./index.js";
+import { License, LicenseFeatures, LicensePanel } from "./index.js";
 
 const read = (name) => readFileSync(new URL(`../testdata/golden/${name}`, import.meta.url), "utf8");
 // same is markup with each tag's attributes in one order, since React and html/template write them in their own.
 const same = (html) => html.replace(/\n/g, "").replace(/<([a-z]+)((?:\s+[^\s=>]+(?:="[^"]*")?)*)>/g, (_, tag, attrs) => `<${tag}${(attrs.match(/\s+[^\s=>]+(?:="[^"]*")?/g) || []).map((a) => a.trim()).sort().map((a) => " " + a).join("")}>`);
-const parts = { "ui/license": License, "ui/license-features": LicenseFeatures };
+const parts = { "ui/license": License, "ui/license-features": LicenseFeatures, "ui/license-panel": LicensePanel };
 
 // The cases are the Go preview's own (written by go test -run Golden -update), so React must draw each Go golden.
 for (const [name, { template, props }] of Object.entries(JSON.parse(read("license-cases.json")))) {
