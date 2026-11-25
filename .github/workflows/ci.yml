@@ -14,8 +14,9 @@ concurrency:
 
 jobs:
   go:
-    name: local · linux · go
-    runs-on: [self-hosted, eg-linux]
+    # A public repo: GitHub's machines cost it nothing, and an own runner would run any fork's PR on the owner's Mac.
+    name: github · linux · go
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
@@ -52,8 +53,9 @@ jobs:
           git diff --exit-code -- css/tokens.css || { echo "css/tokens.css is stale: run go run ./cmd/ui-kit-tokens and commit it"; exit 1; }
 
   react:
-    name: local · linux · react
-    runs-on: [self-hosted, eg-linux]
+    # A public repo: GitHub's machines cost it nothing, and an own runner would run any fork's PR on the owner's Mac.
+    name: github · linux · react
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
