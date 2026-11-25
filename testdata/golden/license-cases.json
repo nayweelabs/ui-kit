@@ -229,7 +229,7 @@
      "daysLeft": 0,
      "ended": true,
      "for": "Example Ltd",
-     "keyId": "prod-2026-a",
+     "keyId": "test-2026-a",
      "kind": "org",
      "until": "2026-11-10"
     }
@@ -326,7 +326,7 @@
      "daysLeft": 12,
      "ended": false,
      "for": "Example Ltd",
-     "keyId": "prod-2026-a",
+     "keyId": "test-2026-a",
      "kind": "org",
      "until": "2026-12-01",
      "window": {
@@ -431,7 +431,7 @@
      "daysLeft": 365,
      "ended": false,
      "for": "Example Ltd",
-     "keyId": "prod-2026-a",
+     "keyId": "test-2026-a",
      "kind": "org",
      "until": "2027-11-19"
     },
@@ -439,7 +439,7 @@
      "daysLeft": 102,
      "ended": false,
      "for": "Example Ltd",
-     "keyId": "prod-2026-a",
+     "keyId": "test-2026-a",
      "kind": "product",
      "until": "2027-03-01"
     }
@@ -648,7 +648,7 @@
      "daysLeft": 10,
      "ended": false,
      "for": "Ada Example",
-     "keyId": "prod-2026-a",
+     "keyId": "test-2026-a",
      "kind": "trial",
      "until": "2026-12-03",
      "window": {
@@ -747,7 +747,7 @@
      "daysLeft": 0,
      "ended": true,
      "for": "Ada Example",
-     "keyId": "prod-2026-a",
+     "keyId": "test-2026-a",
      "kind": "trial",
      "until": "2026-12-03"
     }
